@@ -54,16 +54,14 @@ def run_scale(count, dimensions, query_count, repeats, top_k, seed, url):
             started=time.perf_counter()
             pg.prepare_index('scale',dimensions)
             report['hnsw_build_ms']=(time.perf_counter()-started)*1000
-            report['hnsw']=measure(pg,query_list,truth,'scale',top_k,repeats,'hnsw')
+            report['hnsw_sweep']={str(ef):measure(pg,query_list,truth,'scale',top_k,repeats,'hnsw',ef_search=ef)
+                                  for ef in (100,400,1000)}
+            report['hnsw']=report['hnsw_sweep']['100']
             with pg.connect() as db:
                 report['hnsw_index_bytes']=db.execute('SELECT pg_relation_size(%s::regclass) AS n',
                     (pg.index_name('scale',dimensions),)).fetchone()['n']
-                db.execute('SET LOCAL enable_seqscan=off')
-                plan=db.execute(sql.SQL("EXPLAIN (FORMAT JSON) SELECT id FROM chunks WHERE profile='scale' AND dimensions={} ORDER BY vector::vector({}) <=> %s::vector LIMIT %s").format(
-                    sql.Literal(dimensions),sql.Literal(dimensions)),(json.dumps(query_list[0]),top_k)).fetchone()['QUERY PLAN']
-                report['hnsw_plan']=plan
-                report['hnsw_index_used']=pg.index_name('scale',dimensions) in json.dumps(plan)
-            report['status']='measured' if report['hnsw_index_used'] else 'failed'
+            report['hnsw_index_used']=all(row.get('hnsw_index_used') for row in report['hnsw_sweep'].values())
+            report['status']='measured' if report['exact']['status']=='measured' and report['hnsw_index_used'] else 'failed'
         except Exception as exc:
             report.update(status='failed',error_type=type(exc).__name__)
         finally:
@@ -78,11 +76,12 @@ def write(report,output):
     output=Path(output); output.parent.mkdir(parents=True,exist_ok=True)
     output.with_suffix('.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
     lines=['# pgvector Exact vs HNSW — scale benchmark','',f"Status: **{report['status']}**; run: {report['generated_at']}",
-        '', 'Synthetic normalized Gaussian vectors; warm single-client queries, independent float64 NumPy truth. HNSW ef_search=100, default m=16/ef_construction=64. COPY ingestion is timed separately from index build.', '',
+        '', 'Synthetic normalized Gaussian vectors; warm single-client queries, independent float64 NumPy truth. HNSW ef_search=100/400/1000, default m=16/ef_construction=64. COPY ingestion is timed separately from index build. Plans use the production SQL and server-cursor context. Explicit HNSW mode disables sequential/bitmap scans and sorting to prevent an exact fallback; exact mode disables index/bitmap scans.', '',
         '| Chunks | Search | p50 ms | p95 ms | Recall@K | Status |','|---:|---|---:|---:|---:|---|']
     for row in report['results']:
-        for mode in ('exact','hnsw'):
-            result=row.get(mode,{})
+        measurements={'exact':row.get('exact',{})}
+        measurements.update({f'HNSW ef={ef}':result for ef,result in row.get('hnsw_sweep',{}).items()})
+        for mode,result in measurements.items():
             def fmt(n): return '—' if n is None else f'{n:.3f}'
             lines.append(f"| {row['count']} | {mode} | {fmt(result.get('query_latency_ms',{}).get('p50'))} | {fmt(result.get('query_latency_ms',{}).get('p95'))} | {fmt(result.get('recall_at_k_against_independent_exact'))} | {row['status']} |")
     lines+=['','Choose Exact if its measured p95 meets the application SLO. Choose HNSW only when its measured recall also meets the quality target. This synthetic corpus does not establish a universal switching threshold. Index sizes, build time, query plan, machine and software versions are in JSON. Missing service results are not estimated.']
@@ -103,7 +102,7 @@ def main():
     if not 1<=args.dimensions<=2000 or min(args.sizes)<args.top_k or min(args.queries,args.repeats,args.top_k)<1:
         parser.error('Invalid benchmark sizes or dimensions.')
     url=environment_database_url() if args.database_url_env=='RAG_DATABASE_URL' else os.getenv(args.database_url_env,'')
-    report={'schema_version':1,'generated_at':datetime.now(timezone.utc).isoformat(),
+    report={'schema_version':2,'generated_at':datetime.now(timezone.utc).isoformat(),
         'status':'running' if url else 'blocked','environment':{'python':platform.python_version(),
         'platform':platform.platform(),'cpu_count':os.cpu_count()},'parameters':vars(args)|{'output':str(args.output)},'results':[]}
     for size in args.sizes:

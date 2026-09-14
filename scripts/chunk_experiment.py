@@ -39,6 +39,8 @@ def main():
     key = os.getenv('RAG_API_KEY', '')
     if args.mode == 'api' and not key:
         parser.error('RAG_API_KEY is missing; no API request was made.')
+    if args.mode == 'api' and not args.judge_model:
+        parser.error('An evaluation judge model is required; no API request was made.')
     settings = environment_settings().model_copy(update={'mode': args.mode, 'search_mode': 'exact'})
     dataset = load_dataset(args.dataset)
     provider, _ = provider_and_metrics(args.mode)
@@ -58,6 +60,8 @@ def main():
         final_settings = settings.model_copy(update={'chunk_size': selected['chunk_size'], 'chunk_overlap': selected['chunk_overlap']})
         holdout = evaluate_dataset(dataset, final_settings, split='test', api_key=key, provider=provider, judge_model=args.judge_model)
         write_report(holdout, args.output_dir / f'chunk-{args.mode}-selected-test')
+        if holdout['status'] != 'completed' or (args.mode == 'api' and holdout['quality_evaluation']['status'] != 'completed'):
+            raise RuntimeError('Holdout evaluation failed; partial report saved, no completed experiment published.')
     finally:
         if provider is not None:
             provider.close()

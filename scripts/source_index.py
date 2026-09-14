@@ -5,7 +5,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 
 ROOT = Path(__file__).resolve().parents[1]
-ROOT_FILES = ['README.md', 'SOURCE_INDEX.md', '.env.example', '.gitignore', 'run.py', 'start.ps1',
+ROOT_FILES = ['README.md', 'SOURCE_INDEX.md', '.env.example', '.gitignore', '.gitattributes', 'run.py', 'start.ps1',
               'requirements.txt', 'requirements-dev.txt', 'requirements-lock.txt',
               'pytest.ini', 'Dockerfile', 'compose.yaml', '.dockerignore']
 GROUPS = [('说明、配置与启动', None), ('前端', 'dist'), ('后端', 'backend'), ('测试', 'tests'),
@@ -34,8 +34,9 @@ def main():
     parser.add_argument('--archive', action='store_true')
     args = parser.parse_args()
     groups = source_files()
-    reports = sorted([path.relative_to(ROOT) for folder in (ROOT / 'reports', ROOT / 'reports' / 'chunks')
-                      for path in folder.glob('*') if path.is_file() and path.suffix in ('.md', '.json')])
+    reports = sorted(path.relative_to(ROOT) for path in (ROOT / 'reports').rglob('*')
+                     if path.is_file() and path.suffix in ('.md', '.json') and
+                     not any(part.startswith('store-benchmark-') for part in path.parts))
     lines = ['# Knowbase 源码目录', '',
              '所有链接相对于项目根目录，复制、克隆或解压到其他位置后仍可使用。', '',
              '目录由 `python -m scripts.source_index` 从当前文件生成；`dist/` 就是可直接修改的 HTML、JavaScript、CSS 源文件，无需额外构建。', '',

@@ -60,17 +60,24 @@ def prepare(store, vectors, profile):
     return (time.perf_counter() - started) * 1000
 
 
-def measure(store, queries, truth, profile, top_k, repeats, mode):
+def measure(store, queries, truth, profile, top_k, repeats, mode, **search_options):
+    plan = store.explain_search(queries[0], profile, top_k=top_k, mode=mode, **search_options) if store.backend == 'pgvector' else None
+    index_used = store.index_name(profile, len(queries[0])) in json.dumps(plan) if plan else False
+    if mode == 'hnsw' and not index_used:
+        return {'status': 'failed', 'reason': 'The production query plan did not use the requested HNSW index.',
+                'query_plan': plan, 'hnsw_index_used': False}
+    if mode == 'exact' and index_used:
+        return {'status': 'failed', 'reason': 'The exact baseline unexpectedly used HNSW.', 'query_plan': plan}
     for query in queries:  # One complete warmup pass, excluded from measurements.
-        store.search(query, profile, top_k=top_k, mode=mode)
+        store.search(query, profile, top_k=top_k, mode=mode, **search_options)
     timings, recalls = [], []
     for _ in range(repeats):
         for query, expected in zip(queries, truth, strict=True):
             started = time.perf_counter()
-            rows = store.search(query, profile, top_k=top_k, mode=mode)
+            rows = store.search(query, profile, top_k=top_k, mode=mode, **search_options)
             timings.append((time.perf_counter() - started) * 1000)
             recalls.append(len({row['id'] for row in rows}.intersection(expected)) / len(expected))
-    return {'status': 'measured', 'query_latency_ms': summarize(timings),
+    return {'status': 'measured', 'query_plan': plan, 'hnsw_index_used': index_used, 'query_latency_ms': summarize(timings),
             'recall_at_k_against_independent_exact': statistics.mean(recalls),
             'minimum_query_recall': min(recalls), 'warmup_query_count': len(queries)}
 

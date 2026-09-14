@@ -107,7 +107,7 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                 error_code = None
                 try:
                     result = answer(store, query['question'], settings, api_key, query['document_ids'],
-                                    preferred_language=query['language'], provider=provider, metrics=question_metrics)
+                                    preferred_language=query['language'], provider=provider, metrics=question_metrics, include_candidate=True)
                 except ModelError as exc:
                     error_code = exc.code
                     result = {'status': 'provider_error', 'mode': settings.mode, 'answer': '', 'sources': [],
@@ -119,10 +119,17 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                     [k for k in (1,3,5) if k <= settings.top_k]))
                 quality = answer_metrics(result, query)
                 judge_metrics, judgment, judge_error = Metrics(), None, None
+                candidate_judgment = None
                 if settings.mode == 'api' and not error_code:
                     try:
                         judgment = judge_answer(result, query, dataset, settings, api_key, provider, judge_model, judge_metrics)
                         quality.update({name: judgment[name] for name in ('answer_correctness','citation_groundedness')})
+                        if result['status']=='unsupported_answer' and result.get('evaluation_candidate') and judge_model:
+                            candidate_judgment=judge_answer(result['evaluation_candidate'],query,dataset,settings,
+                                api_key,provider,judge_model,judge_metrics)
+                            quality['withheld_candidate_correctness']=candidate_judgment['answer_correctness']
+                            quality['grounding_rejected_correct_and_grounded']=float(
+                                candidate_judgment['answer_correctness']==1 and candidate_judgment['citation_groundedness']==1)
                     except ModelError as exc:
                         judge_error = exc.code
                 if error_code:
@@ -138,6 +145,7 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                              'answer': result['answer'], 'claims': result.get('claims', []),
                              'support': result.get('support'),
                              'judgment': judgment, 'judge_error': judge_error, 'judge_metrics': judge_metrics.as_dict(),
+                             'candidate_judgment':candidate_judgment,
                              'retrieved_pages': [{'document_id': source['document_id'], 'page': source['page'],
                                                   'score': source['score']} for source in sources]})
             totals = aggregate(rows)
@@ -186,7 +194,7 @@ def markdown(report):
               '| Answer metric | Mean | n |', '|---|---:|---:|']
     for key, metric in summary['answer_quality'].items():
         lines.append(f"| {key} | {display(metric['mean'])} | {metric['count']} |")
-    lines += ['', 'Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Groundedness reflects structured verifier judgments, not independent human labels.', '',
+    lines += ['', 'Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Runtime claim_groundedness is a verifier diagnostic; answer_correctness and citation_groundedness come from the separately configured evaluation Judge, not human labels.', '',
               '| Latency (ms) | p50 | p95 | n |', '|---|---:|---:|---:|']
     for key, metric in summary['latency_ms'].items():
         lines.append(f"| {key} | {display(metric['p50'])} | {display(metric['p95'])} | {metric['count']} |")

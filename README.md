@@ -4,6 +4,25 @@ PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构
 
 查看 [全部源文件](SOURCE_INDEX.md)、[17 项修改说明](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
+[![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
+
+## 实验结果
+
+本轮重点是困难检索、可调依据验证和真实数据库/容器验收，详见 [本轮逐项说明](docs/optimization-report.md)。真实模型评估按用户要求暂缓，不能把本地检索成绩当作生成答案准确率。
+
+<!-- EXPERIMENT_RESULTS_START -->
+| 项目 | 实测结果与范围 |
+|---|---|
+| 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
+| CI / PostgreSQL 测试 | 等待 CI 报告；工作流要求全部执行，任何 skipped 均令验收失败 |
+| 困难集 / 本地检索 | policy-challenge-v2；test Recall@1/3/5 = 0.5516 / 0.7500 / 0.8373；MRR=0.7865，nDCG=0.7505 |
+| Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
+| Docker | 等待实际容器验收报告 |
+| 真实 API 质量 / 成本 | 按用户要求暂缓付费调用。Answer Correctness、Citation Groundedness、Refusal Accuracy、真实模型 P50/P95 和 cost/query 尚无有效实测值 |
+
+以上数据来自 JSON 运行快照，使用 `python -m scripts.results_summary` 更新。测试数量始终引用自动报告；本地哈希检索分数不等于真实模型准确率。
+<!-- EXPERIMENT_RESULTS_END -->
+
 ## 运行与测试状态
 
 **测试数量不在 README 中写死。** 执行下面命令后，程序从本次 pytest JUnit XML 生成 [测试报告](reports/tests.md) 和 [JSON 数据](reports/tests.json)，记录通过、失败、错误、跳过数量、时间与源码摘要。报告是注明时间的运行快照，跳过不算通过。
@@ -47,6 +66,9 @@ RAG_MODE=api
 RAG_BASE_URL=https://api.openai.com/v1
 RAG_API_KEY=填写自己的服务密钥
 RAG_CHAT_MODEL=填写服务支持的回答模型名称
+RAG_VERIFIER_MODEL=填写验证模型名称或留空复用回答模型
+RAG_VERIFICATION_MODE=strict
+RAG_EVAL_JUDGE_MODEL=填写独立评估模型名称
 RAG_EMBEDDING_MODEL=填写服务支持的向量模型名称
 ~~~
 
@@ -64,7 +86,9 @@ RAG_EMBEDDING_MODEL=填写服务支持的向量模型名称
 
 ## 结构化拒答和依据校验
 
-模型返回 status 与 claims。每条 claim 含 text 和 evidence[{source_id, quote}]，不允许额外自由文本答案。服务器先核对摘录是否存在于指定来源，再用一次独立校验调用检查原文是否支持每条断言，包括数字、条件、范围与否定。
+Generator 与 Verifier 可分别配置；同模型的两次调用仍可能犯相似错误。`off` 只检查 JSON 结构和来源编号，`fast` 增加原文摘录匹配，默认 `strict` 再做逐断言模型依据校验。off/fast 的响应明确标为语义依据未验证；结构化拒答不会伪装成正确答案。
+
+模型返回 status 与 claims。每条 claim 含 text 和 evidence[{source_id, quote}]，不允许额外自由文本答案。strict 模式下服务器先核对摘录是否存在于指定来源，再用一次校验调用检查原文是否支持每条断言，包括数字、条件、范围、有效日期与否定。
 
 缺引用、伪造摘录、矛盾断言、校验漏项或格式错误都不能直接展示。业务根据 answered、retrieval_only、insufficient_evidence、unsupported_answer、invalid_model_response 判断，不依赖特殊拒答字符串。响应保留 refused 兼容字段，并附 claims、support、完整 retrieved_sources 和 metrics。文件名、物理页码和原文由服务器映射。
 
@@ -74,6 +98,8 @@ RAG_EMBEDDING_MODEL=填写服务支持的向量模型名称
 
 [评估协议](evals/README.md) 和 [数据集](evals/dataset.json) 包含中日英问题、页级 ground truth、参考事实与答案、无答案及提示注入案例，明确 dev/test 划分与局限。
 
+默认实验已使用 [困难集 policy-challenge-v2](evals/hard_dataset.json)：48 份文档、96 页、108 道题，dev/test 各 54 题，覆盖旧/新制度、草案、相似文档、数字陷阱、否定、例外、跨文档及无答案。两组公司与金额隔离，检索范围同时包含竞争版本；模板仍有相关性，需人工和真实资料继续扩充。
+
 ~~~powershell
 .\.venv\Scripts\python.exe -m scripts.evaluate --mode local --split test --output reports/evaluation-local-test
 .\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks
@@ -81,8 +107,9 @@ RAG_EMBEDDING_MODEL=填写服务支持的向量模型名称
 .\.venv\Scripts\python.exe -m scripts.evaluate --mode api --split test --output reports/evaluation-api-test
 ~~~
 
-- Retrieval：页级 Recall@K、Precision@K、MRR@K、nDCG@K，以及无答案问题误检率。重复页去重，缺少位置不缩小 precision 分母。
-- 回答质量：参考事实覆盖、token F1、规范化 exact match、正确拒答、答案失败/误拒答、候选断言 groundedness。词项指标与模型校验均标明局限；本地检索的生成质量为 N/A。
+- Retrieval：Recall@1/3/5、MRR@K、nDCG@K、Precision@K 与无答案误检率。先截取实际 Chunk 预算，再按物理页去重。
+- 回答质量：独立 Judge 基于 reference answer / gold evidence 评分 Answer Correctness 与 Citation Groundedness；另列 Refusal Accuracy、quote 匹配失败、unsupported answer、false refusal。被拒候选会单独接受 Judge 检查，用于发现正确且有依据的答案被验证器拦截；它们不进入公开回答。
+- 运行时 Verifier 的通过率与独立 Judge 分数分开；词项 F1/覆盖只作为代理指标。本地检索没有生成答案，语义质量为 N/A。Judge 也可能出错，需要人工复核。
 - Latency：解析、分块、索引 Embedding、写库、问题 Embedding、检索、生成、校验及总耗时；聚合平均值、p50/p95 和样本数。嵌套阶段不能直接相加。
 - Cost：真实响应的 token usage、请求/重试次数，按配置单价估算，缺用量或单价时为未知。包括失败请求和校验请求。
 
@@ -92,15 +119,21 @@ RAG_EMBEDDING_MODEL=填写服务支持的向量模型名称
 RAG_EMBEDDING_USD_PER_MILLION_TOKENS=
 RAG_CHAT_INPUT_USD_PER_MILLION_TOKENS=
 RAG_CHAT_OUTPUT_USD_PER_MILLION_TOKENS=
+RAG_VERIFIER_INPUT_USD_PER_MILLION_TOKENS=
+RAG_VERIFIER_OUTPUT_USD_PER_MILLION_TOKENS=
+RAG_JUDGE_INPUT_USD_PER_MILLION_TOKENS=
+RAG_JUDGE_OUTPUT_USD_PER_MILLION_TOKENS=
 ~~~
 
 回答下方可展开「性能与用量」。GET /api/metrics 返回本进程最近的操作；测量随轮转日志保存在 data/logs/service.log。日志记录真实异常栈、文档 ID、阶段与索引身份，并保留 PDF 子进程失败栈。
+
+实验报告把日常 query cost 与额外 Judge 成本分开，输出 token usage、平均 cost/query、P50/P95。不同模型使用对应单价；费用为标准价格估算，尚不计缓存折扣。三种验证模式的付费实验命令为 `python -m scripts.verification_experiment --run-api`，本轮没有执行。
 
 ## Chunk 实验与物理页边界
 
 大小以字符计，默认 size=900、overlap=120，可在网页修改，overlap 必须小于 size。参数进入索引身份，修改后需重建；旧索引不混入新配置检索。
 
-实验比较 (450,0)、(450,60)、(900,0)、(900,120)、(1200,120)、(1200,180)。仅用 dev 选择参数，再测试冻结配置；不根据 test 分数反复选择，也不以小型本地实验自动修改生产默认值。
+实验比较 (450,0)、(450,60)、(900,0)、(900,120)、(1200,120)、(1200,180)。API 模式以 dev Answer Correctness 优先，再比较 Recall/nDCG/Chunk 数；local 模式只用检索成绩。最后测试冻结配置，不根据 test 调参。[本地困难集结果](reports/chunks-v2/chunk-experiment-local.md) 选择 450/0；这只适用于本地基线，真实 API 参数待评估后决定。
 
 **每个 Chunk 仍不跨物理页**，理由、代价与扩展方向见 [ADR 0001](docs/adr/0001-physical-page-chunks.md)。跨页问题可检索多页，为同一断言附多个来源。
 
@@ -109,6 +142,8 @@ RAG_CHAT_OUTPUT_USD_PER_MILLION_TOKENS=
 设置 RAG_DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DATABASE 后，配置、文档、Chunk 和原生 vector 使用 PostgreSQL，数据库连接池复用。PDF 原件保存在 RAG_DATA_DIR/files/。SQLite 保留为离线开发与比较基线。
 
 默认 exact cosine；RAG_SEARCH_MODE=hnsw 或网页选择 HNSW 可用近似检索。目前 HNSW 使用 vector 类型，支持最多 2,000 维，需 PostgreSQL 与 API 模式。本地 2,048 维向量使用 exact；不静默截断或降精度。模型/profile/维度隔离。
+
+HNSW 在索引写入事务、启动或设置维护时建立；用户查询不会 CREATE INDEX。最后一份文档重建到新 profile 或被删除后，废弃索引会清理。维护仅管理本应用保留命名空间下的索引，操作使用数据库 advisory lock 串行化。
 
 已有 SQLite 不会自动迁移。先停止应用，备份数据库与 PDF，在目标库和文件目录为空时执行：
 
@@ -125,13 +160,14 @@ RAG_CHAT_OUTPUT_USD_PER_MILLION_TOKENS=
 ~~~powershell
 # RAG_BENCHMARK_DATABASE_URL 指向可创建隔离 schema 的 pgvector 数据库
 .\.venv\Scripts\python.exe -m scripts.benchmark_stores --count 1000 --dimensions 384 --queries 20 --repeats 3
+.\.venv\Scripts\python.exe -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3
 ~~~
 
 仅创建并清理本次随机 schema。不配置数据库时仍测 SQLite，PostgreSQL 明确 blocked。未测两侧不声称性能提升。实际模型维度、更大规模和并发需要另外测量。
 
 ## Docker
 
-需要可用的 Docker Engine/Compose。按 .env.example 配置 POSTGRES_PASSWORD 和 RAG_DATABASE_URL_DOCKER；后者的数据库主机为 db，密码中的特殊字符需 URL 编码。
+需要可用的 Docker Engine/Compose。全新克隆无需 `.env` 或 API 密钥，直接运行 `docker compose up` 即启动本地检索 App + PostgreSQL + pgvector。首次启动会生成随机数据库密码并保存在独立持久卷，重启复用；AI 模式再按 `.env.example` 配置。
 
 ~~~powershell
 docker compose up --build -d --wait
@@ -143,9 +179,9 @@ docker compose logs -f app
 在运行的 Compose 中执行数据库基准并取回报告：
 
 ~~~powershell
-docker compose exec app python -m scripts.benchmark_stores --database-url-env RAG_DATABASE_URL
-docker compose cp app:/app/reports/store-benchmark.json reports/store-benchmark.json
-docker compose cp app:/app/reports/store-benchmark.md reports/store-benchmark.md
+docker compose exec app python -m scripts.benchmark_scale --database-url-env RAG_DATABASE_URL
+docker compose cp app:/app/reports/vector-scale.json reports/vector-scale.json
+docker compose cp app:/app/reports/vector-scale.md reports/vector-scale.md
 ~~~
 
 使用 docker compose down 停止，命名数据卷保留。当前仍是单用户原型；组织权限、审计、分布式任务调度和对外服务的 TLS 尚未完成。

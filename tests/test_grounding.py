@@ -34,7 +34,7 @@ def run_grounding(tmp_path):
                              'status': 'queued', 'created_at': '2026-09-14T00:00:00Z'})
     store.commit_chunks('handbook', [{'page': 2, 'ordinal': 0, 'text': SOURCE}], [[1.0, 0.0]], settings.profile)
 
-    def run(generation, verification=None, mode='strict', verifier_model=''):
+    def run(generation, verification=None, mode='strict', verifier_model='', include_candidate=False):
         settings.verification_mode = mode
         settings.verifier_model = verifier_model
         requests = []
@@ -58,11 +58,21 @@ def run_grounding(tmp_path):
         with httpx.Client(transport=httpx.MockTransport(handler)) as client:
             provider = OpenAICompatibleProvider(client)
             result = rag.answer(store, 'How should employees request leave?', settings, 'test-key', [],
-                                preferred_language='en', provider=provider)
+                                preferred_language='en', provider=provider, include_candidate=include_candidate)
         return result, requests, chats
 
     yield run
     store.close()
+
+
+def test_withheld_candidate_only_available_to_explicit_evaluation(run_grounding):
+    public, _, _ = run_grounding(generated(), verdict(False))
+    assert public['status'] == 'unsupported_answer'
+    assert public['claims'] == [] and 'evaluation_candidate' not in public
+    evaluation, _, _ = run_grounding(generated(), verdict(False), include_candidate=True)
+    assert evaluation['claims'] == []
+    assert evaluation['evaluation_candidate']['claims'][0]['text'] == generated()['claims'][0]['text']
+    assert evaluation['evaluation_candidate']['sources'][0]['text'] == SOURCE
 
 
 @pytest.mark.parametrize('mode,expected', [('off','answered'),('fast','unsupported_answer'),('strict','unsupported_answer')])

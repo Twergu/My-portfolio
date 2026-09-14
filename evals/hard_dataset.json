@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "dataset_id": "policy-challenge-v2",
+  "dataset_id": "policy-challenge-v2.1",
   "provenance": "Authored synthetic challenge cases; no customer documents; not independently human-validated.",
   "limitations": [
     "Templated multilingual cases are correlated, not independent statistical samples.",
@@ -104,7 +104,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Aster AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. Only the Finance Director may approve that exception before booking."
+          "text": "Aster AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. The separate EX-2026 policy specifies the authorized approver and timing for that exception."
         },
         {
           "page": 2,
@@ -240,7 +240,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Aster AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；只有财务总监可以在预订前批准该例外。"
+          "text": "Aster AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；该例外的审批人和审批时间须查阅EX-2026专门制度。"
         },
         {
           "page": 2,
@@ -376,7 +376,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Aster AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。この特例を予約前に承認できるのは財務部長のみです。"
+          "text": "Aster AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。特例の承認権者と承認時期は専用規程EX-2026を参照してください。"
         },
         {
           "page": 2,
@@ -512,7 +512,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Boreal AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. Only the Finance Director may approve that exception before booking."
+          "text": "Boreal AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. The separate EX-2026 policy specifies the authorized approver and timing for that exception."
         },
         {
           "page": 2,
@@ -648,7 +648,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Boreal AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；只有财务总监可以在预订前批准该例外。"
+          "text": "Boreal AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；该例外的审批人和审批时间须查阅EX-2026专门制度。"
         },
         {
           "page": 2,
@@ -784,7 +784,7 @@
       "pages": [
         {
           "page": 1,
-          "text": "Boreal AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。この特例を予約前に承認できるのは財務部長のみです。"
+          "text": "Boreal AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。特例の承認権者と承認時期は専用規程EX-2026を参照してください。"
         },
         {
           "page": 2,
@@ -979,7 +979,7 @@
         "boreal-en-security",
         "boreal-en-benefits"
       ],
-      "reference_answer": "12 calendar days after return; 3 business days is the cancellation deadline.",
+      "reference_answer": "No. The deadline is 12 calendar days after return.",
       "expected_facts": [],
       "relevance": [
         {
@@ -1279,7 +1279,7 @@
         {
           "document_id": "aster-en-approval",
           "page": 1,
-          "quote": "Aster AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. Only the Finance Director may approve that exception before booking."
+          "quote": "Aster AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. The separate EX-2026 policy specifies the authorized approver and timing for that exception."
         },
         {
           "document_id": "aster-en-exception",
@@ -1549,7 +1549,7 @@
       "split": "dev",
       "language": "en",
       "category": "cross_document",
-      "question": "Can a qualifying Aster conference traveler without an original receipt still be reimbursed under EX-2026?",
+      "question": "Can a qualifying Aster conference traveler without an original receipt still be reimbursed under EX-2026, and does resubmitting reset the deadline?",
       "answerable": true,
       "document_ids": [
         "aster-en-old",
@@ -1569,7 +1569,7 @@
         "boreal-en-security",
         "boreal-en-benefits"
       ],
-      "reference_answer": "No. EX-2026 does not remove the original-receipt requirement.",
+      "reference_answer": "No reimbursement without the original receipt, and resubmitting does not reset the original deadline.",
       "expected_facts": [],
       "relevance": [
         {
@@ -2047,7 +2047,7 @@
         {
           "document_id": "aster-zh-approval",
           "page": 1,
-          "quote": "Aster AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；只有财务总监可以在预订前批准该例外。"
+          "quote": "Aster AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；该例外的审批人和审批时间须查阅EX-2026专门制度。"
         },
         {
           "document_id": "aster-zh-exception",
@@ -2317,7 +2317,7 @@
       "split": "dev",
       "language": "zh",
       "category": "cross_document",
-      "question": "Aster满足会议例外却没有原始发票，可以按EX-2026报销酒店吗？",
+      "question": "Aster满足会议例外却没有原始发票，可以按EX-2026报销酒店吗？补交申请是否重置期限？",
       "answerable": true,
       "document_ids": [
         "aster-zh-old",
@@ -2337,7 +2337,7 @@
         "boreal-zh-security",
         "boreal-zh-benefits"
       ],
-      "reference_answer": "不能，会议例外没有免除原始发票要求。",
+      "reference_answer": "不能，会议例外没有免除原始发票要求，补交也不会重置原始期限。",
       "expected_facts": [],
       "relevance": [
         {
@@ -2815,7 +2815,7 @@
         {
           "document_id": "aster-ja-approval",
           "page": 1,
-          "quote": "Aster AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。この特例を予約前に承認できるのは財務部長のみです。"
+          "quote": "Aster AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。特例の承認権者と承認時期は専用規程EX-2026を参照してください。"
         },
         {
           "document_id": "aster-ja-exception",
@@ -3085,7 +3085,7 @@
       "split": "dev",
       "language": "ja",
       "category": "cross_document",
-      "question": "Asterの会議特例の条件を満たしても領収書原本がない場合、EX-2026で宿泊費を精算できますか？",
+      "question": "Asterの会議特例を満たしても領収書原本がなければ精算できますか？再提出で期限はリセットされますか？",
       "answerable": true,
       "document_ids": [
         "aster-ja-old",
@@ -3105,7 +3105,7 @@
         "boreal-ja-security",
         "boreal-ja-benefits"
       ],
-      "reference_answer": "いいえ、特例でも領収書原本の要件は変わりません。",
+      "reference_answer": "いいえ、特例でも領収書原本が必要で、再提出しても元の期限はリセットされません。",
       "expected_facts": [],
       "relevance": [
         {
@@ -3283,7 +3283,7 @@
         "boreal-en-security",
         "boreal-en-benefits"
       ],
-      "reference_answer": "9 calendar days after return; 3 business days is the cancellation deadline.",
+      "reference_answer": "No. The deadline is 9 calendar days after return.",
       "expected_facts": [],
       "relevance": [
         {
@@ -3583,7 +3583,7 @@
         {
           "document_id": "boreal-en-approval",
           "page": 1,
-          "quote": "Boreal AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. Only the Finance Director may approve that exception before booking."
+          "quote": "Boreal AP-2026 approved travel authorization. Ordinary trips require direct manager approval before booking. A manager may approve the trip but cannot approve an EX-2026 increased hotel cap. The separate EX-2026 policy specifies the authorized approver and timing for that exception."
         },
         {
           "document_id": "boreal-en-exception",
@@ -3853,7 +3853,7 @@
       "split": "test",
       "language": "en",
       "category": "cross_document",
-      "question": "Can a qualifying Boreal conference traveler without an original receipt still be reimbursed under EX-2026?",
+      "question": "Can a qualifying Boreal conference traveler without an original receipt still be reimbursed under EX-2026, and does resubmitting reset the deadline?",
       "answerable": true,
       "document_ids": [
         "aster-en-old",
@@ -3873,7 +3873,7 @@
         "boreal-en-security",
         "boreal-en-benefits"
       ],
-      "reference_answer": "No. EX-2026 does not remove the original-receipt requirement.",
+      "reference_answer": "No reimbursement without the original receipt, and resubmitting does not reset the original deadline.",
       "expected_facts": [],
       "relevance": [
         {
@@ -4351,7 +4351,7 @@
         {
           "document_id": "boreal-zh-approval",
           "page": 1,
-          "quote": "Boreal AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；只有财务总监可以在预订前批准该例外。"
+          "quote": "Boreal AP-2026 出差审批。普通出差必须在预订前取得直属经理批准。经理可以批准出差，但不能提高EX-2026酒店上限；该例外的审批人和审批时间须查阅EX-2026专门制度。"
         },
         {
           "document_id": "boreal-zh-exception",
@@ -4621,7 +4621,7 @@
       "split": "test",
       "language": "zh",
       "category": "cross_document",
-      "question": "Boreal满足会议例外却没有原始发票，可以按EX-2026报销酒店吗？",
+      "question": "Boreal满足会议例外却没有原始发票，可以按EX-2026报销酒店吗？补交申请是否重置期限？",
       "answerable": true,
       "document_ids": [
         "aster-zh-old",
@@ -4641,7 +4641,7 @@
         "boreal-zh-security",
         "boreal-zh-benefits"
       ],
-      "reference_answer": "不能，会议例外没有免除原始发票要求。",
+      "reference_answer": "不能，会议例外没有免除原始发票要求，补交也不会重置原始期限。",
       "expected_facts": [],
       "relevance": [
         {
@@ -5119,7 +5119,7 @@
         {
           "document_id": "boreal-ja-approval",
           "page": 1,
-          "quote": "Boreal AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。この特例を予約前に承認できるのは財務部長のみです。"
+          "quote": "Boreal AP-2026 出張承認。通常の出張は予約前に直属の上司の承認が必要です。上司は出張を承認できますが、EX-2026宿泊上限の引き上げは承認できません。特例の承認権者と承認時期は専用規程EX-2026を参照してください。"
         },
         {
           "document_id": "boreal-ja-exception",
@@ -5389,7 +5389,7 @@
       "split": "test",
       "language": "ja",
       "category": "cross_document",
-      "question": "Borealの会議特例の条件を満たしても領収書原本がない場合、EX-2026で宿泊費を精算できますか？",
+      "question": "Borealの会議特例を満たしても領収書原本がなければ精算できますか？再提出で期限はリセットされますか？",
       "answerable": true,
       "document_ids": [
         "aster-ja-old",
@@ -5409,7 +5409,7 @@
         "boreal-ja-security",
         "boreal-ja-benefits"
       ],
-      "reference_answer": "いいえ、特例でも領収書原本の要件は変わりません。",
+      "reference_answer": "いいえ、特例でも領収書原本が必要で、再提出しても元の期限はリセットされません。",
       "expected_facts": [],
       "relevance": [
         {

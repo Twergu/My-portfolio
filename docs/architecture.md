@@ -30,9 +30,9 @@ API 协议参考：[Embedding](https://developers.openai.com/api/reference/resou
 
 生成模型必须返回 `status` 和 `claims`。`insufficient_evidence` 必须伴随空 claims；`answered` 必须包含逐项断言及其 `source_id` 和原文 quote。服务器只渲染经过校验的 claims，不展示额外的自由文本答案。业务逻辑不再匹配拒答文本里的任何特殊字符串。
 
-先检查 schema、来源 ID、原文摘录，再用一次独立 LLM 调用判断引用的完整片段是否支持每条断言的数字、条件、范围及否定。任意断言未获支持、校验结果不完整或格式错误，整条生成答案停止展示。API 返回 `status`、`support` 和 `claims`，同时保留 `refused` 供现有界面兼容。
+默认 `strict` 检查 schema、来源 ID、摘录，再由 Verifier 检查数字、条件、范围、有效日期及否定。任意断言未获支持、结果不完整或格式错误，整条答案停止展示。`fast` 只做结构和摘录检查，`off` 只做结构和来源 ID 检查；两者明确返回语义依据未验证，不把未执行的验证计为通过。API 返回 `status`、`support` 和 `claims`，保留 `refused` 兼容界面。
 
-这是“精确摘录检查 + 模型判断”，不是形式化证明。同一模型的第二次调用仍可能有相关性错误、受到提示注入或误判，需要独立标注数据与人工核查；不能把通过率当作真实性保证。它会增加一次模型请求的费用与延时，实验报告单独计入 verification。
+Generator 与 Verifier 模型分别配置，Verifier 留空时复用 Generator。strict 增加一次模型请求，单独记录 verification 时间与费用。这是摘录检查加模型判断，不是形式化证明；同一模型的两次调用有相关错误，换模型也不能保证真实性。Evaluation Judge 另行配置，用参考答案和 gold evidence 评分，不继承运行时通过标志。被拦截候选只供显式内部评估误拒答，公开回答隐藏候选内容。
 
 ## 存储、索引与部署边界
 
@@ -41,3 +41,7 @@ API 协议参考：[Embedding](https://developers.openai.com/api/reference/resou
 本应用仍是单用户、单索引进程的原型。数据库换成 PostgreSQL 不等于完成组织权限或分布式任务调度；Compose 默认只在宿主机回环地址发布应用端口。数据库和文件卷需要一起备份。日志记录真实 traceback、文档 ID、处理阶段和索引身份；前端仍显示可读错误，日志不主动记录 API 密钥或请求正文。
 
 物理页边界的决定、理由和代价见 [ADR 0001](adr/0001-physical-page-chunks.md)。
+
+HNSW 在写入事务或启动/设置维护时建立，查询只验证索引存在。生命周期操作用 advisory lock 串行化，只清理应用命名空间中的废弃 profile 索引。Exact 禁用 index/bitmap scan；显式 HNSW 禁用 sequential/bitmap scan 和排序，避免普通索引加排序冒充 ANN。基准通过生产 SQL 的 `EXPLAIN DECLARE` 检查游标查询计划，并比较 ef_search=100/400/1000 的召回和延时。应用 ef_search=100，真实召回不达标时应继续使用 Exact。
+
+全新 Compose 启动由 init-db 服务生成随机密码，存入独立持久卷。数据库与非 root App 只读该文件，重启复用，无需 `.env` 即可运行 local 模式。CI 要求真实 pgvector 测试零跳过，再构建容器、索引示例 PDF、检索引用并检查重启持久性。模型 HTTP 与普通测试隔离，CI 不消耗 API 额度。

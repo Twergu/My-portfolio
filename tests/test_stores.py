@@ -100,6 +100,10 @@ def test_hnsw_has_explicit_backend_and_dimension_contract(store):
         with pytest.raises(ValueError, match='not ready'):
             store.search([1., 0.], 'profile', mode='hnsw', top_k=1)
         store.prepare_index('profile', 2)
+        plan = store.explain_search([1., 0.], 'profile', document_ids=['one'], mode='hnsw', top_k=1)
+        assert store.index_name('profile', 2) in json.dumps(plan)
+        exact_plan = store.explain_search([1., 0.], 'profile', mode='exact', top_k=1)
+        assert store.index_name('profile', 2) not in json.dumps(exact_plan)
         rows = store.search([1., 0.], 'profile', mode='hnsw', top_k=1)
         assert rows[0]['id'] == 'a-1'
         with pytest.raises(ValueError, match='2000'):

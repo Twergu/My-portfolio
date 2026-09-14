@@ -1,15 +1,20 @@
 # RAG Evaluation Dataset 与指标协议
 
-`dataset.json` 是版本化的虚构企业制度种子集，不含企业真实资料。中、日、英三份文档共 15 个物理页，36 个问题：24 个 dev 问题用于参数选择，12 个 test 问题用于选择结束后的验证。数据由 `python -m evals.make_seed` 重建，修改标注时应同步更新生成器与 dataset_id。
+默认使用 `hard_dataset.json`，由 `python -m evals.make_hard` 重建。`policy-challenge-v2.1` 包含 48 份虚构制度、96 个物理页、108 道中日英问题，dev/test 各 54 题。两组公司和金额分别用于 dev/test，检索范围同时保留两组公司、旧版、现行版、草案和合同工制度，不能预先过滤掉干扰文档。原 `dataset.json` 是保留用于回归测试的 36 题种子集。
 
-每题包含 `id`、`language`、`split`、`category`、`question`、`document_ids`、`answerable`、页级 `relevance`（含 grade）、`expected_facts`（可接受表达别名）与 `reference_answer`。覆盖直接查询、跨页汇总、资料不足和提示注入。页文本代表 PDF 提取之后的边界；PDF 上传和真实解析由 `live_smoke.py` 另外验证。
+每题包含问题、语言、类别、检索范围、`answerable`、页级 `relevance`、`reference_answer` 和 `reference_evidence`。覆盖新旧版本、相似制度、数字陷阱、否定、例外、跨文档、无答案和提示注入。困难集不使用数字别名匹配充当答案正确性。v2.1 修正英文参考答案超出 gold 页的事实，并拆分审批规则，避免只读一份文件就回答标为跨文档的问题。页文本从 PDF 解析后开始，PDF 上传和解析另由 smoke 验证。
 
 ## Retrieval 指标
 
-从实际返回的 Top-K Chunk 中按首次出现顺序去重 `(document_id, page)`，使用页级证据排名。重复页不会增加得分。K 仍是原始请求的 Chunk 预算；缺少位置计入 precision 的分母，而不是缩小分母制造高分。
+先截取实际返回的 Top-K Chunk，再按首次出现去重 `(document_id, page)`。分别报告 Recall@1/3/5；MRR@K、nDCG@K 使用请求 K（默认 5）。重复页不会从预算之外补进新页。未填满位置仍计入 precision 分母。
 
 | 指标 | 定义 |
 | --- | --- |
+| Answer Correctness | 单独配置的 Evaluation Judge 根据问题、参考答案和 gold evidence 检查答案正确性与完整性；有答案题未交付回答计 0 |
+| Citation Groundedness | Judge 独立检查实际引用对每条断言的支持，另做摘录匹配；不继承运行时 Verifier 的通过标志 |
+| Refusal Accuracy | 有答案题交付回答、无答案题结构化拒答的比例；只评价拒答决策，不评价回答内容 |
+| quote_match_failure / unsupported_answer | 摘录匹配失败比例、依据检查拦截比例 |
+| grounding_rejected_correct_and_grounded | 被拦截候选中，经 Judge 判定正确且有依据的比例；附候选样本数，用于发现误拦截 |
 | Recall@K | 命中的不同相关页数 / 全部相关页数 |
 | Precision@K | 命中的不同相关页数 / K |
 | MRR@K | 第一个相关页的排名倒数，未命中为 0 |
@@ -30,24 +35,23 @@
 | Claim groundedness | 所有候选断言中通过依据检查的比例，包括被拦截答案的候选断言 |
 | All claims grounded | 该题候选断言是否全部获支持 |
 
-本地模式仅返回原文，因此回答质量指标为 N/A。Groundedness 使用模型依据校验结果，不是独立人工标签；该模型也可能误判，不能用这一指标证明答案必然正确。上线前需要人工核验语义正确性、完整性、相关性及引用的支持度，并在独立模型或人工复核集上验证自动校验器。
+本地模式仅返回原文，因此回答质量为 N/A。运行时 `claim_groundedness` 是 Verifier 诊断值，off/fast 未做语义验证时为未知。独立 `citation_groundedness` 来自额外 Judge，仍不是人工标签。被拦截候选只供显式内部评估，不进入公开问答响应。未配置 Judge、调用失败或结果不完整不能标为完整质量验收。Judge 也会误判，上线前需人工抽样。
 
 ## Latency 与 Cost
 
 报告真实测量 indexing、query embedding、retrieval、generation、verification、provider HTTP、退避和整题耗时，聚合 p50/p95/平均值及样本数。不同阶段存在嵌套关系，不能直接把所有阶段相加。token usage 来自服务实际响应；成本按 `.env` 中配置的每百万 token 单价计算，包含回答与依据校验的两次 LLM 调用。
 
-没有调用 API 时成本为 0。服务缺少 usage、请求失败的费用未知、或未配置价格时，总成本为 null/N/A，同时报告已知部分。估算不含缓存折扣、税费或服务等级差异；单价应与当前服务和模型对应。
+应用 query 成本与额外 Judge 成本分开，run cost 包含索引、问答和 Judge。没有调用 API 时成本为 0；缺少 usage、失败费用未知或缺单价时总成本为 null/N/A，保留已知部分。估算不含缓存折扣、税费或服务等级差异，不能代替账单。
 
 ## 运行
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.evaluate --mode local --split test --output reports/evaluation-local-test
-.\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks
-.\.venv\Scripts\python.exe -m scripts.live_smoke --output reports/live-api-smoke
+.\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks-v2
 ```
 
-真实评估需配置 `RAG_API_KEY`、模型名称及服务地址，再显式运行 `--mode api`。该模式会调用付费接口；默认 local 不会调用。所有脚本使用隔离的临时数据，不改应用已有知识库。
+真实评估需配置密钥、服务、Generator/Verifier、`RAG_EVAL_JUDGE_MODEL` 和单价，再显式使用 `--mode api`。三种验证模式对比命令为 `python -m scripts.verification_experiment --run-api`。这些命令会调用付费接口，本轮按用户要求暂停。默认 local 不会调用；脚本使用隔离临时 SQLite 数据，不改应用知识库，存储性能另由 pgvector benchmark 评估。
 
-Chunk 实验比较六种预先固定的参数组合，以 dev Recall、dev nDCG、较少 Chunk 数依次选择；最后只测一次选定配置的 test 集。相同题材和翻译之间存在相关性，这只是入门评估集，不能将其结果当作真实企业文档准确率或自动修改生产参数。
+固定六组配置为 `(450,0)`、`(450,60)`、`(900,0)`、`(900,120)`、`(1200,120)`、`(1200,180)`，单位为字符且不跨物理页。API 按 dev Answer Correctness、Recall、nDCG、较少 Chunk 数依次选择，local 只用检索指标；冻结后才测 test，不按 test 调参。部分页短于配置值，900/1200 会产生相同边界，仍需真实长页进一步区分。规则模板和翻译有相关性，数据尚无独立人工验收，不能声称生产准确率或自动修改参数。
 
-报告入口：[分块实验](../reports/chunks/chunk-experiment-local.md)、[选定参数 test 验证](../reports/chunks/chunk-local-selected-test.md)、[真实 API 状态](../reports/live-api-smoke.md)。
+报告入口：[困难集分块实验](../reports/chunks-v2/chunk-experiment-local.md)、[冻结参数 test](../reports/chunks-v2/chunk-local-selected-test.md)、[真实 API 状态](../reports/live-api-smoke.md)。

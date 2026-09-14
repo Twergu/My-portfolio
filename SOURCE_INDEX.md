@@ -74,13 +74,16 @@
 - [scripts/init_database_password.py](scripts/init_database_password.py)
 - [scripts/live_smoke.py](scripts/live_smoke.py)
 - [scripts/migrate_sqlite.py](scripts/migrate_sqlite.py)
+- [scripts/results_summary.py](scripts/results_summary.py)
 - [scripts/source_index.py](scripts/source_index.py)
+- [scripts/verification_experiment.py](scripts/verification_experiment.py)
 
 ## 架构与修改说明
 
 - [docs/adr/0001-physical-page-chunks.md](docs/adr/0001-physical-page-chunks.md)
 - [docs/architecture.md](docs/architecture.md)
 - [docs/change-report.md](docs/change-report.md)
+- [docs/optimization-report.md](docs/optimization-report.md)
 
 ## 示例 PDF
 
@@ -110,6 +113,22 @@
 - [reports/chunks/chunk-local-900-120-dev.md](reports/chunks/chunk-local-900-120-dev.md)
 - [reports/chunks/chunk-local-selected-test.json](reports/chunks/chunk-local-selected-test.json)
 - [reports/chunks/chunk-local-selected-test.md](reports/chunks/chunk-local-selected-test.md)
+- [reports/chunks-v2/chunk-experiment-local.json](reports/chunks-v2/chunk-experiment-local.json)
+- [reports/chunks-v2/chunk-experiment-local.md](reports/chunks-v2/chunk-experiment-local.md)
+- [reports/chunks-v2/chunk-local-1200-120-dev.json](reports/chunks-v2/chunk-local-1200-120-dev.json)
+- [reports/chunks-v2/chunk-local-1200-120-dev.md](reports/chunks-v2/chunk-local-1200-120-dev.md)
+- [reports/chunks-v2/chunk-local-1200-180-dev.json](reports/chunks-v2/chunk-local-1200-180-dev.json)
+- [reports/chunks-v2/chunk-local-1200-180-dev.md](reports/chunks-v2/chunk-local-1200-180-dev.md)
+- [reports/chunks-v2/chunk-local-450-0-dev.json](reports/chunks-v2/chunk-local-450-0-dev.json)
+- [reports/chunks-v2/chunk-local-450-0-dev.md](reports/chunks-v2/chunk-local-450-0-dev.md)
+- [reports/chunks-v2/chunk-local-450-60-dev.json](reports/chunks-v2/chunk-local-450-60-dev.json)
+- [reports/chunks-v2/chunk-local-450-60-dev.md](reports/chunks-v2/chunk-local-450-60-dev.md)
+- [reports/chunks-v2/chunk-local-900-0-dev.json](reports/chunks-v2/chunk-local-900-0-dev.json)
+- [reports/chunks-v2/chunk-local-900-0-dev.md](reports/chunks-v2/chunk-local-900-0-dev.md)
+- [reports/chunks-v2/chunk-local-900-120-dev.json](reports/chunks-v2/chunk-local-900-120-dev.json)
+- [reports/chunks-v2/chunk-local-900-120-dev.md](reports/chunks-v2/chunk-local-900-120-dev.md)
+- [reports/chunks-v2/chunk-local-selected-test.json](reports/chunks-v2/chunk-local-selected-test.json)
+- [reports/chunks-v2/chunk-local-selected-test.md](reports/chunks-v2/chunk-local-selected-test.md)
 - [reports/live-api-smoke.json](reports/live-api-smoke.json)
 - [reports/live-api-smoke.md](reports/live-api-smoke.md)
 - [reports/runtime-verification.json](reports/runtime-verification.json)

@@ -31,7 +31,6 @@ jobs:
       - run: python -m scripts.check
       - run: python -m scripts.chunk_experiment --mode local --output-dir reports/chunks
       - run: python -m scripts.benchmark_stores --count 1000 --dimensions 384 --queries 20 --repeats 3 --require-postgres
-      - run: python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3
       - name: Build and run Compose smoke
         env:
           RAG_PORT: '18000'
@@ -42,6 +41,7 @@ jobs:
           docker compose restart app
           docker compose up -d --wait
           python -m scripts.container_smoke --url http://127.0.0.1:18000 --check-persistence
+      - run: python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3
       - name: Container logs and shutdown
         if: always()
         run: |

@@ -165,11 +165,12 @@ def check_quotes(claims, sources):
     return True
 
 
-def answer(store, question, settings, api_key, document_ids, preferred_language=None, provider=None, metrics=None):
+def answer(store, question, settings, api_key, document_ids, preferred_language=None, provider=None, metrics=None, *, include_candidate=False):
     metrics = metrics if metrics is not None else Metrics()
     sources = retrieve(store, question, settings, api_key, document_ids, provider=provider, metrics=metrics)
     retrieved = list(sources)
     language = answer_language(question, preferred_language)
+    generated = None
     status, claims, support = 'insufficient_evidence', [], {'method': 'not_checked', 'total_claims': 0, 'verified_claims': 0}
     result = no_evidence(question, preferred_language)
     if sources and settings.mode == 'local':
@@ -267,7 +268,14 @@ def answer(store, question, settings, api_key, document_ids, preferred_language=
                           'ja': '回答の各主張を資料で確認できなかったため、表示を停止しました。原文を確認するか、質問を変更してください。',
                           'en': 'The answer did not pass evidence verification and has been withheld. Please check the sources or rephrase.'}[language]
     measurements = metrics.as_dict()
-    return {'answer': result, 'sources': sources, 'retrieved_sources': retrieved, 'mode': settings.mode,
+    response = {'answer': result, 'sources': sources, 'retrieved_sources': retrieved, 'mode': settings.mode,
             'refused': status not in ('answered', 'retrieval_only'), 'status': status, 'claims': claims,
             'support': support | {'verification_mode': settings.verification_mode},
             'elapsed_ms': measurements['elapsed_ms'], 'metrics': measurements}
+    # Offline evaluation may inspect withheld candidates. Public HTTP responses
+    # never request this option and continue to withhold unverified answer text.
+    if include_candidate and generated and generated.status == 'answered':
+        response['evaluation_candidate'] = {'status':'answered','mode':'api',
+            'answer':'\n'.join(claim.text for claim in generated.claims),
+            'claims':[claim.model_dump() for claim in generated.claims], 'sources':retrieved}
+    return response

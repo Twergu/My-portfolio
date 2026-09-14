@@ -1,4 +1,4 @@
-# RAG evaluation — policy-challenge-v2
+# RAG evaluation — policy-challenge-v2.1
 
 Mode: **local**; split: **dev**; queries: 54.
 
@@ -8,12 +8,12 @@ Synthetic seed only. Test results are not evidence of production accuracy.
 
 | Retrieval metric (macro, answerable only) | Mean | n |
 |---|---:|---:|
-| recall_at_1 | 0.5437 | 42 |
-| recall_at_3 | 0.7500 | 42 |
-| recall_at_5 | 0.8373 | 42 |
-| mrr_at_k | 0.7706 | 42 |
-| ndcg_at_k | 0.7419 | 42 |
-| precision_at_k | 0.2286 | 42 |
+| recall_at_1 | 0.5675 | 42 |
+| recall_at_3 | 0.7262 | 42 |
+| recall_at_5 | 0.8611 | 42 |
+| mrr_at_k | 0.7964 | 42 |
+| ndcg_at_k | 0.7651 | 42 |
+| precision_at_k | 0.2381 | 42 |
 
 Page ranks are de-duplicated from the returned chunk budget; precision divides by k, including unfilled slots.
 
@@ -35,15 +35,15 @@ Page ranks are de-duplicated from the returned chunk budget; precision divides b
 | refusal_accuracy | N/A | 0 |
 | unsupported_answer | N/A | 0 |
 
-Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Groundedness reflects structured verifier judgments, not independent human labels.
+Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Runtime claim_groundedness is a verifier diagnostic; answer_correctness and citation_groundedness come from the separately configured evaluation Judge, not human labels.
 
 | Latency (ms) | p50 | p95 | n |
 |---|---:|---:|---:|
-| query_embedding | 0.2805 | 0.3107 | 54 |
-| retrieval | 8.3445 | 9.0439 | 54 |
-| question_total | 15.2112 | 15.8935 | 54 |
+| query_embedding | 0.3585 | 0.5829 | 54 |
+| retrieval | 11.4895 | 13.3426 | 54 |
+| question_total | 20.8756 | 23.3672 | 54 |
 
-Indexing: 100 chunks, 914.99 ms.
+Indexing: 100 chunks, 1177.73 ms.
 Total run API cost (USD): 0.0000. Unknown usage or missing configured prices stay null/N/A.
 
 Application mean USD/query: 0.0000; reported tokens: {'embedding_tokens': 0, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0, 'complete': True}.
@@ -54,60 +54,60 @@ One sequential pass; no warmup or concurrency. Timings are measured, not estimat
 
 | ID | Type | Status | Recall@k | Lexical fact coverage | Total ms |
 |---|---|---|---:|---:|---:|
-| aster-en-01 | current_version | retrieval_only | 0.0000 | N/A | 16.57 |
-| aster-en-02 | old_version | retrieval_only | 1.0000 | N/A | 14.04 |
-| aster-en-03 | similar_document | retrieval_only | 1.0000 | N/A | 15.72 |
-| aster-en-04 | numeric_trap | retrieval_only | 1.0000 | N/A | 15.81 |
-| aster-en-05 | negation | retrieval_only | 1.0000 | N/A | 16.00 |
-| aster-en-06 | exception | retrieval_only | 1.0000 | N/A | 120.14 |
-| aster-en-07 | exception_denied | retrieval_only | 0.5000 | N/A | 15.84 |
-| aster-en-08 | negation | retrieval_only | 1.0000 | N/A | 15.56 |
-| aster-en-09 | cross_document | retrieval_only | 0.3333 | N/A | 15.17 |
-| aster-en-10 | cross_document | retrieval_only | 1.0000 | N/A | 15.66 |
-| aster-en-11 | similar_document | retrieval_only | 1.0000 | N/A | 15.28 |
-| aster-en-12 | draft_trap | retrieval_only | 1.0000 | N/A | 15.29 |
-| aster-en-13 | negative | retrieval_only | N/A | N/A | 14.98 |
-| aster-en-14 | negative | retrieval_only | N/A | N/A | 14.32 |
-| aster-en-15 | negative | retrieval_only | N/A | N/A | 11.52 |
-| aster-en-16 | adversarial | retrieval_only | N/A | N/A | 10.87 |
-| aster-en-17 | negation | retrieval_only | 1.0000 | N/A | 14.84 |
-| aster-en-18 | cross_document | retrieval_only | 1.0000 | N/A | 15.00 |
-| aster-zh-01 | current_version | retrieval_only | 1.0000 | N/A | 15.80 |
-| aster-zh-02 | old_version | retrieval_only | 1.0000 | N/A | 15.34 |
-| aster-zh-03 | similar_document | retrieval_only | 1.0000 | N/A | 14.69 |
-| aster-zh-04 | numeric_trap | retrieval_only | 0.0000 | N/A | 15.37 |
-| aster-zh-05 | negation | retrieval_only | 1.0000 | N/A | 15.37 |
-| aster-zh-06 | exception | retrieval_only | 1.0000 | N/A | 14.56 |
-| aster-zh-07 | exception_denied | retrieval_only | 0.5000 | N/A | 15.03 |
-| aster-zh-08 | negation | retrieval_only | 1.0000 | N/A | 15.38 |
-| aster-zh-09 | cross_document | retrieval_only | 0.6667 | N/A | 15.42 |
-| aster-zh-10 | cross_document | retrieval_only | 1.0000 | N/A | 15.17 |
-| aster-zh-11 | similar_document | retrieval_only | 1.0000 | N/A | 14.99 |
-| aster-zh-12 | draft_trap | retrieval_only | 0.5000 | N/A | 15.25 |
-| aster-zh-13 | negative | retrieval_only | N/A | N/A | 15.13 |
-| aster-zh-14 | negative | retrieval_only | N/A | N/A | 14.44 |
-| aster-zh-15 | negative | retrieval_only | N/A | N/A | 11.32 |
-| aster-zh-16 | adversarial | retrieval_only | N/A | N/A | 11.45 |
-| aster-zh-17 | negation | retrieval_only | 1.0000 | N/A | 13.88 |
-| aster-zh-18 | cross_document | retrieval_only | 0.5000 | N/A | 15.43 |
-| aster-ja-01 | current_version | retrieval_only | 1.0000 | N/A | 15.72 |
-| aster-ja-02 | old_version | retrieval_only | 1.0000 | N/A | 15.12 |
-| aster-ja-03 | similar_document | retrieval_only | 1.0000 | N/A | 14.90 |
-| aster-ja-04 | numeric_trap | retrieval_only | 0.0000 | N/A | 15.41 |
-| aster-ja-05 | negation | retrieval_only | 1.0000 | N/A | 15.59 |
-| aster-ja-06 | exception | retrieval_only | 1.0000 | N/A | 15.37 |
-| aster-ja-07 | exception_denied | retrieval_only | 0.5000 | N/A | 15.26 |
-| aster-ja-08 | negation | retrieval_only | 1.0000 | N/A | 15.15 |
-| aster-ja-09 | cross_document | retrieval_only | 0.6667 | N/A | 15.09 |
-| aster-ja-10 | cross_document | retrieval_only | 1.0000 | N/A | 15.74 |
-| aster-ja-11 | similar_document | retrieval_only | 1.0000 | N/A | 15.04 |
-| aster-ja-12 | draft_trap | retrieval_only | 1.0000 | N/A | 15.03 |
-| aster-ja-13 | negative | retrieval_only | N/A | N/A | 15.66 |
-| aster-ja-14 | negative | retrieval_only | N/A | N/A | 15.29 |
-| aster-ja-15 | negative | retrieval_only | N/A | N/A | 14.06 |
-| aster-ja-16 | adversarial | retrieval_only | N/A | N/A | 12.90 |
-| aster-ja-17 | negation | retrieval_only | 1.0000 | N/A | 14.97 |
-| aster-ja-18 | cross_document | retrieval_only | 1.0000 | N/A | 15.73 |
+| aster-en-01 | current_version | retrieval_only | 0.0000 | N/A | 22.73 |
+| aster-en-02 | old_version | retrieval_only | 1.0000 | N/A | 20.24 |
+| aster-en-03 | similar_document | retrieval_only | 1.0000 | N/A | 23.20 |
+| aster-en-04 | numeric_trap | retrieval_only | 1.0000 | N/A | 21.18 |
+| aster-en-05 | negation | retrieval_only | 1.0000 | N/A | 21.27 |
+| aster-en-06 | exception | retrieval_only | 1.0000 | N/A | 21.71 |
+| aster-en-07 | exception_denied | retrieval_only | 0.5000 | N/A | 21.64 |
+| aster-en-08 | negation | retrieval_only | 1.0000 | N/A | 23.21 |
+| aster-en-09 | cross_document | retrieval_only | 0.3333 | N/A | 21.69 |
+| aster-en-10 | cross_document | retrieval_only | 1.0000 | N/A | 20.92 |
+| aster-en-11 | similar_document | retrieval_only | 1.0000 | N/A | 21.87 |
+| aster-en-12 | draft_trap | retrieval_only | 1.0000 | N/A | 30.74 |
+| aster-en-13 | negative | retrieval_only | N/A | N/A | 21.46 |
+| aster-en-14 | negative | retrieval_only | N/A | N/A | 21.17 |
+| aster-en-15 | negative | retrieval_only | N/A | N/A | 15.86 |
+| aster-en-16 | adversarial | retrieval_only | N/A | N/A | 14.76 |
+| aster-en-17 | negation | retrieval_only | 1.0000 | N/A | 19.71 |
+| aster-en-18 | cross_document | retrieval_only | 1.0000 | N/A | 20.91 |
+| aster-zh-01 | current_version | retrieval_only | 1.0000 | N/A | 22.22 |
+| aster-zh-02 | old_version | retrieval_only | 1.0000 | N/A | 20.74 |
+| aster-zh-03 | similar_document | retrieval_only | 1.0000 | N/A | 20.16 |
+| aster-zh-04 | numeric_trap | retrieval_only | 0.0000 | N/A | 21.70 |
+| aster-zh-05 | negation | retrieval_only | 1.0000 | N/A | 19.64 |
+| aster-zh-06 | exception | retrieval_only | 1.0000 | N/A | 19.07 |
+| aster-zh-07 | exception_denied | retrieval_only | 1.0000 | N/A | 23.64 |
+| aster-zh-08 | negation | retrieval_only | 1.0000 | N/A | 20.10 |
+| aster-zh-09 | cross_document | retrieval_only | 0.6667 | N/A | 19.13 |
+| aster-zh-10 | cross_document | retrieval_only | 1.0000 | N/A | 19.38 |
+| aster-zh-11 | similar_document | retrieval_only | 1.0000 | N/A | 23.19 |
+| aster-zh-12 | draft_trap | retrieval_only | 0.5000 | N/A | 22.50 |
+| aster-zh-13 | negative | retrieval_only | N/A | N/A | 20.63 |
+| aster-zh-14 | negative | retrieval_only | N/A | N/A | 19.96 |
+| aster-zh-15 | negative | retrieval_only | N/A | N/A | 16.75 |
+| aster-zh-16 | adversarial | retrieval_only | N/A | N/A | 16.16 |
+| aster-zh-17 | negation | retrieval_only | 1.0000 | N/A | 19.71 |
+| aster-zh-18 | cross_document | retrieval_only | 1.0000 | N/A | 21.92 |
+| aster-ja-01 | current_version | retrieval_only | 1.0000 | N/A | 21.12 |
+| aster-ja-02 | old_version | retrieval_only | 1.0000 | N/A | 20.36 |
+| aster-ja-03 | similar_document | retrieval_only | 1.0000 | N/A | 20.84 |
+| aster-ja-04 | numeric_trap | retrieval_only | 0.0000 | N/A | 23.55 |
+| aster-ja-05 | negation | retrieval_only | 1.0000 | N/A | 23.27 |
+| aster-ja-06 | exception | retrieval_only | 1.0000 | N/A | 22.28 |
+| aster-ja-07 | exception_denied | retrieval_only | 0.5000 | N/A | 21.16 |
+| aster-ja-08 | negation | retrieval_only | 1.0000 | N/A | 20.51 |
+| aster-ja-09 | cross_document | retrieval_only | 0.6667 | N/A | 20.32 |
+| aster-ja-10 | cross_document | retrieval_only | 1.0000 | N/A | 18.96 |
+| aster-ja-11 | similar_document | retrieval_only | 1.0000 | N/A | 19.11 |
+| aster-ja-12 | draft_trap | retrieval_only | 1.0000 | N/A | 21.17 |
+| aster-ja-13 | negative | retrieval_only | N/A | N/A | 20.14 |
+| aster-ja-14 | negative | retrieval_only | N/A | N/A | 20.46 |
+| aster-ja-15 | negative | retrieval_only | N/A | N/A | 22.54 |
+| aster-ja-16 | adversarial | retrieval_only | N/A | N/A | 19.61 |
+| aster-ja-17 | negation | retrieval_only | 1.0000 | N/A | 20.45 |
+| aster-ja-18 | cross_document | retrieval_only | 1.0000 | N/A | 18.88 |
 
 ## Limits
 

@@ -27,7 +27,6 @@ class PostgresStore:
         self.folder.mkdir(parents=True, exist_ok=True)
         (self.folder / 'files').mkdir(exist_ok=True)
         self.schema = schema
-        self._indexes = set()
         # vector lives in public; isolated benchmark schemas only contain app data.
         with psycopg.connect(database_url, autocommit=True, connect_timeout=10) as db:
             db.execute('CREATE EXTENSION IF NOT EXISTS vector WITH SCHEMA public')
@@ -214,27 +213,16 @@ class PostgresStore:
                     self._prepare_index_db(db, profile, row['dimensions'])
         return removed
 
-    def search(self, query_vector, profile, document_ids=None, top_k=5, min_score=-1, mode='exact', text_filter=None):
-        if mode not in ('exact', 'hnsw'):
-            raise ValueError('检索模式必须是 exact 或 hnsw。')
-        query = validate_vector(query_vector, allow_zero=True)
+    @staticmethod
+    def _search_statement(query, profile, document_ids, top_k, text_filter):
         dimensions = len(query)
-        if mode == 'hnsw':
-            if text_filter:
-                raise ValueError('本地词法过滤使用 exact 检索；HNSW 用于 API Embedding。')
-            if not 1 <= dimensions <= 2000:
-                raise ValueError('HNSW only supports dimensions up to 2000.')
-        if not math.hypot(*query) or top_k < 1:
-            return []
         vector = json.dumps(query)
         # Literals are escaped by psycopg, not interpolated strings. Constants
         # let the planner prove eligibility of each model/dimension partial index.
         where = sql.SQL("c.profile={} AND c.dimensions={} AND d.profile={} AND d.dimensions={} AND d.status='ready' AND vector_norm(c.vector)>0").format(
             sql.Literal(profile), sql.Literal(dimensions), sql.Literal(profile), sql.Literal(dimensions))
-        params = [vector, vector]
         if document_ids:
             where += sql.SQL(' AND d.id=ANY(%s)')
-            params.append(list(document_ids))
         distance = sql.SQL('c.vector::vector({}) <=> %s::vector').format(sql.Literal(dimensions))
         statement = sql.SQL('SELECT c.id,c.document_id,c.page,c.text,d.name,1-({}) AS score FROM chunks c JOIN documents d ON c.document_id=d.id WHERE {} ORDER BY {} ASC').format(distance, where, distance)
         # Parameter order: SELECT vector, optional scope, ORDER vector.
@@ -242,19 +230,54 @@ class PostgresStore:
         if not text_filter:
             statement += sql.SQL(' LIMIT %s')
             params.append(top_k)
+        return statement, params
+
+    def _configure_search(self, db, profile, dimensions, mode, ef_search):
+        if mode == 'exact':
+            # Explicit exact baseline even if this table already has HNSW indexes.
+            db.execute('SET LOCAL enable_indexscan=off')
+            db.execute('SET LOCAL enable_bitmapscan=off')
+        elif mode == 'hnsw':
+            if not 1 <= dimensions <= 2000:
+                raise ValueError('HNSW only supports dimensions up to 2000.')
+            if not 1 <= ef_search <= 1000:
+                raise ValueError('HNSW ef_search must be between 1 and 1000.')
+            name = self.index_name(profile, dimensions)
+            exists = db.execute('SELECT to_regclass(%s) AS name', (f'{self.schema}.{name}',)).fetchone()['name']
+            if exists is None:
+                raise ValueError('HNSW index is not ready; rebuild the document index or run index maintenance before querying.')
+            # HNSW is explicitly requested. A bitmap/B-tree scan followed by a
+            # sort is exact search, and must not masquerade as an ANN measurement.
+            db.execute('SET LOCAL enable_seqscan=off')
+            db.execute('SET LOCAL enable_bitmapscan=off')
+            db.execute('SET LOCAL enable_sort=off')
+            db.execute("SELECT set_config('hnsw.ef_search', %s, true)", (str(ef_search),))
+            db.execute("SET LOCAL hnsw.iterative_scan='strict_order'")
+        else:
+            raise ValueError('检索模式必须是 exact 或 hnsw。')
+
+    def explain_search(self, query_vector, profile, document_ids=None, top_k=5, mode='exact', ef_search=100):
+        """Inspect the production SQL, including document scope and planner settings."""
+        query = validate_vector(query_vector, allow_zero=True)
+        statement, params = self._search_statement(query, profile, document_ids, top_k, None)
         with self.connect() as db:
-            if mode == 'exact':
-                # Explicit exact baseline even if this table already has HNSW indexes.
-                db.execute('SET LOCAL enable_indexscan=off')
-                db.execute('SET LOCAL enable_bitmapscan=off')
-            else:
-                name = self.index_name(profile, dimensions)
-                exists = db.execute('SELECT to_regclass(%s) AS name', (f'{self.schema}.{name}',)).fetchone()['name']
-                if exists is None:
-                    raise ValueError('HNSW index is not ready; rebuild the document index or run index maintenance before querying.')
-                db.execute('SET LOCAL enable_seqscan=off')
-                db.execute('SET LOCAL hnsw.ef_search=100')
-                db.execute("SET LOCAL hnsw.iterative_scan='strict_order'")
+            self._configure_search(db, profile, len(query), mode, ef_search)
+            # Search uses a server-side cursor. Explain DECLARE so its planner
+            # context is the same as the timed path, rather than a simpler probe.
+            return db.execute(sql.SQL('EXPLAIN (FORMAT JSON) DECLARE knowledge_plan CURSOR FOR ') + statement,
+                              params).fetchone()['QUERY PLAN']
+
+    def search(self, query_vector, profile, document_ids=None, top_k=5, min_score=-1, mode='exact', text_filter=None, ef_search=100):
+        if mode not in ('exact', 'hnsw'):
+            raise ValueError('检索模式必须是 exact 或 hnsw。')
+        query = validate_vector(query_vector, allow_zero=True)
+        if mode == 'hnsw' and text_filter:
+            raise ValueError('本地词法过滤使用 exact 检索；HNSW 用于 API Embedding。')
+        if not math.hypot(*query) or top_k < 1:
+            return []
+        statement, params = self._search_statement(query, profile, document_ids, top_k, text_filter)
+        with self.connect() as db:
+            self._configure_search(db, profile, len(query), mode, ef_search)
             # A named cursor streams results for lexical filtering; never loads
             # the whole corpus into Python when the local baseline is selected.
             with db.cursor(name='knowledge_search') as cursor:
