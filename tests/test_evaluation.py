@@ -93,3 +93,19 @@ def test_real_local_evaluation_uses_isolated_index_and_reports_no_api_cost():
     assert report['run_cost_usd'] == 0
     assert report['queries'][0]['metrics']['attempt_count'] == 0
     assert report['summary']['answer_quality']['expected_facts_coverage_lexical']['count'] == 0
+
+
+def test_identical_chunk_boundaries_have_reproducible_tied_rankings(tmp_path):
+    from backend.store import Store
+    from backend.rag import local_vector
+    from scripts.evaluate import build_index
+    dataset = {'documents': [{'id':'ties','name':'ties.pdf','pages':[
+        {'page':n,'text':'identical policy words' + '!'*n} for n in range(1,8)]}]}
+    snapshots = []
+    for size in (900,1200):
+        store = Store(tmp_path / str(size))
+        settings = Settings(mode='local', chunk_size=size)
+        build_index(store,dataset,settings,'',None)
+        snapshots.append((store.get_chunks('ties'),store.search(local_vector('policy'),settings.profile,top_k=3)))
+        store.close()
+    assert snapshots[0] == snapshots[1]

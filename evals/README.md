@@ -10,11 +10,6 @@
 
 | 指标 | 定义 |
 | --- | --- |
-| Answer Correctness | 单独配置的 Evaluation Judge 根据问题、参考答案和 gold evidence 检查答案正确性与完整性；有答案题未交付回答计 0 |
-| Citation Groundedness | Judge 独立检查实际引用对每条断言的支持，另做摘录匹配；不继承运行时 Verifier 的通过标志 |
-| Refusal Accuracy | 有答案题交付回答、无答案题结构化拒答的比例；只评价拒答决策，不评价回答内容 |
-| quote_match_failure / unsupported_answer | 摘录匹配失败比例、依据检查拦截比例 |
-| grounding_rejected_correct_and_grounded | 被拦截候选中，经 Judge 判定正确且有依据的比例；附候选样本数，用于发现误拦截 |
 | Recall@K | 命中的不同相关页数 / 全部相关页数 |
 | Precision@K | 命中的不同相关页数 / K |
 | MRR@K | 第一个相关页的排名倒数，未命中为 0 |
@@ -27,6 +22,11 @@
 
 | 指标 | 解释与限制 |
 | --- | --- |
+| Answer Correctness | 单独配置的 Evaluation Judge 根据问题、参考答案和 gold evidence 检查答案正确性与完整性；有答案题未交付回答计 0 |
+| Citation Groundedness | Judge 独立检查实际引用对每条断言的支持，另做摘录匹配；不继承运行时 Verifier 的通过标志 |
+| Refusal Accuracy | 有答案题交付回答、无答案题结构化拒答的比例；只评价拒答决策，不评价回答内容 |
+| quote_match_failure / unsupported_answer | 摘录匹配失败比例、依据检查拦截比例 |
+| grounding_rejected_correct_and_grounded | 被拦截候选中，经 Judge 判定正确且有依据的比例；附候选样本数，用于发现误拦截 |
 | Expected facts coverage | 参考事实的别名在回答中出现的比例，是词项代理指标；命中数字不代表语义正确 |
 | Reference token F1 | 参考答案和生成答案之间的 token 重合 F1；中日文按字符、英文按词处理 |
 | Reference exact match | 规范化 token 序列是否相同，不能正确评价所有改写 |

@@ -67,6 +67,11 @@ def build_index(store, dataset, settings, api_key, provider, metrics=None):
                                  'status': 'embedding', 'created_at': datetime.now(timezone.utc).isoformat()})
         with metrics.measure('chunking'):
             chunks = chunks_from_pages(document['pages'], settings.chunk_size, settings.chunk_overlap)
+            # Stable IDs make equal-score tie breaking reproducible across runs
+            # and configurations producing identical physical chunks.
+            for chunk in chunks:
+                identity = json.dumps([document['id'], chunk['page'], chunk['ordinal'], chunk['text']], ensure_ascii=False)
+                chunk['id'] = hashlib.sha256(identity.encode('utf-8')).hexdigest()
         with metrics.measure('index_embedding'):
             vectors = embed([chunk['text'] for chunk in chunks], settings, api_key, provider=provider, metrics=metrics)
         with metrics.measure('storage'):

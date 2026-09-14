@@ -14,13 +14,22 @@ PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构
 | 项目 | 实测结果与范围 |
 |---|---|
 | 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
-| CI / PostgreSQL 测试 | 等待 CI 报告；工作流要求全部执行，任何 skipped 均令验收失败 |
-| 困难集 / 本地检索 | policy-challenge-v2；test Recall@1/3/5 = 0.5516 / 0.7500 / 0.8373；MRR=0.7865，nDCG=0.7505 |
+| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34829035354)，版本 `ca7a899`；[数据库测试报告](reports/ci/tests.md) |
+| 困难集 / 本地检索 | policy-challenge-v2.1；test Recall@1/3/5 = 0.5873 / 0.7500 / 0.8611；MRR=0.8302，nDCG=0.7819 |
 | Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
-| Docker | 等待实际容器验收报告 |
+| 1,000 chunks / exact | measured：P50/P95 = 2.3594/2.4802 ms；Recall@5=1.0000 |
+| 1,000 chunks / hnsw | measured：P50/P95 = 2.7054/3.2001 ms；Recall@5=1.0000 |
+| 10,000 chunks / exact | measured：P50/P95 = 8.4518/8.9194 ms；Recall@5=1.0000 |
+| 10,000 chunks / hnsw | measured：P50/P95 = 3.4713/3.6364 ms；Recall@5=0.6000 |
+| 100,000 chunks / exact | measured：P50/P95 = 90.3528/93.4345 ms；Recall@5=1.0000 |
+| 100,000 chunks / hnsw | measured：P50/P95 = 6.6106/7.3725 ms；Recall@5=0.1700 |
+| Vector Benchmark | [硬件、方法、构建耗时与索引大小](reports/vector-scale.md)；合成向量、单客户端、热缓存，不代表语义检索质量 |
+| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 124.7660 / pgvector_exact 2.3656 / pgvector_hnsw 2.7146；[对照报告](reports/store-benchmark.md) |
+| Docker | passed：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |
 | 真实 API 质量 / 成本 | 按用户要求暂缓付费调用。Answer Correctness、Citation Groundedness、Refusal Accuracy、真实模型 P50/P95 和 cost/query 尚无有效实测值 |
 
 以上数据来自 JSON 运行快照，使用 `python -m scripts.results_summary` 更新。测试数量始终引用自动报告；本地哈希检索分数不等于真实模型准确率。
+HNSW 表格使用 ef_search=100；完整报告另列 400/1000 的召回与延时。默认仍选 Exact，只有目标数据的召回和延时都达标才切换 HNSW。CI 的 Docker 验收来自全新 Linux runner，本机尚未安装 Docker。
 <!-- EXPERIMENT_RESULTS_END -->
 
 ## 运行与测试状态
@@ -33,7 +42,7 @@ PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构
 
 [CI](.github/workflows/ci.yml) 使用真实 pgvector 服务运行存储契约测试，生成评估/数据库基准报告，并构建启动 Compose 验证健康检查。工作流已提供，未执行时不能当作验证通过。
 
-本次实测见 [分块实验](reports/chunks/chunk-experiment-local.md)、[数据库基准](reports/store-benchmark.md)、[真实 API 状态](reports/live-api-smoke.md)。缺少服务凭据或数据库环境时明确显示 blocked，不使用模拟结果代替实测。
+本次实测见 [分块实验](reports/chunks-v2/chunk-experiment-local.md)、[数据库基准](reports/store-benchmark.md)、[真实 API 状态](reports/live-api-smoke.md)。缺少服务凭据或数据库环境时明确显示 blocked，不使用模拟结果代替实测。
 
 ## 本机启动
 
@@ -98,11 +107,11 @@ Generator 与 Verifier 可分别配置；同模型的两次调用仍可能犯相
 
 [评估协议](evals/README.md) 和 [数据集](evals/dataset.json) 包含中日英问题、页级 ground truth、参考事实与答案、无答案及提示注入案例，明确 dev/test 划分与局限。
 
-默认实验已使用 [困难集 policy-challenge-v2](evals/hard_dataset.json)：48 份文档、96 页、108 道题，dev/test 各 54 题，覆盖旧/新制度、草案、相似文档、数字陷阱、否定、例外、跨文档及无答案。两组公司与金额隔离，检索范围同时包含竞争版本；模板仍有相关性，需人工和真实资料继续扩充。
+默认实验使用 [困难集 policy-challenge-v2.1](evals/hard_dataset.json)：48 份文档、96 页、108 道题，dev/test 各 54 题，覆盖旧/新制度、草案、相似文档、数字陷阱、否定、例外、跨文档及无答案。两组公司与金额隔离，检索范围同时包含竞争版本；模板仍有相关性，需人工和真实资料继续扩充。
 
 ~~~powershell
 .\.venv\Scripts\python.exe -m scripts.evaluate --mode local --split test --output reports/evaluation-local-test
-.\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks
+.\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks-v2
 # 已配置模型服务后，执行真实 API 评估：
 .\.venv\Scripts\python.exe -m scripts.evaluate --mode api --split test --output reports/evaluation-api-test
 ~~~
@@ -133,7 +142,7 @@ RAG_JUDGE_OUTPUT_USD_PER_MILLION_TOKENS=
 
 大小以字符计，默认 size=900、overlap=120，可在网页修改，overlap 必须小于 size。参数进入索引身份，修改后需重建；旧索引不混入新配置检索。
 
-实验比较 (450,0)、(450,60)、(900,0)、(900,120)、(1200,120)、(1200,180)。API 模式以 dev Answer Correctness 优先，再比较 Recall/nDCG/Chunk 数；local 模式只用检索成绩。最后测试冻结配置，不根据 test 调参。[本地困难集结果](reports/chunks-v2/chunk-experiment-local.md) 选择 450/0；这只适用于本地基线，真实 API 参数待评估后决定。
+实验比较 (450,0)、(450,60)、(900,0)、(900,120)、(1200,120)、(1200,180)。API 模式以 dev Answer Correctness 优先，再比较 Recall/nDCG/Chunk 数；local 模式只用检索成绩。评估 Chunk ID 固定，避免同分排序受随机 ID 影响。最后测试冻结配置，不根据 test 调参。[本地困难集结果](reports/chunks-v2/chunk-experiment-local.md) 只适用于本地基线，真实 API 参数待评估后决定。
 
 **每个 Chunk 仍不跨物理页**，理由、代价与扩展方向见 [ADR 0001](docs/adr/0001-physical-page-chunks.md)。跨页问题可检索多页，为同一断言附多个来源。
 

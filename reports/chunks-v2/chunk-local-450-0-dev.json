@@ -4,7 +4,7 @@
   "requested_query_count": 54,
   "indexing_error": null,
   "dataset_id": "policy-challenge-v2.1",
-  "generated_at": "2026-09-14T09:34:43.340393+00:00",
+  "generated_at": "2026-09-14T09:40:28.707072+00:00",
   "dataset_sha256": "b6165dfb79402c7e0e4528bad44b51cfa57dcc3ba64e13818186756dff2d55e7",
   "split": "dev",
   "mode": "local",
@@ -38,13 +38,13 @@
   ],
   "indexing": {
     "chunk_count": 100,
-    "elapsed_ms": 1177.7254000189714,
+    "elapsed_ms": 1520.852499990724,
     "metrics": {
-      "elapsed_ms": 1177.758,
+      "elapsed_ms": 1520.891,
       "timings_ms": {
-        "chunking": 1.205,
-        "index_embedding": 43.089,
-        "storage": 777.427
+        "chunking": 3.131,
+        "index_embedding": 48.761,
+        "storage": 1069.394
       },
       "token_usage": {
         "embedding_tokens": 0,
@@ -90,19 +90,19 @@
       },
       "mrr_at_3": {
         "count": 42,
-        "mean": 0.7857142857142857,
+        "mean": 0.7896825396825397,
         "p50": 1.0,
         "p95": 1.0
       },
       "mrr_at_5": {
         "count": 42,
-        "mean": 0.7964285714285715,
+        "mean": 0.8003968253968254,
         "p50": 1.0,
         "p95": 1.0
       },
       "mrr_at_k": {
         "count": 42,
-        "mean": 0.7964285714285715,
+        "mean": 0.8003968253968254,
         "p50": 1.0,
         "p95": 1.0
       },
@@ -114,19 +114,19 @@
       },
       "ndcg_at_3": {
         "count": 42,
-        "mean": 0.7013041424464758,
+        "mean": 0.7032155522286618,
         "p50": 0.7753252713598224,
         "p95": 1.0
       },
       "ndcg_at_5": {
         "count": 42,
-        "mean": 0.7650685615076236,
+        "mean": 0.7713023949216513,
         "p50": 0.8984680522431184,
         "p95": 1.0
       },
       "ndcg_at_k": {
         "count": 42,
-        "mean": 0.7650685615076236,
+        "mean": 0.7713023949216513,
         "p50": 0.8984680522431184,
         "p95": 1.0
       },
@@ -144,13 +144,13 @@
       },
       "precision_at_5": {
         "count": 42,
-        "mean": 0.23809523809523808,
+        "mean": 0.24285714285714288,
         "p50": 0.2,
         "p95": 0.4
       },
       "precision_at_k": {
         "count": 42,
-        "mean": 0.23809523809523808,
+        "mean": 0.24285714285714288,
         "p50": 0.2,
         "p95": 0.4
       },
@@ -168,13 +168,13 @@
       },
       "recall_at_5": {
         "count": 42,
-        "mean": 0.861111111111111,
+        "mean": 0.8690476190476191,
         "p50": 1.0,
         "p95": 1.0
       },
       "recall_at_k": {
         "count": 42,
-        "mean": 0.861111111111111,
+        "mean": 0.8690476190476191,
         "p50": 1.0,
         "p95": 1.0
       },
@@ -280,21 +280,21 @@
     "latency_ms": {
       "query_embedding": {
         "count": 54,
-        "mean": 0.3823888888888889,
-        "p50": 0.3585,
-        "p95": 0.5829000000000001
+        "mean": 0.3982777777777778,
+        "p50": 0.376,
+        "p95": 0.5725000000000001
       },
       "retrieval": {
         "count": 54,
-        "mean": 11.375055555555557,
-        "p50": 11.4895,
-        "p95": 13.342600000000001
+        "mean": 12.700407407407408,
+        "p50": 12.749,
+        "p95": 15.932549999999999
       },
       "question_total": {
         "count": 54,
-        "mean": 20.843729624714427,
-        "p50": 20.87559999199584,
-        "p95": 23.367155011510476
+        "mean": 23.516429631315447,
+        "p50": 23.882700013928115,
+        "p95": 27.04136998800095
       }
     },
     "cost_usd": {
@@ -339,19 +339,19 @@
         },
         "mrr_at_3": {
           "count": 14,
-          "mean": 0.7380952380952381,
+          "mean": 0.75,
           "p50": 1.0,
           "p95": 1.0
         },
         "mrr_at_5": {
           "count": 14,
-          "mean": 0.7523809523809524,
+          "mean": 0.7642857142857142,
           "p50": 1.0,
           "p95": 1.0
         },
         "mrr_at_k": {
           "count": 14,
-          "mean": 0.7523809523809524,
+          "mean": 0.7642857142857142,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -363,19 +363,19 @@
         },
         "ndcg_at_3": {
           "count": 14,
-          "mean": 0.7033380324061078,
+          "mean": 0.7090722617526659,
           "p50": 1.0,
           "p95": 1.0
         },
         "ndcg_at_5": {
           "count": 14,
-          "mean": 0.7498323845351889,
+          "mean": 0.7685338847772719,
           "p50": 1.0,
           "p95": 1.0
         },
         "ndcg_at_k": {
           "count": 14,
-          "mean": 0.7498323845351889,
+          "mean": 0.7685338847772719,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -393,13 +393,13 @@
         },
         "precision_at_5": {
           "count": 14,
-          "mean": 0.2285714285714286,
+          "mean": 0.24285714285714288,
           "p50": 0.2,
           "p95": 0.4
         },
         "precision_at_k": {
           "count": 14,
-          "mean": 0.2285714285714286,
+          "mean": 0.24285714285714288,
           "p50": 0.2,
           "p95": 0.4
         },
@@ -417,13 +417,13 @@
         },
         "recall_at_5": {
           "count": 14,
-          "mean": 0.8452380952380952,
+          "mean": 0.869047619047619,
           "p50": 1.0,
           "p95": 1.0
         },
         "recall_at_k": {
           "count": 14,
-          "mean": 0.8452380952380952,
+          "mean": 0.869047619047619,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -529,21 +529,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 18,
-          "mean": 0.35294444444444445,
-          "p50": 0.329,
-          "p95": 0.5406499999999999
+          "mean": 0.3686111111111111,
+          "p50": 0.3535,
+          "p95": 0.44259999999999994
         },
         "retrieval": {
           "count": 18,
-          "mean": 11.76511111111111,
-          "p50": 11.849499999999999,
-          "p95": 14.401949999999989
+          "mean": 11.860999999999999,
+          "p50": 12.358,
+          "p95": 13.263749999999998
         },
         "question_total": {
           "count": 18,
-          "mean": 21.347061106805793,
-          "p50": 21.364099986385554,
-          "p95": 24.33751999051309
+          "mean": 22.66559444898222,
+          "p50": 22.449549986049533,
+          "p95": 25.524460020824336
         }
       },
       "cost_usd": {
@@ -610,20 +610,20 @@
         },
         "ndcg_at_3": {
           "count": 14,
-          "mean": 0.6825174484578876,
-          "p50": 0.766433990956823,
+          "mean": 0.6606193344305499,
+          "p50": 0.6131471927654584,
           "p95": 1.0
         },
         "ndcg_at_5": {
           "count": 14,
-          "mean": 0.7601327181828405,
-          "p50": 0.885032847341471,
+          "mean": 0.7570966129106876,
+          "p50": 0.863780110436402,
           "p95": 1.0
         },
         "ndcg_at_k": {
           "count": 14,
-          "mean": 0.7601327181828405,
-          "p50": 0.885032847341471,
+          "mean": 0.7570966129106876,
+          "p50": 0.863780110436402,
           "p95": 1.0
         },
         "precision_at_1": {
@@ -634,9 +634,9 @@
         },
         "precision_at_3": {
           "count": 14,
-          "mean": 0.3095238095238095,
+          "mean": 0.2857142857142857,
           "p50": 0.3333333333333333,
-          "p95": 0.44999999999999984
+          "p95": 0.3333333333333333
         },
         "precision_at_5": {
           "count": 14,
@@ -658,8 +658,8 @@
         },
         "recall_at_3": {
           "count": 14,
-          "mean": 0.7023809523809524,
-          "p50": 1.0,
+          "mean": 0.6666666666666667,
+          "p50": 0.75,
           "p95": 1.0
         },
         "recall_at_5": {
@@ -776,21 +776,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 18,
-          "mean": 0.4191111111111111,
-          "p50": 0.365,
-          "p95": 0.6397999999999998
+          "mean": 0.4371111111111111,
+          "p50": 0.3945,
+          "p95": 0.6216499999999999
         },
         "retrieval": {
           "count": 18,
-          "mean": 11.484555555555556,
-          "p50": 11.501,
-          "p95": 12.839399999999998
+          "mean": 13.511833333333334,
+          "p50": 13.3305,
+          "p95": 16.92445
         },
         "question_total": {
           "count": 18,
-          "mean": 20.81883888523508,
-          "p50": 20.488799986196682,
-          "p95": 23.311295005260035
+          "mean": 24.15872778187299,
+          "p50": 24.53475000220351,
+          "p95": 27.437545004067943
         }
       },
       "cost_usd": {
@@ -857,20 +857,20 @@
         },
         "ndcg_at_3": {
           "count": 14,
-          "mean": 0.718056946475432,
-          "p50": 0.6220384731684578,
+          "mean": 0.7399550605027698,
+          "p50": 0.7753252713598224,
           "p95": 1.0
         },
         "ndcg_at_5": {
           "count": 14,
-          "mean": 0.7852405818048414,
-          "p50": 0.863780110436402,
+          "mean": 0.788276687076994,
+          "p50": 0.885032847341471,
           "p95": 1.0
         },
         "ndcg_at_k": {
           "count": 14,
-          "mean": 0.7852405818048414,
-          "p50": 0.863780110436402,
+          "mean": 0.788276687076994,
+          "p50": 0.885032847341471,
           "p95": 1.0
         },
         "precision_at_1": {
@@ -881,9 +881,9 @@
         },
         "precision_at_3": {
           "count": 14,
-          "mean": 0.3095238095238095,
+          "mean": 0.3333333333333333,
           "p50": 0.3333333333333333,
-          "p95": 0.3333333333333333
+          "p95": 0.44999999999999984
         },
         "precision_at_5": {
           "count": 14,
@@ -905,7 +905,7 @@
         },
         "recall_at_3": {
           "count": 14,
-          "mean": 0.7380952380952381,
+          "mean": 0.7738095238095238,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -1023,21 +1023,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 18,
-          "mean": 0.3751111111111111,
-          "p50": 0.3655,
-          "p95": 0.44530000000000003
+          "mean": 0.38911111111111113,
+          "p50": 0.373,
+          "p95": 0.4767999999999999
         },
         "retrieval": {
           "count": 18,
-          "mean": 10.8755,
-          "p50": 11.2475,
-          "p95": 12.661099999999998
+          "mean": 12.728388888888889,
+          "p50": 13.039,
+          "p95": 14.886199999999997
         },
         "question_total": {
           "count": 18,
-          "mean": 20.365288882102405,
-          "p50": 20.129449985688552,
-          "p95": 23.256169966771267
+          "mean": 23.724966663091134,
+          "p50": 24.22870000009425,
+          "p95": 26.41445997287519
         }
       },
       "cost_usd": {
@@ -1272,21 +1272,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.3263333333333333,
-          "p50": 0.317,
-          "p95": 0.3566
+          "mean": 0.36200000000000004,
+          "p50": 0.366,
+          "p95": 0.38130000000000003
         },
         "retrieval": {
           "count": 3,
-          "mean": 7.309666666666668,
-          "p50": 6.323,
-          "p95": 9.3326
+          "mean": 8.255,
+          "p50": 8.074,
+          "p95": 9.710199999999999
         },
         "question_total": {
           "count": 3,
-          "mean": 16.84203332600494,
-          "p50": 16.159299993887544,
-          "p95": 19.264930015197024
+          "mean": 18.467033359532554,
+          "p50": 18.31559999845922,
+          "p95": 19.119210040662438
         }
       },
       "cost_usd": {
@@ -1329,19 +1329,19 @@
         },
         "mrr_at_3": {
           "count": 9,
-          "mean": 0.8148148148148148,
+          "mean": 0.8333333333333334,
           "p50": 1.0,
           "p95": 1.0
         },
         "mrr_at_5": {
           "count": 9,
-          "mean": 0.8148148148148148,
+          "mean": 0.8333333333333334,
           "p50": 1.0,
           "p95": 1.0
         },
         "mrr_at_k": {
           "count": 9,
-          "mean": 0.8148148148148148,
+          "mean": 0.8333333333333334,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -1353,19 +1353,19 @@
         },
         "ndcg_at_3": {
           "count": 9,
-          "mean": 0.5696865013090865,
+          "mean": 0.5786064136259546,
           "p50": 0.6131471927654584,
           "p95": 0.967888315659275
         },
         "ndcg_at_5": {
           "count": 9,
-          "mean": 0.7237065912781615,
+          "mean": 0.7527978138769575,
           "p50": 0.8503449055347546,
           "p95": 0.967888315659275
         },
         "ndcg_at_k": {
           "count": 9,
-          "mean": 0.7237065912781615,
+          "mean": 0.7527978138769575,
           "p50": 0.8503449055347546,
           "p95": 0.967888315659275
         },
@@ -1383,13 +1383,13 @@
         },
         "precision_at_5": {
           "count": 9,
-          "mean": 0.3777777777777778,
+          "mean": 0.4,
           "p50": 0.4,
           "p95": 0.4
         },
         "precision_at_k": {
           "count": 9,
-          "mean": 0.3777777777777778,
+          "mean": 0.4,
           "p50": 0.4,
           "p95": 0.4
         },
@@ -1407,13 +1407,13 @@
         },
         "recall_at_5": {
           "count": 9,
-          "mean": 0.8518518518518519,
+          "mean": 0.8888888888888888,
           "p50": 1.0,
           "p95": 1.0
         },
         "recall_at_k": {
           "count": 9,
-          "mean": 0.8518518518518519,
+          "mean": 0.8888888888888888,
           "p50": 1.0,
           "p95": 1.0
         },
@@ -1519,21 +1519,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 9,
-          "mean": 0.372,
-          "p50": 0.36,
-          "p95": 0.43979999999999997
+          "mean": 0.392,
+          "p50": 0.394,
+          "p95": 0.4336
         },
         "retrieval": {
           "count": 9,
-          "mean": 11.460333333333333,
-          "p50": 11.304,
-          "p95": 12.784799999999999
+          "mean": 13.077111111111112,
+          "p50": 13.038,
+          "p95": 15.124799999999999
         },
         "question_total": {
           "count": 9,
-          "mean": 20.233955551197546,
-          "p50": 20.324099983554333,
-          "p95": 21.823499992024153
+          "mean": 23.883022219201344,
+          "p50": 23.690100002568215,
+          "p95": 26.974200014956295
         }
       },
       "cost_usd": {
@@ -1766,21 +1766,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.35400000000000004,
-          "p50": 0.38,
-          "p95": 0.38
+          "mean": 0.401,
+          "p50": 0.359,
+          "p95": 0.49129999999999996
         },
         "retrieval": {
           "count": 3,
-          "mean": 11.952,
-          "p50": 11.895,
-          "p95": 12.228
+          "mean": 13.495666666666667,
+          "p50": 13.219,
+          "p95": 14.3368
         },
         "question_total": {
           "count": 3,
-          "mean": 22.02369998364399,
-          "p50": 22.222100000362843,
-          "p95": 22.679209971101955
+          "mean": 24.92456667823717,
+          "p50": 25.05840000230819,
+          "p95": 25.38519002846442
         }
       },
       "cost_usd": {
@@ -2013,21 +2013,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.4146666666666667,
-          "p50": 0.364,
-          "p95": 0.5107
+          "mean": 0.36199999999999993,
+          "p50": 0.363,
+          "p95": 0.3756
         },
         "retrieval": {
           "count": 3,
-          "mean": 14.717666666666666,
-          "p50": 12.221,
-          "p95": 20.222
+          "mean": 12.495333333333333,
+          "p50": 12.527,
+          "p95": 12.627799999999999
         },
         "question_total": {
           "count": 3,
-          "mean": 24.805699979575973,
-          "p50": 22.501499974168837,
-          "p95": 29.918039974290878
+          "mean": 22.881533329685528,
+          "p50": 23.288299969863147,
+          "p95": 23.305579996667802
         }
       },
       "cost_usd": {
@@ -2260,21 +2260,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.44366666666666665,
-          "p50": 0.37,
-          "p95": 0.5977
+          "mean": 0.39866666666666667,
+          "p50": 0.389,
+          "p95": 0.4313
         },
         "retrieval": {
           "count": 3,
-          "mean": 11.568666666666667,
-          "p50": 11.619,
-          "p95": 12.168
+          "mean": 12.662,
+          "p50": 12.48,
+          "p95": 13.5096
         },
         "question_total": {
           "count": 3,
-          "mean": 21.019866670637082,
-          "p50": 21.71160001307726,
-          "p95": 22.225139994407073
+          "mean": 22.643900010734797,
+          "p50": 22.177500010002404,
+          "p95": 24.38915998209268
         }
       },
       "cost_usd": {
@@ -2507,21 +2507,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.37866666666666665,
-          "p50": 0.366,
-          "p95": 0.40559999999999996
+          "mean": 0.37399999999999994,
+          "p50": 0.367,
+          "p95": 0.3922
         },
         "retrieval": {
           "count": 3,
-          "mean": 12.405000000000001,
-          "p50": 12.143,
-          "p95": 13.4309
+          "mean": 13.020333333333333,
+          "p50": 12.582,
+          "p95": 14.0085
         },
         "question_total": {
           "count": 3,
-          "mean": 22.144699993077666,
-          "p50": 21.635000011883676,
-          "p95": 23.439679975854233
+          "mean": 24.114233325235546,
+          "p50": 24.075300025288016,
+          "p95": 25.90508997091092
         }
       },
       "cost_usd": {
@@ -2754,21 +2754,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 9,
-          "mean": 0.3827777777777778,
-          "p50": 0.335,
-          "p95": 0.5291999999999999
+          "mean": 0.42900000000000005,
+          "p50": 0.37,
+          "p95": 0.5922
         },
         "retrieval": {
           "count": 9,
-          "mean": 11.494444444444445,
-          "p50": 11.481,
-          "p95": 12.681000000000001
+          "mean": 13.395777777777777,
+          "p50": 13.124,
+          "p95": 15.9344
         },
         "question_total": {
           "count": 9,
-          "mean": 20.874255563184207,
-          "p50": 20.449700008612126,
-          "p95": 23.244559997692704
+          "mean": 24.242788883081328,
+          "p50": 24.533000017981976,
+          "p95": 26.200099976267666
         }
       },
       "cost_usd": {
@@ -3001,21 +3001,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 9,
-          "mean": 0.38455555555555554,
-          "p50": 0.358,
-          "p95": 0.5479999999999999
+          "mean": 0.4182222222222223,
+          "p50": 0.364,
+          "p95": 0.6308
         },
         "retrieval": {
           "count": 9,
-          "mean": 10.229333333333333,
-          "p50": 11.236,
-          "p95": 11.8702
+          "mean": 12.494444444444445,
+          "p50": 12.354,
+          "p95": 17.0382
         },
         "question_total": {
           "count": 9,
-          "mean": 19.884177761721528,
-          "p50": 20.464899949729443,
-          "p95": 22.10561998654157
+          "mean": 23.583922211805152,
+          "p50": 22.65830000396818,
+          "p95": 27.736479975283146
         }
       },
       "cost_usd": {
@@ -3248,21 +3248,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.36833333333333335,
-          "p50": 0.367,
-          "p95": 0.39130000000000004
+          "mean": 0.39333333333333337,
+          "p50": 0.391,
+          "p95": 0.4027
         },
         "retrieval": {
           "count": 3,
-          "mean": 12.583333333333334,
-          "p50": 12.229,
-          "p95": 13.6627
+          "mean": 13.221666666666666,
+          "p50": 13.43,
+          "p95": 13.988000000000001
         },
         "question_total": {
           "count": 3,
-          "mean": 22.140566686478753,
-          "p50": 21.69500000309199,
-          "p95": 23.363330028951168
+          "mean": 23.93766667228192,
+          "p50": 23.571800033096224,
+          "p95": 25.85428996826522
         }
       },
       "cost_usd": {
@@ -3495,21 +3495,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 3,
-          "mean": 0.326,
-          "p50": 0.327,
-          "p95": 0.34769999999999995
+          "mean": 0.3753333333333333,
+          "p50": 0.354,
+          "p95": 0.4179
         },
         "retrieval": {
           "count": 3,
-          "mean": 11.442666666666668,
-          "p50": 10.99,
-          "p95": 12.349
+          "mean": 13.085333333333333,
+          "p50": 12.946,
+          "p95": 14.2996
         },
         "question_total": {
           "count": 3,
-          "mean": 20.446233334951103,
-          "p50": 20.36179997958243,
-          "p95": 20.701099996222183
+          "mean": 23.9529666917709,
+          "p50": 24.441600020509213,
+          "p95": 24.497850029729307
         }
       },
       "cost_usd": {
@@ -3742,21 +3742,21 @@
       "latency_ms": {
         "query_embedding": {
           "count": 6,
-          "mean": 0.4266666666666667,
-          "p50": 0.3805,
-          "p95": 0.65875
+          "mean": 0.3925,
+          "p50": 0.389,
+          "p95": 0.46349999999999997
         },
         "retrieval": {
           "count": 6,
-          "mean": 11.609833333333334,
-          "p50": 11.5145,
-          "p95": 12.1455
+          "mean": 12.735,
+          "p50": 13.0085,
+          "p95": 13.26225
         },
         "question_total": {
           "count": 6,
-          "mean": 21.393583321090166,
-          "p50": 21.3551499764435,
-          "p95": 23.19732499017846
+          "mean": 23.622316676968087,
+          "p50": 24.170100019546226,
+          "p95": 25.221699994290248
         }
       },
       "cost_usd": {
@@ -3830,12 +3830,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 22.729999967850745,
+      "elapsed_ms": 25.42150003137067,
       "metrics": {
-        "elapsed_ms": 22.714,
+        "elapsed_ms": 25.4,
         "timings_ms": {
-          "query_embedding": 0.302,
-          "retrieval": 11.696
+          "query_embedding": 0.338,
+          "retrieval": 12.807
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -3875,7 +3875,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.021,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -3978,12 +3978,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.238100027199835,
+      "elapsed_ms": 24.50410003075376,
       "metrics": {
-        "elapsed_ms": 20.225,
+        "elapsed_ms": 24.488,
         "timings_ms": {
-          "query_embedding": 0.301,
-          "retrieval": 10.838
+          "query_embedding": 0.347,
+          "retrieval": 12.946
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4023,7 +4023,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.024,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -4126,12 +4126,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.20029999827966,
+      "elapsed_ms": 24.08080000896007,
       "metrics": {
-        "elapsed_ms": 23.188,
+        "elapsed_ms": 24.068,
         "timings_ms": {
-          "query_embedding": 0.303,
-          "retrieval": 12.193
+          "query_embedding": 0.48,
+          "retrieval": 13.125
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4171,7 +4171,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.02,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -4223,7 +4223,7 @@
           "score": 0.3291
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.3238
         }
@@ -4274,12 +4274,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.17800002451986,
+      "elapsed_ms": 26.107899961061776,
       "metrics": {
-        "elapsed_ms": 21.167,
+        "elapsed_ms": 26.096,
         "timings_ms": {
-          "query_embedding": 0.344,
-          "retrieval": 12.229
+          "query_embedding": 0.404,
+          "retrieval": 14.05
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4319,7 +4319,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -4422,12 +4422,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.26710000447929,
+      "elapsed_ms": 22.66110002528876,
       "metrics": {
-        "elapsed_ms": 21.255,
+        "elapsed_ms": 22.649,
         "timings_ms": {
-          "query_embedding": 0.327,
-          "retrieval": 12.691
+          "query_embedding": 0.37,
+          "retrieval": 12.362
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4570,12 +4570,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.71160001307726,
+      "elapsed_ms": 22.177500010002404,
       "metrics": {
-        "elapsed_ms": 21.699,
+        "elapsed_ms": 22.166,
         "timings_ms": {
-          "query_embedding": 0.338,
-          "retrieval": 12.229
+          "query_embedding": 0.436,
+          "retrieval": 12.48
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4667,7 +4667,7 @@
           "score": 0.2599
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.2406
         }
@@ -4718,12 +4718,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.635000011883676,
+      "elapsed_ms": 22.1589999855496,
       "metrics": {
-        "elapsed_ms": 21.623,
+        "elapsed_ms": 22.148,
         "timings_ms": {
           "query_embedding": 0.36,
-          "retrieval": 12.143
+          "retrieval": 12.582
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4815,7 +4815,7 @@
           "score": 0.2684
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.2485
         }
@@ -4866,12 +4866,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.207299993373454,
+      "elapsed_ms": 21.822200040332973,
       "metrics": {
-        "elapsed_ms": 23.195,
+        "elapsed_ms": 21.786,
         "timings_ms": {
-          "query_embedding": 0.318,
-          "retrieval": 12.141
+          "query_embedding": 0.334,
+          "retrieval": 11.926
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -4958,12 +4958,12 @@
           "score": 0.2738
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.229
         },
         {
-          "document_id": "aster-en-exception",
+          "document_id": "boreal-en-exception",
           "page": 2,
           "score": 0.229
         }
@@ -4977,10 +4977,10 @@
       "status": "retrieval_only",
       "error_code": null,
       "retrieval": {
-        "recall_at_k": 0.3333333333333333,
-        "precision_at_k": 0.2,
+        "recall_at_k": 0.6666666666666666,
+        "precision_at_k": 0.4,
         "mrr_at_k": 0.5,
-        "ndcg_at_k": 0.2960819109658653,
+        "ndcg_at_k": 0.4776237035032179,
         "retrieved_unique_pages": 5,
         "any_retrieval_for_unanswerable": null,
         "recall_at_1": 0.0,
@@ -4991,10 +4991,10 @@
         "precision_at_3": 0.3333333333333333,
         "mrr_at_3": 0.5,
         "ndcg_at_3": 0.2960819109658653,
-        "recall_at_5": 0.3333333333333333,
-        "precision_at_5": 0.2,
+        "recall_at_5": 0.6666666666666666,
+        "precision_at_5": 0.4,
         "mrr_at_5": 0.5,
-        "ndcg_at_5": 0.2960819109658653
+        "ndcg_at_5": 0.4776237035032179
       },
       "answer_quality": {
         "applicability": "N/A: local mode retrieves excerpts without generating answers",
@@ -5014,12 +5014,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.685799991246313,
+      "elapsed_ms": 23.060599982272834,
       "metrics": {
-        "elapsed_ms": 21.675,
+        "elapsed_ms": 23.049,
         "timings_ms": {
-          "query_embedding": 0.348,
-          "retrieval": 11.455
+          "query_embedding": 0.436,
+          "retrieval": 12.078
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5059,7 +5059,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5111,7 +5111,7 @@
           "score": 0.2094
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.1921
         }
@@ -5162,12 +5162,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.922399999108166,
+      "elapsed_ms": 22.13639998808503,
       "metrics": {
-        "elapsed_ms": 20.911,
+        "elapsed_ms": 22.125,
         "timings_ms": {
-          "query_embedding": 0.313,
-          "retrieval": 13.218
+          "query_embedding": 0.325,
+          "retrieval": 11.986
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5207,7 +5207,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.018,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5249,12 +5249,12 @@
           "score": 0.2215
         },
         {
-          "document_id": "aster-en-current",
+          "document_id": "boreal-en-current",
           "page": 1,
           "score": 0.2161
         },
         {
-          "document_id": "boreal-en-current",
+          "document_id": "aster-en-current",
           "page": 1,
           "score": 0.2161
         },
@@ -5310,12 +5310,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.86679997248575,
+      "elapsed_ms": 21.401200036052614,
       "metrics": {
-        "elapsed_ms": 21.855,
+        "elapsed_ms": 21.387,
         "timings_ms": {
-          "query_embedding": 0.331,
-          "retrieval": 12.003
+          "query_embedding": 0.34,
+          "retrieval": 11.371
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5355,7 +5355,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.022,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5407,7 +5407,7 @@
           "score": 0.2669
         },
         {
-          "document_id": "aster-en-current",
+          "document_id": "boreal-en-current",
           "page": 1,
           "score": 0.2192
         }
@@ -5458,12 +5458,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 30.742099974304438,
+      "elapsed_ms": 23.307499999646097,
       "metrics": {
-        "elapsed_ms": 30.73,
+        "elapsed_ms": 23.296,
         "timings_ms": {
-          "query_embedding": 0.527,
-          "retrieval": 21.111
+          "query_embedding": 0.346,
+          "retrieval": 12.639
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5503,7 +5503,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.018,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5606,12 +5606,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.46109996829182,
+      "elapsed_ms": 22.624799981713295,
       "metrics": {
-        "elapsed_ms": 21.45,
+        "elapsed_ms": 22.613,
         "timings_ms": {
-          "query_embedding": 0.618,
-          "retrieval": 11.236
+          "query_embedding": 0.33,
+          "retrieval": 12.354
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5651,7 +5651,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5754,12 +5754,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.1663999943994,
+      "elapsed_ms": 21.64930000435561,
       "metrics": {
-        "elapsed_ms": 21.154,
+        "elapsed_ms": 21.638,
         "timings_ms": {
-          "query_embedding": 0.317,
-          "retrieval": 10.49
+          "query_embedding": 0.364,
+          "retrieval": 11.235
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5799,7 +5799,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.02,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -5851,7 +5851,7 @@
           "score": 0.255
         },
         {
-          "document_id": "aster-en-contractor",
+          "document_id": "boreal-en-contractor",
           "page": 2,
           "score": 0.2535
         }
@@ -5902,12 +5902,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 15.86489996407181,
+      "elapsed_ms": 21.04459999827668,
       "metrics": {
-        "elapsed_ms": 15.854,
+        "elapsed_ms": 21.025,
         "timings_ms": {
-          "query_embedding": 0.339,
-          "retrieval": 7.373
+          "query_embedding": 0.364,
+          "retrieval": 8.55
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -5947,7 +5947,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.019,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6050,12 +6050,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 14.75679996656254,
+      "elapsed_ms": 17.87700003478676,
       "metrics": {
-        "elapsed_ms": 14.745,
+        "elapsed_ms": 17.866,
         "timings_ms": {
-          "query_embedding": 0.301,
-          "retrieval": 5.939
+          "query_embedding": 0.337,
+          "retrieval": 6.799
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6095,7 +6095,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6198,12 +6198,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.70570004777983,
+      "elapsed_ms": 23.670899972785264,
       "metrics": {
-        "elapsed_ms": 19.695,
+        "elapsed_ms": 23.659,
         "timings_ms": {
-          "query_embedding": 0.306,
-          "retrieval": 11.481
+          "query_embedding": 0.345,
+          "retrieval": 12.456
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6243,7 +6243,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6311,8 +6311,8 @@
       "retrieval": {
         "recall_at_k": 1.0,
         "precision_at_k": 0.4,
-        "mrr_at_k": 0.3333333333333333,
-        "ndcg_at_k": 0.5706417189553201,
+        "mrr_at_k": 0.5,
+        "ndcg_at_k": 0.6509209298071326,
         "retrieved_unique_pages": 5,
         "any_retrieval_for_unanswerable": null,
         "recall_at_1": 0.0,
@@ -6321,12 +6321,12 @@
         "ndcg_at_1": 0.0,
         "recall_at_3": 0.5,
         "precision_at_3": 0.3333333333333333,
-        "mrr_at_3": 0.3333333333333333,
-        "ndcg_at_3": 0.3065735963827292,
+        "mrr_at_3": 0.5,
+        "ndcg_at_3": 0.3868528072345416,
         "recall_at_5": 1.0,
         "precision_at_5": 0.4,
-        "mrr_at_5": 0.3333333333333333,
-        "ndcg_at_5": 0.5706417189553201
+        "mrr_at_5": 0.5,
+        "ndcg_at_5": 0.6509209298071326
       },
       "answer_quality": {
         "applicability": "N/A: local mode retrieves excerpts without generating answers",
@@ -6346,12 +6346,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.907700003590435,
+      "elapsed_ms": 22.27429999038577,
       "metrics": {
-        "elapsed_ms": 20.897,
+        "elapsed_ms": 22.263,
         "timings_ms": {
-          "query_embedding": 0.36,
-          "retrieval": 11.306
+          "query_embedding": 0.379,
+          "retrieval": 11.752
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6391,7 +6391,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.023,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6428,12 +6428,12 @@
           "score": 0.2834
         },
         {
-          "document_id": "boreal-en-exception",
+          "document_id": "aster-en-exception",
           "page": 2,
           "score": 0.2784
         },
         {
-          "document_id": "aster-en-exception",
+          "document_id": "boreal-en-exception",
           "page": 2,
           "score": 0.2784
         },
@@ -6494,12 +6494,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 22.222100000362843,
+      "elapsed_ms": 24.29380000103265,
       "metrics": {
-        "elapsed_ms": 22.212,
+        "elapsed_ms": 24.283,
         "timings_ms": {
-          "query_embedding": 0.38,
-          "retrieval": 12.265
+          "query_embedding": 0.359,
+          "retrieval": 13.219
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6642,12 +6642,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.738799998071045,
+      "elapsed_ms": 22.91320002404973,
       "metrics": {
-        "elapsed_ms": 20.727,
+        "elapsed_ms": 22.902,
         "timings_ms": {
-          "query_embedding": 0.327,
-          "retrieval": 12.5
+          "query_embedding": 0.354,
+          "retrieval": 11.86
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6687,7 +6687,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6790,12 +6790,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.15719999326393,
+      "elapsed_ms": 24.259400030132383,
       "metrics": {
-        "elapsed_ms": 20.145,
+        "elapsed_ms": 24.247,
         "timings_ms": {
-          "query_embedding": 0.355,
-          "retrieval": 11.508
+          "query_embedding": 0.343,
+          "retrieval": 13.04
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6835,7 +6835,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -6938,12 +6938,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.69500000309199,
+      "elapsed_ms": 22.133300022687763,
       "metrics": {
-        "elapsed_ms": 21.684,
+        "elapsed_ms": 22.122,
         "timings_ms": {
-          "query_embedding": 0.367,
-          "retrieval": 11.699
+          "query_embedding": 0.391,
+          "retrieval": 12.185
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -6983,7 +6983,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7086,12 +7086,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.64170002611354,
+      "elapsed_ms": 24.096999957691878,
       "metrics": {
-        "elapsed_ms": 19.63,
+        "elapsed_ms": 24.082,
         "timings_ms": {
-          "query_embedding": 0.33,
-          "retrieval": 11.14
+          "query_embedding": 0.463,
+          "retrieval": 13.198
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7131,7 +7131,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.024,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7163,12 +7163,12 @@
       "candidate_judgment": null,
       "retrieved_pages": [
         {
-          "document_id": "boreal-zh-exception",
+          "document_id": "aster-zh-exception",
           "page": 2,
           "score": 0.3139
         },
         {
-          "document_id": "aster-zh-exception",
+          "document_id": "boreal-zh-exception",
           "page": 2,
           "score": 0.3139
         },
@@ -7234,12 +7234,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.065800006501377,
+      "elapsed_ms": 24.634899978991598,
       "metrics": {
-        "elapsed_ms": 19.055,
+        "elapsed_ms": 24.624,
         "timings_ms": {
-          "query_embedding": 0.37,
-          "retrieval": 10.858
+          "query_embedding": 0.371,
+          "retrieval": 13.624
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7279,7 +7279,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7382,12 +7382,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.64019997185096,
+      "elapsed_ms": 26.108399964869022,
       "metrics": {
-        "elapsed_ms": 23.627,
+        "elapsed_ms": 26.095,
         "timings_ms": {
-          "query_embedding": 0.41,
-          "retrieval": 13.574
+          "query_embedding": 0.367,
+          "retrieval": 14.167
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7427,7 +7427,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.021,
+        "elapsed_ms": 0.02,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7530,12 +7530,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.101699978113174,
+      "elapsed_ms": 24.713599996175617,
       "metrics": {
-        "elapsed_ms": 20.091,
+        "elapsed_ms": 24.701,
         "timings_ms": {
-          "query_embedding": 0.343,
-          "retrieval": 10.47
+          "query_embedding": 0.555,
+          "retrieval": 14.684
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7575,7 +7575,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.019,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7678,12 +7678,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.12730000913143,
+      "elapsed_ms": 28.14880001824349,
       "metrics": {
-        "elapsed_ms": 19.117,
+        "elapsed_ms": 28.136,
         "timings_ms": {
-          "query_embedding": 0.337,
-          "retrieval": 10.954
+          "query_embedding": 0.43,
+          "retrieval": 16.032
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7723,7 +7723,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.019,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7826,12 +7826,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.378700002562255,
+      "elapsed_ms": 24.197999970056117,
       "metrics": {
-        "elapsed_ms": 19.369,
+        "elapsed_ms": 24.186,
         "timings_ms": {
-          "query_embedding": 0.429,
-          "retrieval": 10.695
+          "query_embedding": 0.375,
+          "retrieval": 13.038
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -7871,7 +7871,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -7974,12 +7974,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.18839996587485,
+      "elapsed_ms": 25.32529999734834,
       "metrics": {
-        "elapsed_ms": 23.177,
+        "elapsed_ms": 25.313,
         "timings_ms": {
-          "query_embedding": 0.406,
-          "retrieval": 11.355
+          "query_embedding": 0.391,
+          "retrieval": 12.977
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8019,7 +8019,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8122,12 +8122,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 22.501499974168837,
+      "elapsed_ms": 23.288299969863147,
       "metrics": {
-        "elapsed_ms": 22.49,
+        "elapsed_ms": 23.277,
         "timings_ms": {
-          "query_embedding": 0.364,
-          "retrieval": 12.221
+          "query_embedding": 0.377,
+          "retrieval": 12.527
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8270,12 +8270,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.6268000183627,
+      "elapsed_ms": 22.65830000396818,
       "metrics": {
-        "elapsed_ms": 20.616,
+        "elapsed_ms": 22.645,
         "timings_ms": {
-          "query_embedding": 0.443,
-          "retrieval": 11.408
+          "query_embedding": 0.364,
+          "retrieval": 13.24
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8315,7 +8315,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.024,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8418,12 +8418,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.95709998300299,
+      "elapsed_ms": 24.910499982070178,
       "metrics": {
-        "elapsed_ms": 19.947,
+        "elapsed_ms": 24.898,
         "timings_ms": {
-          "query_embedding": 0.323,
-          "retrieval": 9.799
+          "query_embedding": 0.356,
+          "retrieval": 12.933
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8463,7 +8463,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.019,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8566,12 +8566,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 16.745299973990768,
+      "elapsed_ms": 17.934999952558428,
       "metrics": {
-        "elapsed_ms": 16.736,
+        "elapsed_ms": 17.92,
         "timings_ms": {
-          "query_embedding": 0.359,
-          "retrieval": 6.572
+          "query_embedding": 0.342,
+          "retrieval": 8.205
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8611,7 +8611,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.024,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8653,12 +8653,12 @@
           "score": 0.3176
         },
         {
-          "document_id": "aster-zh-benefits",
+          "document_id": "boreal-zh-benefits",
           "page": 2,
           "score": 0.0953
         },
         {
-          "document_id": "boreal-zh-benefits",
+          "document_id": "aster-zh-benefits",
           "page": 2,
           "score": 0.0953
         },
@@ -8714,12 +8714,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 16.159299993887544,
+      "elapsed_ms": 19.208500045351684,
       "metrics": {
-        "elapsed_ms": 16.149,
+        "elapsed_ms": 19.194,
         "timings_ms": {
-          "query_embedding": 0.317,
-          "retrieval": 6.323
+          "query_embedding": 0.383,
+          "retrieval": 8.074
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8759,7 +8759,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.014,
+        "elapsed_ms": 0.022,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8862,12 +8862,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.712999986950308,
+      "elapsed_ms": 24.533000017981976,
       "metrics": {
-        "elapsed_ms": 19.702,
+        "elapsed_ms": 24.52,
         "timings_ms": {
-          "query_embedding": 0.445,
-          "retrieval": 10.283
+          "query_embedding": 0.366,
+          "retrieval": 12.691
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -8907,7 +8907,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -8954,12 +8954,12 @@
           "score": 0.1596
         },
         {
-          "document_id": "aster-zh-benefits",
+          "document_id": "boreal-zh-benefits",
           "page": 2,
           "score": 0.1348
         },
         {
-          "document_id": "boreal-zh-benefits",
+          "document_id": "aster-zh-benefits",
           "page": 2,
           "score": 0.1348
         }
@@ -8976,21 +8976,21 @@
         "recall_at_k": 1.0,
         "precision_at_k": 0.4,
         "mrr_at_k": 1.0,
-        "ndcg_at_k": 0.8772153153380493,
+        "ndcg_at_k": 0.9197207891481876,
         "retrieved_unique_pages": 5,
         "any_retrieval_for_unanswerable": null,
         "recall_at_1": 0.5,
         "precision_at_1": 1.0,
         "mrr_at_1": 1.0,
         "ndcg_at_1": 1.0,
-        "recall_at_3": 0.5,
-        "precision_at_3": 0.3333333333333333,
+        "recall_at_3": 1.0,
+        "precision_at_3": 0.6666666666666666,
         "mrr_at_3": 1.0,
-        "ndcg_at_3": 0.6131471927654584,
+        "ndcg_at_3": 0.9197207891481876,
         "recall_at_5": 1.0,
         "precision_at_5": 0.4,
         "mrr_at_5": 1.0,
-        "ndcg_at_5": 0.8772153153380493
+        "ndcg_at_5": 0.9197207891481876
       },
       "answer_quality": {
         "applicability": "N/A: local mode retrieves excerpts without generating answers",
@@ -9010,12 +9010,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.915299992542714,
+      "elapsed_ms": 23.690100002568215,
       "metrics": {
-        "elapsed_ms": 21.904,
+        "elapsed_ms": 23.679,
         "timings_ms": {
-          "query_embedding": 0.447,
-          "retrieval": 12.135
+          "query_embedding": 0.417,
+          "retrieval": 13.417
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9097,12 +9097,12 @@
           "score": 0.272
         },
         {
-          "document_id": "boreal-zh-exception",
+          "document_id": "aster-zh-exception",
           "page": 2,
           "score": 0.2422
         },
         {
-          "document_id": "aster-zh-exception",
+          "document_id": "boreal-zh-exception",
           "page": 2,
           "score": 0.2422
         },
@@ -9158,12 +9158,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.11899998271838,
+      "elapsed_ms": 25.05840000230819,
       "metrics": {
-        "elapsed_ms": 21.108,
+        "elapsed_ms": 25.045,
         "timings_ms": {
-          "query_embedding": 0.38,
-          "retrieval": 11.895
+          "query_embedding": 0.506,
+          "retrieval": 14.461
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9203,7 +9203,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.02,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -9306,12 +9306,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.36179997958243,
+      "elapsed_ms": 24.441600020509213,
       "metrics": {
-        "elapsed_ms": 20.351,
+        "elapsed_ms": 24.428,
         "timings_ms": {
-          "query_embedding": 0.35,
-          "retrieval": 10.99
+          "query_embedding": 0.425,
+          "retrieval": 14.45
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9351,7 +9351,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.021,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -9454,12 +9454,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.843499980401248,
+      "elapsed_ms": 24.910899985115975,
       "metrics": {
-        "elapsed_ms": 20.832,
+        "elapsed_ms": 24.9,
         "timings_ms": {
-          "query_embedding": 0.735,
-          "retrieval": 11.521
+          "query_embedding": 0.414,
+          "retrieval": 13.308
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9499,7 +9499,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.022,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -9602,12 +9602,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.54870003182441,
+      "elapsed_ms": 23.571800033096224,
       "metrics": {
-        "elapsed_ms": 23.537,
+        "elapsed_ms": 23.56,
         "timings_ms": {
-          "query_embedding": 0.394,
-          "retrieval": 13.822
+          "query_embedding": 0.385,
+          "retrieval": 13.43
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9750,12 +9750,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 23.269400000572205,
+      "elapsed_ms": 25.177699979394674,
       "metrics": {
-        "elapsed_ms": 23.258,
+        "elapsed_ms": 25.166,
         "timings_ms": {
-          "query_embedding": 0.477,
-          "retrieval": 12.666
+          "query_embedding": 0.45,
+          "retrieval": 13.124
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9795,7 +9795,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.02,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -9827,12 +9827,12 @@
       "candidate_judgment": null,
       "retrieved_pages": [
         {
-          "document_id": "aster-ja-exception",
+          "document_id": "boreal-ja-exception",
           "page": 2,
           "score": 0.2782
         },
         {
-          "document_id": "boreal-ja-exception",
+          "document_id": "aster-ja-exception",
           "page": 2,
           "score": 0.2782
         },
@@ -9898,12 +9898,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 22.282199992332608,
+      "elapsed_ms": 21.119300043210387,
       "metrics": {
-        "elapsed_ms": 22.271,
+        "elapsed_ms": 21.108,
         "timings_ms": {
-          "query_embedding": 0.623,
-          "retrieval": 11.619
+          "query_embedding": 0.389,
+          "retrieval": 11.882
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -9995,7 +9995,7 @@
           "score": 0.22
         },
         {
-          "document_id": "aster-ja-exception",
+          "document_id": "boreal-ja-exception",
           "page": 2,
           "score": 0.1922
         }
@@ -10046,12 +10046,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.15889999549836,
+      "elapsed_ms": 24.075300025288016,
       "metrics": {
-        "elapsed_ms": 21.148,
+        "elapsed_ms": 24.061,
         "timings_ms": {
-          "query_embedding": 0.366,
-          "retrieval": 11.498
+          "query_embedding": 0.395,
+          "retrieval": 12.312
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10091,7 +10091,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -10143,7 +10143,7 @@
           "score": 0.2058
         },
         {
-          "document_id": "aster-ja-exception",
+          "document_id": "boreal-ja-exception",
           "page": 2,
           "score": 0.1922
         }
@@ -10194,12 +10194,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.51270002266392,
+      "elapsed_ms": 24.627899983897805,
       "metrics": {
-        "elapsed_ms": 20.501,
+        "elapsed_ms": 24.617,
         "timings_ms": {
-          "query_embedding": 0.564,
-          "retrieval": 11.826
+          "query_embedding": 0.361,
+          "retrieval": 13.353
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10281,12 +10281,12 @@
           "score": 0.2755
         },
         {
-          "document_id": "boreal-ja-approval",
+          "document_id": "aster-ja-approval",
           "page": 2,
           "score": 0.1985
         },
         {
-          "document_id": "aster-ja-approval",
+          "document_id": "boreal-ja-approval",
           "page": 2,
           "score": 0.1985
         },
@@ -10342,12 +10342,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.324099983554333,
+      "elapsed_ms": 21.9799000187777,
       "metrics": {
-        "elapsed_ms": 20.312,
+        "elapsed_ms": 21.969,
         "timings_ms": {
-          "query_embedding": 0.398,
-          "retrieval": 10.874
+          "query_embedding": 0.357,
+          "retrieval": 11.941
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10387,7 +10387,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.019,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -10490,12 +10490,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 18.963399983476847,
+      "elapsed_ms": 25.2123000100255,
       "metrics": {
-        "elapsed_ms": 18.953,
+        "elapsed_ms": 25.2,
         "timings_ms": {
-          "query_embedding": 0.36,
-          "retrieval": 11.304
+          "query_embedding": 0.394,
+          "retrieval": 13.686
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10535,7 +10535,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.019,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -10638,12 +10638,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.10530001623556,
+      "elapsed_ms": 21.756300004199147,
       "metrics": {
-        "elapsed_ms": 19.095,
+        "elapsed_ms": 21.745,
         "timings_ms": {
-          "query_embedding": 0.43,
-          "retrieval": 11.079
+          "query_embedding": 0.387,
+          "retrieval": 12.589
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10683,7 +10683,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.017,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -10786,12 +10786,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 21.17349999025464,
+      "elapsed_ms": 22.048800019547343,
       "metrics": {
-        "elapsed_ms": 21.163,
+        "elapsed_ms": 22.034,
         "timings_ms": {
-          "query_embedding": 0.353,
-          "retrieval": 10.821
+          "query_embedding": 0.363,
+          "retrieval": 12.32
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10831,7 +10831,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.018,
+        "elapsed_ms": 0.022,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -10934,12 +10934,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.135800004936755,
+      "elapsed_ms": 27.337900013662875,
       "metrics": {
-        "elapsed_ms": 20.124,
+        "elapsed_ms": 27.324,
         "timings_ms": {
-          "query_embedding": 0.34,
-          "retrieval": 11.987
+          "query_embedding": 0.391,
+          "retrieval": 17.811
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -10979,7 +10979,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.017,
+        "elapsed_ms": 0.021,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -11082,12 +11082,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.464899949729443,
+      "elapsed_ms": 26.09270001994446,
       "metrics": {
-        "elapsed_ms": 20.453,
+        "elapsed_ms": 26.081,
         "timings_ms": {
-          "query_embedding": 0.358,
-          "retrieval": 11.504
+          "query_embedding": 0.605,
+          "retrieval": 15.879
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -11230,12 +11230,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 22.53529999870807,
+      "elapsed_ms": 28.00219994969666,
       "metrics": {
-        "elapsed_ms": 22.522,
+        "elapsed_ms": 27.991,
         "timings_ms": {
-          "query_embedding": 0.364,
-          "retrieval": 11.695
+          "query_embedding": 0.648,
+          "retrieval": 12.243
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -11275,7 +11275,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.022,
+        "elapsed_ms": 0.016,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -11378,12 +11378,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 19.610000017564744,
+      "elapsed_ms": 18.31559999845922,
       "metrics": {
-        "elapsed_ms": 19.599,
+        "elapsed_ms": 18.304,
         "timings_ms": {
-          "query_embedding": 0.361,
-          "retrieval": 9.667
+          "query_embedding": 0.366,
+          "retrieval": 9.892
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -11455,12 +11455,12 @@
       "candidate_judgment": null,
       "retrieved_pages": [
         {
-          "document_id": "boreal-ja-security",
+          "document_id": "aster-ja-security",
           "page": 2,
           "score": 0.3684
         },
         {
-          "document_id": "aster-ja-security",
+          "document_id": "boreal-ja-security",
           "page": 2,
           "score": 0.3684
         },
@@ -11526,12 +11526,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 20.449700008612126,
+      "elapsed_ms": 26.881699974182993,
       "metrics": {
-        "elapsed_ms": 20.439,
+        "elapsed_ms": 26.869,
         "timings_ms": {
-          "query_embedding": 0.335,
-          "retrieval": 10.752
+          "query_embedding": 0.617,
+          "retrieval": 16.768
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -11571,7 +11571,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.015,
+        "elapsed_ms": 0.018,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -11640,21 +11640,21 @@
         "recall_at_k": 1.0,
         "precision_at_k": 0.4,
         "mrr_at_k": 1.0,
-        "ndcg_at_k": 0.9197207891481876,
+        "ndcg_at_k": 0.8772153153380493,
         "retrieved_unique_pages": 5,
         "any_retrieval_for_unanswerable": null,
         "recall_at_1": 0.5,
         "precision_at_1": 1.0,
         "mrr_at_1": 1.0,
         "ndcg_at_1": 1.0,
-        "recall_at_3": 1.0,
-        "precision_at_3": 0.6666666666666666,
+        "recall_at_3": 0.5,
+        "precision_at_3": 0.3333333333333333,
         "mrr_at_3": 1.0,
-        "ndcg_at_3": 0.9197207891481876,
+        "ndcg_at_3": 0.6131471927654584,
         "recall_at_5": 1.0,
         "precision_at_5": 0.4,
         "mrr_at_5": 1.0,
-        "ndcg_at_5": 0.9197207891481876
+        "ndcg_at_5": 0.8772153153380493
       },
       "answer_quality": {
         "applicability": "N/A: local mode retrieves excerpts without generating answers",
@@ -11674,12 +11674,12 @@
         "answer_correctness": null,
         "citation_groundedness": null
       },
-      "elapsed_ms": 18.880899995565414,
+      "elapsed_ms": 24.246799992397428,
       "metrics": {
-        "elapsed_ms": 18.869,
+        "elapsed_ms": 24.236,
         "timings_ms": {
-          "query_embedding": 0.356,
-          "retrieval": 11.202
+          "query_embedding": 0.415,
+          "retrieval": 13.764
         },
         "token_usage": {
           "embedding_tokens": 0,
@@ -11719,7 +11719,7 @@
       "judgment": null,
       "judge_error": null,
       "judge_metrics": {
-        "elapsed_ms": 0.016,
+        "elapsed_ms": 0.015,
         "timings_ms": {},
         "token_usage": {
           "embedding_tokens": 0,
@@ -11761,12 +11761,12 @@
           "score": 0.2988
         },
         {
-          "document_id": "aster-ja-exception",
+          "document_id": "boreal-ja-exception",
           "page": 2,
           "score": 0.2114
         },
         {
-          "document_id": "boreal-ja-exception",
+          "document_id": "aster-ja-exception",
           "page": 2,
           "score": 0.2114
         },

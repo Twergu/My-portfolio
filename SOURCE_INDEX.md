@@ -10,6 +10,7 @@
 
 - [.dockerignore](.dockerignore)
 - [.env.example](.env.example)
+- [.gitattributes](.gitattributes)
 - [.gitignore](.gitignore)
 - [compose.yaml](compose.yaml)
 - [Dockerfile](Dockerfile)
@@ -129,6 +130,12 @@
 - [reports/chunks-v2/chunk-local-900-120-dev.md](reports/chunks-v2/chunk-local-900-120-dev.md)
 - [reports/chunks-v2/chunk-local-selected-test.json](reports/chunks-v2/chunk-local-selected-test.json)
 - [reports/chunks-v2/chunk-local-selected-test.md](reports/chunks-v2/chunk-local-selected-test.md)
+- [reports/ci/container-persistence.json](reports/ci/container-persistence.json)
+- [reports/ci/container-smoke.json](reports/ci/container-smoke.json)
+- [reports/ci/provenance.json](reports/ci/provenance.json)
+- [reports/ci/tests.json](reports/ci/tests.json)
+- [reports/ci/tests.md](reports/ci/tests.md)
+- [reports/ci-status.json](reports/ci-status.json)
 - [reports/live-api-smoke.json](reports/live-api-smoke.json)
 - [reports/live-api-smoke.md](reports/live-api-smoke.md)
 - [reports/runtime-verification.json](reports/runtime-verification.json)
@@ -136,6 +143,8 @@
 - [reports/store-benchmark.md](reports/store-benchmark.md)
 - [reports/tests.json](reports/tests.json)
 - [reports/tests.md](reports/tests.md)
+- [reports/vector-scale.json](reports/vector-scale.json)
+- [reports/vector-scale.md](reports/vector-scale.md)
 
 ## 运行数据
 

@@ -1,0 +1,96 @@
+{
+  "id": 34829035354,
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/34829035354",
+  "head_sha": "ca7a8992e58342376e0a865fd2532f91b91a466a",
+  "jobs": [
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Initialize containers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install -r requirements-lock.txt",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.check",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.chunk_experiment --mode local --output-dir reports/chunks",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.benchmark_stores --count 1000 --dimensions 384 --queries 20 --repeats 3 --require-postgres",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build and run Compose smoke",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container logs and shutdown",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Stop containers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}
