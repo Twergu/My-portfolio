@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.env
+data/
+.sites-runtime/
+.delivery/
+*.log
+test-results/
+pytest-cache-files-*/
+pgdata/
+exports/
+reports/store-benchmark-*/

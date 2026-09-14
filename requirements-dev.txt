@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest>=8,<10
+numpy>=2,<3
+reportlab>=4,<5
+PyYAML>=6,<7

@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-14T02:34:44.581866+00:00",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu_count": 16
+  },
+  "dataset": {
+    "kind": "synthetic-normalized-gaussian",
+    "seed": 20260914,
+    "vectors": 1000,
+    "dimensions": 384,
+    "queries": 20,
+    "sha256": "97edf69d804c9237edcdcd8bfc64455f370cace3ed3cf8932809fad172069f74"
+  },
+  "method": {
+    "top_k": 5,
+    "repeats": 3,
+    "concurrency": 1,
+    "distance": "cosine",
+    "hnsw_ef_search": 100,
+    "timing_scope": "store.search including DB connection acquisition and row decoding; excludes model calls",
+    "recall_reference": "independent Python float64 brute-force dot product on normalized vectors",
+    "cache_state": "warm, one full query pass excluded",
+    "limitations": [
+      "Synthetic vectors measure storage/search, not semantic RAG answer quality.",
+      "Single machine/client and one data scale; do not infer production speedups.",
+      "PostgreSQL stores float32; exact tie/rounding differences can affect recall.",
+      "SQLite opens per-call connections; PostgreSQL reuses a connection pool."
+    ]
+  },
+  "backends": {
+    "sqlite_exact": {
+      "status": "measured",
+      "query_latency_ms": {
+        "count": 60,
+        "mean": 105.14429166602592,
+        "p50": 104.76015001768246,
+        "p95": 108.5212449892424
+      },
+      "recall_at_k_against_independent_exact": 1.0,
+      "minimum_query_recall": 1.0,
+      "warmup_query_count": 20,
+      "indexing_ms": 218.05069997208193,
+      "hnsw_index_build_ms": null,
+      "database_file_bytes": 8798208
+    },
+    "pgvector_exact": {
+      "status": "blocked",
+      "reason": "RAG_BENCHMARK_DATABASE_URL is not configured; no PostgreSQL measurement was made."
+    },
+    "pgvector_hnsw": {
+      "status": "blocked",
+      "reason": "RAG_BENCHMARK_DATABASE_URL is not configured; no PostgreSQL measurement was made."
+    }
+  },
+  "comparison_complete": false
+}

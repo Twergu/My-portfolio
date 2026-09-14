@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-14T04:02:54.518805+00:00",
+  "status": "failed",
+  "chat_model": "gpt-4o-mini",
+  "embedding_model": "text-embedding-3-small",
+  "verifier_model": "gpt-4.1-mini",
+  "real_api_calls_attempted": true,
+  "checks": {
+    "indexed": false,
+    "physical_pages": true
+  },
+  "operations": [
+    {
+      "operation": "indexing",
+      "status": "error",
+      "recorded_at": "2026-09-14T04:02:58.410653+00:00",
+      "document_id": "af551de99c0042ae9fa4bffdf5d6ff59",
+      "metrics": {
+        "elapsed_ms": 3541.415,
+        "timings_ms": {
+          "parsing": 182.076,
+          "chunking": 0.088,
+          "provider_http": 338.569,
+          "provider_backoff": 3000.617,
+          "embedding": 3339.295
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.15,
+          "chat_output": 0.6,
+          "verifier_input": 0.4,
+          "verifier_output": 1.6,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 236.448,
+            "attempt": 1,
+            "status_code": 429,
+            "error": "http_429",
+            "role": "embedding"
+          },
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 54.054,
+            "attempt": 2,
+            "status_code": 429,
+            "error": "http_429",
+            "role": "embedding"
+          },
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 48.067,
+            "attempt": 3,
+            "status_code": 429,
+            "error": "http_429",
+            "role": "embedding"
+          }
+        ]
+      }
+    }
+  ],
+  "cost_usd": null,
+  "reason": "Live smoke did not complete (RuntimeError). Check the configured endpoint, model compatibility, and API access; no success is claimed.",
+  "elapsed_ms": 3701.7674999660812
+}

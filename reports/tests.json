@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-09-14T04:18:13.166682+00:00",
+  "exit_code": 0,
+  "status": "passed",
+  "total": 124,
+  "passed": 119,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 5,
+  "source_sha256": "8d99c8c175657b7d983278fb81e91e3bdd011995392b22a734476b4b6fbad50a",
+  "python": "3.12.14",
+  "source": "test-results/junit.xml",
+  "command": "python -m scripts.check"
+}
