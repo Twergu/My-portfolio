@@ -1,5 +1,6 @@
 """Run the seed benchmark in isolated storage. API calls require --mode api."""
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -18,7 +19,7 @@ from backend.rag import answer, chunks_from_pages, embed
 from backend.providers import ModelError
 from backend.store import Store
 from evals.metrics import aggregate, answer_metrics, retrieval_metrics, retrieval_at_cutoffs
-from evals.judge import judge_answer
+from evals.judge import judge_answer, EVALUATION_PROTOCOL
 
 DEFAULT_DATASET = ROOT / 'evals' / 'dataset.json'
 HARD_DATASET = ROOT / 'evals' / 'hard_dataset.json'
@@ -82,7 +83,9 @@ def build_index(store, dataset, settings, api_key, provider, metrics=None):
             'metrics': metrics.as_dict()}
 
 
-def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None, only_ids=None, judge_model=''):
+def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None, only_ids=None, judge_model='', concurrency=1, progress=None):
+    if not 1 <= concurrency <= 4:
+        raise ValueError('Evaluation concurrency must be between 1 and 4')
     queries = [query for query in dataset['queries']
                if (split == 'all' or query['split'] == split) and (not only_ids or query['id'] in only_ids)]
     if not queries:
@@ -106,7 +109,7 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                             'chunk_count': sum(doc['chunk_count'] for doc in store.all_documents()),
                             'elapsed_ms': index_metrics.as_dict()['elapsed_ms'], 'metrics': index_metrics.as_dict()}
             rows = []
-            for query in queries if indexing_error is None else []:
+            def evaluate_query(query):
                 started = time.perf_counter()
                 question_metrics = Metrics()
                 error_code = None
@@ -142,7 +145,7 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                     # or a correct refusal. Error counts remain visible in status_counts.
                     retrieval = dict.fromkeys(retrieval)
                     quality = {key: None for key in quality if key != 'applicability'} | {'applicability': 'N/A: provider error'}
-                rows.append({'id': query['id'], 'language': query['language'], 'category': query['category'],
+                return {'id': query['id'], 'language': query['language'], 'category': query['category'],
                              'answerable': query['answerable'], 'status': result['status'], 'error_code': error_code,
                              'retrieval': retrieval,
                              'answer_quality': quality, 'elapsed_ms': elapsed_ms,
@@ -152,7 +155,13 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                              'judgment': judgment, 'judge_error': judge_error, 'judge_metrics': judge_metrics.as_dict(),
                              'candidate_judgment':candidate_judgment,
                              'retrieved_pages': [{'document_id': source['document_id'], 'page': source['page'],
-                                                  'score': source['score']} for source in sources]})
+                                                  'score': source['score']} for source in sources]}
+            if indexing_error is None:
+                with ThreadPoolExecutor(max_workers=concurrency) as executor:
+                    for row in executor.map(evaluate_query, queries):
+                        rows.append(row)
+                        if progress:
+                            progress(len(rows), len(queries), row)
             totals = aggregate(rows)
             costs = [indexing['metrics'].get('cost_usd'), totals['cost_usd']['total'] if rows else 0.0]
             judge_costs = [row['judge_metrics']['cost_usd'] for row in rows]
@@ -164,13 +173,16 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                     'dataset_sha256': hashlib.sha256(json.dumps(dataset, ensure_ascii=False, sort_keys=True).encode()).hexdigest(),
                     'split': split, 'mode': settings.mode,
                     'configuration': settings.model_dump(exclude={'base_url'}),
+                    'embedding_profile': settings.profile,
+                    'evaluation_protocol': EVALUATION_PROTOCOL,
                     'quality_evaluation': {'judge_model':judge_model or None,
                         'independent_model':bool(judge_model and judge_model not in (settings.chat_model,settings.effective_verifier_model)),
                         'status':'not_applicable' if settings.mode=='local' else 'not_configured' if not judge_model else
                                  'failed' if indexing_error or any(r['judge_error'] or r['error_code'] for r in rows) else 'completed',
                         'judge_cost_usd':judge_cost, 'judge_errors':sum(bool(r['judge_error']) for r in rows)},
                     'endpoint_configured': bool(settings.base_url) if settings.mode == 'api' else False,
-                    'measurement': 'One sequential pass; no warmup or concurrency. Timings are measured, not estimates.',
+                    'concurrency': concurrency,
+                    'measurement': f'One pass with {concurrency} query worker(s); no warmup. Application latency excludes evaluator/queue time; Judge cost is separate.',
                     'limitations': dataset['limitations'], 'indexing': indexing,
                     'summary': totals, 'run_cost_usd': sum(costs) if all(cost is not None for cost in costs) else None,
                     'by_language': {lang: aggregate([row for row in rows if row['language'] == lang]) for lang in sorted({row['language'] for row in rows})},
@@ -232,6 +244,7 @@ def main():
     parser.add_argument('--chunk-size', type=int, default=900)
     parser.add_argument('--overlap', type=int, default=120)
     parser.add_argument('--top-k', type=int, default=5)
+    parser.add_argument('--concurrency', type=int, choices=range(1,5), default=1)
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     settings = environment_settings().model_copy(update={'mode': args.mode, 'search_mode': 'exact', 'chunk_size': args.chunk_size,
@@ -241,7 +254,8 @@ def main():
         settings.verification_mode = args.verification_mode
     if args.mode == 'api' and not os.getenv('RAG_API_KEY'):
         parser.error('RAG_API_KEY is missing; no API request was made. Local mode needs no key.')
-    report = evaluate_dataset(load_dataset(args.dataset), settings, args.split, os.getenv('RAG_API_KEY', ''), judge_model=args.judge_model)
+    report = evaluate_dataset(load_dataset(args.dataset), settings, args.split, os.getenv('RAG_API_KEY', ''), judge_model=args.judge_model,
+        concurrency=args.concurrency, progress=lambda done,total,row: print(f"{done}/{total}: {row['id']} {row['status']}",flush=True))
     output = args.output or ROOT / 'evals' / 'reports' / f'evaluation-{args.mode}-{args.split}'
     write_report(report, output)
     print(f"Completed {report['summary']['query_count']} queries; report: {output.with_suffix('.md')}")

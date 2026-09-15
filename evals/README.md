@@ -50,7 +50,11 @@
 .\.venv\Scripts\python.exe -m scripts.chunk_experiment --mode local --output-dir reports/chunks-v2
 ```
 
-真实评估需配置密钥、服务、Generator/Verifier、`RAG_EVAL_JUDGE_MODEL` 和单价，再显式使用 `--mode api`。三种验证模式对比命令为 `python -m scripts.verification_experiment --run-api`。这些命令会调用付费接口，本轮按用户要求暂停。默认 local 不会调用；脚本使用隔离临时 SQLite 数据，不改应用知识库，存储性能另由 pgvector benchmark 评估。
+真实评估需配置密钥、服务、Generator/Verifier、`RAG_EVAL_JUDGE_MODEL` 和单价，再显式使用 `--mode api`。三种验证模式对比命令为 `python -m scripts.verification_experiment --run-api`。这些命令会调用付费接口；2026-09-15 补充额度后恢复执行。默认 local 不会调用；脚本使用隔离临时 SQLite 数据，不改应用知识库，存储性能另由 pgvector benchmark 评估。
+
+正式协议 `isolated-correctness-and-citations-v2` 分别调用两个 Judge 请求：正确性看到参考答案和 gold evidence；引用支持度只看到问题和实际引用，不能借用未引用的参考证据。运行时 Verifier 标志也不进入 Judge 输入。旧单次 Judge 报告仅留作诊断与已发生费用记录，不参与正式选参。
+
+`--concurrency 2` 使用两个问题 worker，各问题指标独立，报告标注并发数；应用延迟不含等待队列与额外 Judge 时间。Chunk/Verification 脚本支持 `--resume`，仅复用数据哈希、配置、Embedding profile、评分协议、Judge 与并发数完全匹配且已完成的报告；变化时要求另选输出目录。
 
 固定六组配置为 `(450,0)`、`(450,60)`、`(900,0)`、`(900,120)`、`(1200,120)`、`(1200,180)`，单位为字符且不跨物理页。API 按 dev Answer Correctness、Recall、nDCG、较少 Chunk 数依次选择，local 只用检索指标；冻结后才测 test，不按 test 调参。部分页短于配置值，900/1200 会产生相同边界，仍需真实长页进一步区分。规则模板和翻译有相关性，数据尚无独立人工验收，不能声称生产准确率或自动修改参数。
 

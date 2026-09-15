@@ -1,9 +1,9 @@
 {
-  "id": 34829035354,
+  "id": 34836175013,
   "status": "completed",
   "conclusion": "success",
-  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/34829035354",
-  "head_sha": "ca7a8992e58342376e0a865fd2532f91b91a466a",
+  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/34836175013",
+  "head_sha": "14e38dce674700d1b680b549e823072123154671",
   "jobs": [
     {
       "name": "verify",
@@ -41,7 +41,7 @@
           "conclusion": "success"
         },
         {
-          "name": "Run python -m scripts.chunk_experiment --mode local --output-dir reports/chunks",
+          "name": "Run python -m scripts.chunk_experiment --mode local --output-dir reports/chunks-v2",
           "status": "completed",
           "conclusion": "success"
         },

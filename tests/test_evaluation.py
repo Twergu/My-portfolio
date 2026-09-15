@@ -109,3 +109,28 @@ def test_identical_chunk_boundaries_have_reproducible_tied_rankings(tmp_path):
         snapshots.append((store.get_chunks('ties'),store.search(local_vector('policy'),settings.profile,top_k=3)))
         store.close()
     assert snapshots[0] == snapshots[1]
+
+
+def test_parallel_evaluation_and_resume_preserve_inputs_and_query_metrics(tmp_path):
+    from scripts.evaluate import write_report
+    from scripts.chunk_experiment import reusable_report
+    dataset = copy.deepcopy(load_dataset())
+    dataset['documents'] = [d for d in dataset['documents'] if d['language']=='ja']
+    dataset['queries'] = [q for q in dataset['queries'] if q['language']=='ja' and q['split']=='dev'][:3]
+    settings = Settings(mode='local')
+    progress = []
+    parallel = evaluate_dataset(dataset,settings,'dev',concurrency=2,
+        progress=lambda done,total,row: progress.append((done,total,row['id'])))
+    sequential = evaluate_dataset(dataset,settings,'dev')
+    assert parallel['summary']['retrieval'] == sequential['summary']['retrieval']
+    assert parallel['run_cost_usd'] == 0
+    assert [item[2] for item in progress] == [q['id'] for q in dataset['queries']]
+    output = tmp_path/'cached'
+    write_report(parallel,output)
+    assert reusable_report(output.with_suffix('.json'),dataset,settings,'dev','',2) == parallel
+    with pytest.raises(ValueError,match='different inputs'):
+        reusable_report(output.with_suffix('.json'),dataset,settings,'dev','',1)
+    altered=copy.deepcopy(dataset)
+    altered['documents'][0]['pages'][0]['text']+=' changed policy'
+    with pytest.raises(ValueError,match='different inputs'):
+        reusable_report(output.with_suffix('.json'),altered,settings,'dev','',2)

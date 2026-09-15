@@ -192,6 +192,10 @@ def answer(store, question, settings, api_key, document_ids, preferred_language=
              'For insufficient_evidence, claims must be []. Otherwise each claim is one atomic factual sentence '
              'with text and evidence: [{source_id: integer, quote: exact passage copied from that source}]. '
              'Every claim must be entailed by its cited evidence, including conditions, exceptions and negation. '
+             'Copy each quote as ONE contiguous substring without paraphrasing, combining distant sentences or adding ellipses. '
+             'For a policy exception, cite both the exception and every unchanged general rule needed for your claim. '
+             'Cite the passage establishing the employee category and effective period when your claim depends on them. '
+             'For an unanswerable request, use insufficient_evidence; do not answer with claims about missing information. '
              'Do not put citation markers in text. Do not add uncited introductions or conclusions. '
              'Example JSON: {"status":"answered","claims":[{"text":"A supported fact.",'
              '"evidence":[{"source_id":1,"quote":"The exact supporting source sentence."}]}]}'},
@@ -235,6 +239,7 @@ def answer(store, question, settings, api_key, document_ids, preferred_language=
                  'conditions and negation, and whether it answers the requested date/version/scope in the question. '
                  'A real quote or matching citation ID alone is insufficient. '
                  'Use no external knowledge. Contradictory, partially supported or uncertain claims are false. '
+                 'Equivalent wording and logically entailed conclusions are allowed; a claim need not repeat the source verbatim. '
                  'Return ONLY JSON: {"verdicts":[{"claim_index":1,"supported":false,"reason":"Explanation"}]}. '
                  'Include each one-based claim_index exactly once.'},
                 {'role': 'user', 'content': json.dumps({'question': question, 'claims': verification_claims}, ensure_ascii=False)},

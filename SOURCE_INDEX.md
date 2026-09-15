@@ -98,6 +98,9 @@
 
 报告包含运行时间与验证范围，blocked/skipped 表示尚未实测或未执行。
 
+- [reports/api-baseline-v1/chunk-api-900-120-dev.json](reports/api-baseline-v1/chunk-api-900-120-dev.json)
+- [reports/api-baseline-v1/chunk-api-900-120-dev.md](reports/api-baseline-v1/chunk-api-900-120-dev.md)
+- [reports/api-baseline-v1/README.md](reports/api-baseline-v1/README.md)
 - [reports/chunks/chunk-experiment-local.json](reports/chunks/chunk-experiment-local.json)
 - [reports/chunks/chunk-experiment-local.md](reports/chunks/chunk-experiment-local.md)
 - [reports/chunks/chunk-local-1200-120-dev.json](reports/chunks/chunk-local-1200-120-dev.json)
@@ -114,6 +117,8 @@
 - [reports/chunks/chunk-local-900-120-dev.md](reports/chunks/chunk-local-900-120-dev.md)
 - [reports/chunks/chunk-local-selected-test.json](reports/chunks/chunk-local-selected-test.json)
 - [reports/chunks/chunk-local-selected-test.md](reports/chunks/chunk-local-selected-test.md)
+- [reports/chunks-api/chunk-api-450-0-dev.json](reports/chunks-api/chunk-api-450-0-dev.json)
+- [reports/chunks-api/chunk-api-450-0-dev.md](reports/chunks-api/chunk-api-450-0-dev.md)
 - [reports/chunks-v2/chunk-experiment-local.json](reports/chunks-v2/chunk-experiment-local.json)
 - [reports/chunks-v2/chunk-experiment-local.md](reports/chunks-v2/chunk-experiment-local.md)
 - [reports/chunks-v2/chunk-local-1200-120-dev.json](reports/chunks-v2/chunk-local-1200-120-dev.json)
@@ -143,6 +148,7 @@
 - [reports/store-benchmark.md](reports/store-benchmark.md)
 - [reports/tests.json](reports/tests.json)
 - [reports/tests.md](reports/tests.md)
+- [reports/ui-smoke.md](reports/ui-smoke.md)
 - [reports/vector-scale.json](reports/vector-scale.json)
 - [reports/vector-scale.md](reports/vector-scale.md)
 

@@ -1,8 +1,8 @@
 # Real API smoke test
 
-Status: **failed**
+Status: **passed**
 
-Live smoke did not complete (RuntimeError). Check the configured endpoint, model compatibility, and API access; no success is claimed.
+Real embedding, generation, and entailment-verification requests completed and all smoke assertions passed.
 
 Only a generated fictional two-page PDF is submitted. Customer documents and the application data directory are not used.
 

@@ -21,6 +21,8 @@ def main():
     local=read('reports/tests.json')
     pg=read('reports/ci/tests.json')
     stores=read('reports/store-benchmark.json')
+    api=read('reports/chunks-api/chunk-api-selected-test.json')
+    smoke=read('reports/live-api-smoke.json')
     lines=['| 项目 | 实测结果与范围 |','|---|---|',
            f"| 本地测试 | {local.get('status','未执行')}，具体数量和时间见[动态报告](reports/tests.md) |",
            f"| CI / PostgreSQL 测试 | {ci.get('conclusion') or ci.get('status','待运行')}；[验收运行]({ci.get('html_url','https://github.com/Twergu/My-portfolio/actions')})，版本 `{ci.get('head_sha','')[:7]}`；[数据库测试报告](reports/ci/tests.md) |" if pg else
@@ -46,8 +48,24 @@ def main():
     container=read('reports/ci/container-persistence.json')
     lines += [f"| Docker | {container.get('status','待实测')}：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |" if container else
               '| Docker | 等待实际容器验收报告 |',
-              '| 真实 API 质量 / 成本 | 按用户要求暂缓付费调用。Answer Correctness、Citation Groundedness、Refusal Accuracy、真实模型 P50/P95 和 cost/query 尚无有效实测值 |',
+              f"| 真实 API 流程 | {smoke.get('status','待验证')}；PDF→Embedding→结构化回答→原文/断言校验→物理页引用；[真实 smoke](reports/live-api-smoke.md) |",
               '', '以上数据来自 JSON 运行快照，使用 `python -m scripts.results_summary` 更新。测试数量始终引用自动报告；本地哈希检索分数不等于真实模型准确率。']
+    if api.get('status')=='completed' and api.get('quality_evaluation',{}).get('status')=='completed':
+        summary=api['summary']; quality=summary['answer_quality']; retrieval=summary['retrieval']
+        def mean(name): return number(quality.get(name,{}).get('mean'))
+        timing=summary['latency_ms']['question_total']
+        lines += ['', '| 真实 RAG 测试集 | 实测结果 |','|---|---|',
+            f"| 版本 / 范围 | {api['dataset_id']}；{summary['query_count']} 题；{api['configuration']['chat_model']} / verifier {api['configuration']['verifier_model']}；[完整逐题结果](reports/chunks-api/chunk-api-selected-test.md) |",
+            '| Recall@1/3/5 | '+' / '.join(number(retrieval[f'recall_at_{k}']['mean']) for k in (1,3,5))+' |',
+            f"| MRR / nDCG | {number(retrieval['mrr_at_k']['mean'])} / {number(retrieval['ndcg_at_k']['mean'])} |",
+            f"| Correctness / Citation Groundedness / Refusal Accuracy | {mean('answer_correctness')} / {mean('citation_groundedness')} / {mean('refusal_accuracy')} |",
+            f"| Quote mismatch / Unsupported / False refusal | {mean('quote_match_failure')} / {mean('unsupported_answer')} / {mean('false_refusal')} |",
+            f"| Query P50 / P95 | {number(timing['p50'])} / {number(timing['p95'])} ms；{api.get('concurrency',1)} workers；不含额外 Judge |",
+            f"| 平均应用 cost/query | USD {summary['cost_usd']['average_per_query']:.8f} |" if summary['cost_usd']['average_per_query'] is not None else '| 平均应用 cost/query | 用量不完整，未知 |',
+            f"| 实验与额外评估开销 | [分块对比](reports/chunks-api/chunk-experiment-api.md)；[验证模式](reports/verification/comparison.md)；Judge 不计入用户 query 成本 |",
+            '', '答案正确性与引用支持度分别调用独立 Judge，引用评分看不到 gold evidence。指标分母及限制见评估协议；单次合成集结果仍需真实资料与人工复核。']
+    else:
+        lines.append('真实 API smoke 已恢复执行；完整质量、分块和验证模式结果以各报告的完成状态为准。')
     if scale.get('status')=='completed':
         lines.append('HNSW 表格使用 ef_search=100；完整报告另列 400/1000 的召回与延时。默认仍选 Exact，只有目标数据的召回和延时都达标才切换 HNSW。CI 的 Docker 验收来自全新 Linux runner，本机尚未安装 Docker。')
     path=ROOT/'README.md'; text=path.read_text(encoding='utf-8')

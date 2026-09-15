@@ -65,8 +65,14 @@ def test_independent_judge_does_not_inherit_runtime_verified_flag():
         payload=json.loads(request.content)
         assert payload['model']=='independent-judge'
         assert '"supported": true' not in payload['messages'][1]['content']
-        response={'answer_correct':False,'reason':'Wrong number','citations':[
-            {'claim_index':1,'supported':False,'reason':'Contradiction'}]}
+        body=json.loads(payload['messages'][1]['content'])
+        if 'gold_evidence' in body:
+            assert 'claims' not in body
+            response={'answer_correct':False,'reason':'Wrong number'}
+        else:
+            assert 'reference_answer' not in body and 'answerable' not in body
+            assert set(body)=={'question','claims'}
+            response={'citations':[{'claim_index':1,'supported':False,'reason':'Contradiction'}]}
         return httpx.Response(200,json={'choices':[{'message':{'content':json.dumps(response)}}]})
     with httpx.Client(transport=httpx.MockTransport(handler)) as client:
         judged=judge_answer(result,q,data,Settings(),'fixture',OpenAICompatibleProvider(client),'independent-judge',Metrics({}))

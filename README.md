@@ -2,33 +2,34 @@
 
 PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构化回答 → 原文与断言依据校验 → 物理页引用。中日双语界面、OpenAI 兼容 Provider、PostgreSQL + pgvector、评估数据集、分块实验和 Docker Compose。
 
-查看 [全部源文件](SOURCE_INDEX.md)、[17 项修改说明](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
+查看 [全部源文件](SOURCE_INDEX.md)、[本轮 17 项优化说明](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
 ## 实验结果
 
-本轮重点是困难检索、可调依据验证和真实数据库/容器验收，详见 [本轮逐项说明](docs/optimization-report.md)。真实模型评估按用户要求暂缓，不能把本地检索成绩当作生成答案准确率。
+本轮重点是困难检索、可调依据验证、真实模型和数据库/容器验收，详见 [本轮逐项说明](docs/optimization-report.md)。用户于 2026-09-15 补充额度后已恢复真实模型实验；完成状态以运行报告为准，本地检索成绩不代表生成答案准确率。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |
 |---|---|
 | 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
-| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34829035354)，版本 `ca7a899`；[数据库测试报告](reports/ci/tests.md) |
+| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34836175013)，版本 `14e38dc`；[数据库测试报告](reports/ci/tests.md) |
 | 困难集 / 本地检索 | policy-challenge-v2.1；test Recall@1/3/5 = 0.5873 / 0.7500 / 0.8611；MRR=0.8302，nDCG=0.7819 |
 | Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
-| 1,000 chunks / exact | measured：P50/P95 = 2.3594/2.4802 ms；Recall@5=1.0000 |
-| 1,000 chunks / hnsw | measured：P50/P95 = 2.7054/3.2001 ms；Recall@5=1.0000 |
-| 10,000 chunks / exact | measured：P50/P95 = 8.4518/8.9194 ms；Recall@5=1.0000 |
-| 10,000 chunks / hnsw | measured：P50/P95 = 3.4713/3.6364 ms；Recall@5=0.6000 |
-| 100,000 chunks / exact | measured：P50/P95 = 90.3528/93.4345 ms；Recall@5=1.0000 |
-| 100,000 chunks / hnsw | measured：P50/P95 = 6.6106/7.3725 ms；Recall@5=0.1700 |
+| 1,000 chunks / exact | measured：P50/P95 = 3.2621/3.7750 ms；Recall@5=1.0000 |
+| 1,000 chunks / hnsw | measured：P50/P95 = 3.8911/3.9847 ms；Recall@5=1.0000 |
+| 10,000 chunks / exact | measured：P50/P95 = 12.7817/19.7181 ms；Recall@5=1.0000 |
+| 10,000 chunks / hnsw | measured：P50/P95 = 4.9197/5.1166 ms；Recall@5=0.5900 |
+| 100,000 chunks / exact | measured：P50/P95 = 106.1703/121.5568 ms；Recall@5=1.0000 |
+| 100,000 chunks / hnsw | measured：P50/P95 = 7.9408/8.9148 ms；Recall@5=0.1100 |
 | Vector Benchmark | [硬件、方法、构建耗时与索引大小](reports/vector-scale.md)；合成向量、单客户端、热缓存，不代表语义检索质量 |
-| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 124.7660 / pgvector_exact 2.3656 / pgvector_hnsw 2.7146；[对照报告](reports/store-benchmark.md) |
+| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 171.5263 / pgvector_exact 3.6588 / pgvector_hnsw 4.2225；[对照报告](reports/store-benchmark.md) |
 | Docker | passed：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |
-| 真实 API 质量 / 成本 | 按用户要求暂缓付费调用。Answer Correctness、Citation Groundedness、Refusal Accuracy、真实模型 P50/P95 和 cost/query 尚无有效实测值 |
+| 真实 API 流程 | passed；PDF→Embedding→结构化回答→原文/断言校验→物理页引用；[真实 smoke](reports/live-api-smoke.md) |
 
 以上数据来自 JSON 运行快照，使用 `python -m scripts.results_summary` 更新。测试数量始终引用自动报告；本地哈希检索分数不等于真实模型准确率。
+真实 API smoke 已恢复执行；完整质量、分块和验证模式结果以各报告的完成状态为准。
 HNSW 表格使用 ef_search=100；完整报告另列 400/1000 的召回与延时。默认仍选 Exact，只有目标数据的召回和延时都达标才切换 HNSW。CI 的 Docker 验收来自全新 Linux runner，本机尚未安装 Docker。
 <!-- EXPERIMENT_RESULTS_END -->
 
@@ -136,7 +137,7 @@ RAG_JUDGE_OUTPUT_USD_PER_MILLION_TOKENS=
 
 回答下方可展开「性能与用量」。GET /api/metrics 返回本进程最近的操作；测量随轮转日志保存在 data/logs/service.log。日志记录真实异常栈、文档 ID、阶段与索引身份，并保留 PDF 子进程失败栈。
 
-实验报告把日常 query cost 与额外 Judge 成本分开，输出 token usage、平均 cost/query、P50/P95。不同模型使用对应单价；费用为标准价格估算，尚不计缓存折扣。三种验证模式的付费实验命令为 `python -m scripts.verification_experiment --run-api`，本轮没有执行。
+实验报告把日常 query cost 与额外 Judge 成本分开，输出 token usage、平均 cost/query、P50/P95。不同模型使用对应单价；费用为标准价格估算，尚不计缓存折扣。三种验证模式的付费实验命令为 `python -m scripts.verification_experiment --run-api`。正式协议将正确性 Judge 与引用 Judge 的输入隔离，避免用未引用的参考证据补全引用支持度。
 
 ## Chunk 实验与物理页边界
 

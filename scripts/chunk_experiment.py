@@ -1,5 +1,6 @@
 """Compare six page-preserving chunk policies using dev queries only."""
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -11,9 +12,24 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from backend.config import environment_settings
+from evals.judge import EVALUATION_PROTOCOL
 from scripts.evaluate import HARD_DATASET, evaluate_dataset, load_dataset, provider_and_metrics, write_report, display
 
 GRID = [(450, 0), (450, 60), (900, 0), (900, 120), (1200, 120), (1200, 180)]
+
+
+def reusable_report(path, dataset, settings, split, judge_model, concurrency):
+    if not path.exists():
+        return None
+    report = json.loads(path.read_text(encoding='utf-8'))
+    expected_hash = hashlib.sha256(json.dumps(dataset,ensure_ascii=False,sort_keys=True).encode()).hexdigest()
+    if (report.get('evaluation_protocol') != EVALUATION_PROTOCOL or report.get('dataset_sha256') != expected_hash or report.get('configuration') != settings.model_dump(exclude={'base_url'})
+            or report.get('embedding_profile') != settings.profile or report.get('split') != split
+            or report.get('concurrency') != concurrency or report.get('status') != 'completed'
+            or report.get('quality_evaluation',{}).get('judge_model') != (judge_model or None)
+            or (settings.mode=='api' and report.get('quality_evaluation',{}).get('status') != 'completed')):
+        raise ValueError(f'Existing report is incomplete or has different inputs: {path}. Use a new output directory.')
+    return report
 
 
 def choose_configuration(reports):
@@ -35,6 +51,8 @@ def main():
     parser.add_argument('--output-dir', type=Path, default=ROOT / 'evals' / 'reports')
     parser.add_argument('--dataset', type=Path, default=HARD_DATASET)
     parser.add_argument('--judge-model', default=os.getenv('RAG_EVAL_JUDGE_MODEL',''))
+    parser.add_argument('--concurrency',type=int,choices=range(1,5),default=1)
+    parser.add_argument('--resume',action='store_true',help='Reuse completed reports only when dataset, models, endpoint profile and concurrency match.')
     args = parser.parse_args()
     key = os.getenv('RAG_API_KEY', '')
     if args.mode == 'api' and not key:
@@ -45,10 +63,19 @@ def main():
     dataset = load_dataset(args.dataset)
     provider, _ = provider_and_metrics(args.mode)
     reports = []
+    def run(settings,split,output):
+        cached = reusable_report(output.with_suffix('.json'),dataset,settings,split,args.judge_model,args.concurrency) if args.resume else None
+        if cached:
+            print(f'Reusing completed report: {output}',flush=True)
+            return cached
+        report = evaluate_dataset(dataset, settings, split=split, api_key=key, provider=provider, judge_model=args.judge_model,
+            concurrency=args.concurrency,progress=lambda done,total,row: print(f'{output.name} {done}/{total}: {row["status"]}',flush=True))
+        write_report(report,output)
+        return report
     try:
         for size, overlap in GRID:
             candidate = settings.model_copy(update={'chunk_size': size, 'chunk_overlap': overlap})
-            report = evaluate_dataset(dataset, candidate, split='dev', api_key=key, provider=provider, judge_model=args.judge_model)
+            report = run(candidate,'dev',args.output_dir / f'chunk-{args.mode}-{size}-{overlap}-dev')
             reports.append(report)
             write_report(report, args.output_dir / f'chunk-{args.mode}-{size}-{overlap}-dev')
             if report['status'] != 'completed' or (args.mode == 'api' and report['quality_evaluation']['status'] != 'completed'):
@@ -58,7 +85,7 @@ def main():
         selected = winner['configuration']
         # Run the held-out questions only after selecting and freezing parameters.
         final_settings = settings.model_copy(update={'chunk_size': selected['chunk_size'], 'chunk_overlap': selected['chunk_overlap']})
-        holdout = evaluate_dataset(dataset, final_settings, split='test', api_key=key, provider=provider, judge_model=args.judge_model)
+        holdout = run(final_settings,'test',args.output_dir / f'chunk-{args.mode}-selected-test')
         write_report(holdout, args.output_dir / f'chunk-{args.mode}-selected-test')
         if holdout['status'] != 'completed' or (args.mode == 'api' and holdout['quality_evaluation']['status'] != 'completed'):
             raise RuntimeError('Holdout evaluation failed; partial report saved, no completed experiment published.')
@@ -80,6 +107,7 @@ def main():
              'run_cost_usd': report['run_cost_usd']} for report in reports]
     combined = {'schema_version': 1, 'generated_at': datetime.now(timezone.utc).isoformat(),
                 'mode': args.mode, 'dataset_id': dataset['dataset_id'], 'tuning_split': 'dev',
+                'concurrency':args.concurrency,
                 'selection_rule': 'Max dev Answer Correctness when judged, then Recall@k, nDCG@k, then fewest chunks; never test metrics.',
                 'status':'completed' if holdout['status']=='completed' else 'failed',
                 'chunk_unit': 'Unicode characters, adjusted toward sentence boundaries; physical pages never merged.',
