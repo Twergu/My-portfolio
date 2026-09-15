@@ -154,6 +154,8 @@ def evaluate_dataset(dataset, settings, split='test', api_key='', provider=None,
                              'support': result.get('support'),
                              'judgment': judgment, 'judge_error': judge_error, 'judge_metrics': judge_metrics.as_dict(),
                              'candidate_judgment':candidate_judgment,
+                             'evaluation_trace': {'sources': result.get('sources', []),
+                                                  'candidate': result.get('evaluation_candidate')},
                              'retrieved_pages': [{'document_id': source['document_id'], 'page': source['page'],
                                                   'score': source['score']} for source in sources]}
             if indexing_error is None:

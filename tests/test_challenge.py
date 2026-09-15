@@ -79,6 +79,34 @@ def test_independent_judge_does_not_inherit_runtime_verified_flag():
     assert judged['answer_correctness']==judged['citation_groundedness']==0
 
 
+@pytest.mark.parametrize('recover', [True, False])
+def test_judge_format_retry_is_bounded_and_keeps_all_billed_usage(recover):
+    from evals.judge import GroundingJudgment, validated_judgment
+    requests = []
+    def handler(request):
+        payload = json.loads(request.content)
+        requests.append(payload)
+        # Valid JSON with a missing claim is still a failed judgment.
+        value = {'citations': [{'claim_index': 1, 'supported': False, 'reason': 'Missing premise'}]} if recover and len(requests) == 2 else {'citations': []}
+        return httpx.Response(200, json={'choices': [{'message': {'content': json.dumps(value)}}],
+            'usage': {'prompt_tokens': 100, 'completion_tokens': 10, 'total_tokens': 110}})
+    metrics = Metrics({'judge_input': 2, 'judge_output': 8})
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        provider = OpenAICompatibleProvider(client)
+        args = (GroundingJudgment, [{'role': 'user', 'content': 'untrusted data'}], Settings(),
+                'fixture', provider, metrics, 'grounding')
+        if recover:
+            assert validated_judgment(*args, claim_count=1).citations[0].supported is False
+        else:
+            with pytest.raises(ModelError, match='after one format retry'):
+                validated_judgment(*args, claim_count=1)
+    assert len(requests) == 2
+    assert 'exactly 1 citations' in requests[1]['messages'][-1]['content']
+    assert len(metrics.validation_failures) == (1 if recover else 2)
+    assert metrics.as_dict()['token_usage']['total_tokens'] == 220
+    assert metrics.as_dict()['cost_usd'] == pytest.approx(.00056)
+
+
 def test_compose_secret_survives_restart_and_explicit_sqlite_is_still_isolated(tmp_path,monkeypatch):
     initialize(tmp_path)
     secret=(tmp_path/'postgres_password').read_text()

@@ -60,6 +60,7 @@ class Metrics:
             if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < 0):
                 raise ValueError('Token prices must be non-negative finite numbers or None.')
         self.requests = []
+        self.validation_failures = []
         self._usage = {'embedding_tokens': 0, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0}
         self._known_cost = 0.0
         self._unknown = set()
@@ -128,4 +129,5 @@ class Metrics:
             'prices': dict(self.prices),
             'unknown_cost_reasons': sorted(self._unknown),
             'requests': [dict(request) for request in self.requests],
+            'validation_failures': [dict(event) for event in self.validation_failures],
         }

@@ -66,6 +66,7 @@
 
 ## 运行与实验脚本
 
+- [scripts/analyze_api_results.py](scripts/analyze_api_results.py)
 - [scripts/benchmark_scale.py](scripts/benchmark_scale.py)
 - [scripts/benchmark_stores.py](scripts/benchmark_stores.py)
 - [scripts/check.py](scripts/check.py)
@@ -117,8 +118,16 @@
 - [reports/chunks/chunk-local-900-120-dev.md](reports/chunks/chunk-local-900-120-dev.md)
 - [reports/chunks/chunk-local-selected-test.json](reports/chunks/chunk-local-selected-test.json)
 - [reports/chunks/chunk-local-selected-test.md](reports/chunks/chunk-local-selected-test.md)
+- [reports/chunks-api/chunk-api-1200-120-dev.json](reports/chunks-api/chunk-api-1200-120-dev.json)
+- [reports/chunks-api/chunk-api-1200-120-dev.md](reports/chunks-api/chunk-api-1200-120-dev.md)
 - [reports/chunks-api/chunk-api-450-0-dev.json](reports/chunks-api/chunk-api-450-0-dev.json)
 - [reports/chunks-api/chunk-api-450-0-dev.md](reports/chunks-api/chunk-api-450-0-dev.md)
+- [reports/chunks-api/chunk-api-450-60-dev.json](reports/chunks-api/chunk-api-450-60-dev.json)
+- [reports/chunks-api/chunk-api-450-60-dev.md](reports/chunks-api/chunk-api-450-60-dev.md)
+- [reports/chunks-api/chunk-api-900-0-dev.json](reports/chunks-api/chunk-api-900-0-dev.json)
+- [reports/chunks-api/chunk-api-900-0-dev.md](reports/chunks-api/chunk-api-900-0-dev.md)
+- [reports/chunks-api/chunk-api-900-120-dev.json](reports/chunks-api/chunk-api-900-120-dev.json)
+- [reports/chunks-api/chunk-api-900-120-dev.md](reports/chunks-api/chunk-api-900-120-dev.md)
 - [reports/chunks-v2/chunk-experiment-local.json](reports/chunks-v2/chunk-experiment-local.json)
 - [reports/chunks-v2/chunk-experiment-local.md](reports/chunks-v2/chunk-experiment-local.md)
 - [reports/chunks-v2/chunk-local-1200-120-dev.json](reports/chunks-v2/chunk-local-1200-120-dev.json)
@@ -141,6 +150,7 @@
 - [reports/ci/tests.json](reports/ci/tests.json)
 - [reports/ci/tests.md](reports/ci/tests.md)
 - [reports/ci-status.json](reports/ci-status.json)
+- [reports/judge-recovery/chunk-api-900-0-dev-before-replay.json](reports/judge-recovery/chunk-api-900-0-dev-before-replay.json)
 - [reports/live-api-smoke.json](reports/live-api-smoke.json)
 - [reports/live-api-smoke.md](reports/live-api-smoke.md)
 - [reports/runtime-verification.json](reports/runtime-verification.json)
@@ -151,6 +161,8 @@
 - [reports/ui-smoke.md](reports/ui-smoke.md)
 - [reports/vector-scale.json](reports/vector-scale.json)
 - [reports/vector-scale.md](reports/vector-scale.md)
+- [reports/verifier-models/mini-450-0-dev.json](reports/verifier-models/mini-450-0-dev.json)
+- [reports/verifier-models/mini-450-0-dev.md](reports/verifier-models/mini-450-0-dev.md)
 
 ## 运行数据
 

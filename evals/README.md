@@ -56,6 +56,10 @@
 
 `--concurrency 2` 使用两个问题 worker，各问题指标独立，报告标注并发数；应用延迟不含等待队列与额外 Judge 时间。Chunk/Verification 脚本支持 `--resume`，仅复用数据哈希、配置、Embedding profile、评分协议、Judge 与并发数完全匹配且已完成的报告；变化时要求另选输出目录。
 
+Judge 的 JSON/schema 或断言编号不完整时最多追加一次格式重试；不会把缺失 verdict 当作通过。所有尝试保留实际 token/cost，`validation_failures` 记录环节与次数，不保存原始错误响应。正确性与引用评分的输入仍隔离，重试不提供期望分数。评估报告保存合成数据的 `evaluation_trace`，便于复核；这些实验文件可能包含数据集原文，使用企业资料评估时应按资料的访问要求保存。
+
+本轮 `900/0 dev` 有一次 Judge 格式错误，已仅重评原来的一个答案，原回答和检索没有重新执行。此前失败快照保存在 `reports/judge-recovery/`，正式报告的 `judge_replays` 记录补评；正式费用已包含原失败调用，不能再把快照费用累加一次。
+
 固定六组配置为 `(450,0)`、`(450,60)`、`(900,0)`、`(900,120)`、`(1200,120)`、`(1200,180)`，单位为字符且不跨物理页。API 按 dev Answer Correctness、Recall、nDCG、较少 Chunk 数依次选择，local 只用检索指标；冻结后才测 test，不按 test 调参。部分页短于配置值，900/1200 会产生相同边界，仍需真实长页进一步区分。规则模板和翻译有相关性，数据尚无独立人工验收，不能声称生产准确率或自动修改参数。
 
 报告入口：[困难集分块实验](../reports/chunks-v2/chunk-experiment-local.md)、[冻结参数 test](../reports/chunks-v2/chunk-local-selected-test.md)、[真实 API 状态](../reports/live-api-smoke.md)。

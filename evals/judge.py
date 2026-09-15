@@ -23,6 +23,34 @@ class GroundingJudgment(StrictModel):
     citations: list[Verdict] = Field(max_length=20)
 
 
+def validated_judgment(schema, messages, settings, key, provider, metrics, stage, claim_count=None):
+    """Retry malformed output once, retaining every billed attempt in metrics.
+
+    Validation never turns a missing verdict into a passing verdict. The retry
+    receives format requirements, not a desired quality score or gold evidence.
+    """
+    for attempt in (1, 2):
+        with metrics.measure('evaluation_judge_' + stage):
+            raw = provider.chat(settings, key, messages, metrics=metrics, role='judge',
+                                response_format={'type': 'json_object'})
+        try:
+            parsed = schema.model_validate_json(raw)
+            if claim_count is not None and sorted(v.claim_index for v in parsed.citations) != list(range(1, claim_count + 1)):
+                raise ValueError('Incomplete claim indices')
+            return parsed
+        except (ValidationError, ValueError):
+            metrics.validation_failures.append({'stage': stage, 'attempt': attempt,
+                                                'code': 'invalid_evaluation_judgment'})
+            if attempt == 2:
+                raise ModelError('Evaluation judge returned an invalid verdict after one format retry.',
+                                 code='invalid_evaluation_judgment') from None
+            correction = 'Your previous response failed schema/index validation. Independently evaluate the same input again. Return only JSON matching this schema: '
+            correction += json.dumps(schema.model_json_schema())
+            if claim_count is not None:
+                correction += f' Return exactly {claim_count} citations with indices 1 through {claim_count}, each once.'
+            messages = messages + [{'role': 'user', 'content': correction}]
+
+
 def judge_answer(result, query, dataset, settings, key, provider, model, metrics):
     if result['status'] != 'answered':
         return {'answer_correctness': 0.0 if query['answerable'] else None,
@@ -49,12 +77,7 @@ def judge_answer(result, query, dataset, settings, key, provider, model, metrics
             'reference_answer':query['reference_answer'],'gold_evidence':gold,
             'answer':result['answer']}, ensure_ascii=False)}]
     judge_settings = settings.model_copy(update={'chat_model':model})
-    with metrics.measure('evaluation_judge_correctness'):
-        raw = provider.chat(judge_settings,key,messages,metrics=metrics,role='judge',response_format={'type':'json_object'})
-    try:
-        correctness = CorrectnessJudgment.model_validate_json(raw)
-    except (ValidationError, ValueError):
-        raise ModelError('Evaluation judge returned invalid correctness.',code='invalid_evaluation_judgment') from None
+    correctness = validated_judgment(CorrectnessJudgment, messages, judge_settings, key, provider, metrics, 'correctness')
     # Never expose the reference answer or gold evidence to the citation judge:
     # otherwise it can borrow missing evidence and inflate groundedness.
     grounding_messages = [
@@ -66,14 +89,8 @@ def judge_answer(result, query, dataset, settings, key, provider, model, metrics
          'Return only JSON: {"citations":[{"claim_index":1,"supported":true,"reason":"why"}]}. '
          'List every one-based claim index exactly once.'},
         {'role':'user','content':json.dumps({'question':query['question'],'claims':claims},ensure_ascii=False)}]
-    with metrics.measure('evaluation_judge_grounding'):
-        raw = provider.chat(judge_settings,key,grounding_messages,metrics=metrics,role='judge',response_format={'type':'json_object'})
-    try:
-        grounding = GroundingJudgment.model_validate_json(raw)
-        if sorted(v.claim_index for v in grounding.citations) != list(range(1,len(claims)+1)):
-            raise ValueError('Incomplete judgment')
-    except (ValidationError, ValueError):
-        raise ModelError('Evaluation judge returned an invalid verdict.',code='invalid_evaluation_judgment') from None
+    grounding = validated_judgment(GroundingJudgment, grounding_messages, judge_settings, key, provider, metrics,
+                                   'grounding', claim_count=len(claims))
     quote_matches = {i: all(e['source_id'] in source_map and len(quote_key(e['quote'])) >= 5 and
                            quote_key(e['quote']) in quote_key(source_map[e['source_id']]['text'])
                            for e in claim['evidence']) for i,claim in enumerate(result['claims'],1)}

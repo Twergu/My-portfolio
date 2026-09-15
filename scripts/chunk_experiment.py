@@ -79,7 +79,7 @@ def main():
             reports.append(report)
             write_report(report, args.output_dir / f'chunk-{args.mode}-{size}-{overlap}-dev')
             if report['status'] != 'completed' or (args.mode == 'api' and report['quality_evaluation']['status'] != 'completed'):
-                raise RuntimeError('Chunk experiment stopped: provider errors were saved in the configuration report; incomplete metrics cannot select parameters.')
+                raise RuntimeError('Chunk experiment stopped: API or Judge errors were saved in the configuration report; incomplete metrics cannot select parameters.')
             print(f'Completed dev: size={size}, overlap={overlap}, chunks={report["indexing"]["chunk_count"]}')
         winner = choose_configuration(reports)
         selected = winner['configuration']
