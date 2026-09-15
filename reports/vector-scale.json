@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-09-15T01:34:32.778430+00:00",
+  "generated_at": "2026-09-15T02:27:27.625211+00:00",
   "status": "completed",
   "environment": {
     "python": "3.12.14",
@@ -32,7 +32,7 @@
       "postgres_version": "17.11 (Debian 17.11-1.pgdg12+2)",
       "pgvector_version": "0.8.6",
       "chunks_bytes_before_hnsw": 2211840,
-      "ingestion_ms": 356.11681500000714,
+      "ingestion_ms": 444.7060170000441,
       "exact": {
         "status": "measured",
         "query_plan": [
@@ -121,15 +121,15 @@
         "hnsw_index_used": false,
         "query_latency_ms": {
           "count": 60,
-          "mean": 3.442874216667254,
-          "p50": 3.310042499990118,
-          "p95": 4.267505249997327
+          "mean": 2.516467833332096,
+          "p50": 2.505806999977267,
+          "p95": 2.653638599963415
         },
         "recall_at_k_against_independent_exact": 1.0,
         "minimum_query_recall": 1.0,
         "warmup_query_count": 20
       },
-      "hnsw_build_ms": 258.2989679999912,
+      "hnsw_build_ms": 202.89742599999272,
       "hnsw_sweep": {
         "100": {
           "status": "measured",
@@ -211,9 +211,9 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 3.994467433334137,
-            "p50": 3.9941475000091486,
-            "p95": 4.065638150002826
+            "mean": 2.797373300001027,
+            "p50": 2.7873519999843666,
+            "p95": 3.0846439999976383
           },
           "recall_at_k_against_independent_exact": 1.0,
           "minimum_query_recall": 1.0,
@@ -299,9 +299,9 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 4.450722100000348,
-            "p50": 4.441344999989383,
-            "p95": 4.5420912000153635
+            "mean": 3.1650601833320025,
+            "p50": 3.2046784999977262,
+            "p95": 3.2563660000278105
           },
           "recall_at_k_against_independent_exact": 1.0,
           "minimum_query_recall": 1.0,
@@ -387,9 +387,9 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 5.230950616666519,
-            "p50": 5.230821999987256,
-            "p95": 5.341530250014159
+            "mean": 3.7599855499981536,
+            "p50": 3.7704420000181926,
+            "p95": 3.8195029500059263
           },
           "recall_at_k_against_independent_exact": 1.0,
           "minimum_query_recall": 1.0,
@@ -476,9 +476,9 @@
         "hnsw_index_used": true,
         "query_latency_ms": {
           "count": 60,
-          "mean": 3.994467433334137,
-          "p50": 3.9941475000091486,
-          "p95": 4.065638150002826
+          "mean": 2.797373300001027,
+          "p50": 2.7873519999843666,
+          "p95": 3.0846439999976383
         },
         "recall_at_k_against_independent_exact": 1.0,
         "minimum_query_recall": 1.0,
@@ -497,7 +497,7 @@
       "postgres_version": "17.11 (Debian 17.11-1.pgdg12+2)",
       "pgvector_version": "0.8.6",
       "chunks_bytes_before_hnsw": 21504000,
-      "ingestion_ms": 3391.465962000012,
+      "ingestion_ms": 2414.388195000015,
       "exact": {
         "status": "measured",
         "query_plan": [
@@ -586,15 +586,15 @@
         "hnsw_index_used": false,
         "query_latency_ms": {
           "count": 60,
-          "mean": 12.550314466665213,
-          "p50": 12.518420999995783,
-          "p95": 13.084851500005357
+          "mean": 8.216835650003418,
+          "p50": 8.2161029999952,
+          "p95": 8.301245499995957
         },
         "recall_at_k_against_independent_exact": 1.0,
         "minimum_query_recall": 1.0,
         "warmup_query_count": 20
       },
-      "hnsw_build_ms": 3535.5353779999914,
+      "hnsw_build_ms": 3212.2022039999933,
       "hnsw_sweep": {
         "100": {
           "status": "measured",
@@ -676,12 +676,12 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 5.041222183333123,
-            "p50": 4.992162000007738,
-            "p95": 5.355359600000042
+            "mean": 3.6239851166679196,
+            "p50": 3.597005499983652,
+            "p95": 3.7906519499898645
           },
-          "recall_at_k_against_independent_exact": 0.62,
-          "minimum_query_recall": 0.4,
+          "recall_at_k_against_independent_exact": 0.58,
+          "minimum_query_recall": 0.2,
           "warmup_query_count": 20
         },
         "400": {
@@ -764,9 +764,9 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 8.885482650000162,
-            "p50": 8.945419999989213,
-            "p95": 9.597217450010476
+            "mean": 5.4030187333324875,
+            "p50": 5.399126500009288,
+            "p95": 5.4977668499816446
           },
           "recall_at_k_against_independent_exact": 0.91,
           "minimum_query_recall": 0.6,
@@ -852,12 +852,12 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 10.487867799999625,
-            "p50": 10.343614500001763,
-            "p95": 11.243435800007262
+            "mean": 7.636912499998516,
+            "p50": 7.401034499991965,
+            "p95": 9.426214600020444
           },
-          "recall_at_k_against_independent_exact": 0.99,
-          "minimum_query_recall": 0.8,
+          "recall_at_k_against_independent_exact": 1.0,
+          "minimum_query_recall": 1.0,
           "warmup_query_count": 20
         }
       },
@@ -941,12 +941,12 @@
         "hnsw_index_used": true,
         "query_latency_ms": {
           "count": 60,
-          "mean": 5.041222183333123,
-          "p50": 4.992162000007738,
-          "p95": 5.355359600000042
+          "mean": 3.6239851166679196,
+          "p50": 3.597005499983652,
+          "p95": 3.7906519499898645
         },
-        "recall_at_k_against_independent_exact": 0.62,
-        "minimum_query_recall": 0.4,
+        "recall_at_k_against_independent_exact": 0.58,
+        "minimum_query_recall": 0.2,
         "warmup_query_count": 20
       },
       "hnsw_index_bytes": 20488192,
@@ -962,7 +962,7 @@
       "postgres_version": "17.11 (Debian 17.11-1.pgdg12+2)",
       "pgvector_version": "0.8.6",
       "chunks_bytes_before_hnsw": 209584128,
-      "ingestion_ms": 33914.44604399999,
+      "ingestion_ms": 24130.514793999966,
       "exact": {
         "status": "measured",
         "query_plan": [
@@ -1051,15 +1051,15 @@
         "hnsw_index_used": false,
         "query_latency_ms": {
           "count": 60,
-          "mean": 107.86773066666342,
-          "p50": 105.56123549999086,
-          "p95": 122.32087284998694
+          "mean": 76.77251366666174,
+          "p50": 73.18361650001748,
+          "p95": 101.62879039995399
         },
         "recall_at_k_against_independent_exact": 1.0,
         "minimum_query_recall": 1.0,
         "warmup_query_count": 20
       },
-      "hnsw_build_ms": 193880.467577,
+      "hnsw_build_ms": 138462.72024200004,
       "hnsw_sweep": {
         "100": {
           "status": "measured",
@@ -1139,11 +1139,11 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 7.724782833338395,
-            "p50": 7.697916000012128,
-            "p95": 8.438091999980202
+            "mean": 6.007309683345359,
+            "p50": 6.037991500022599,
+            "p95": 6.6224854499864705
           },
-          "recall_at_k_against_independent_exact": 0.1,
+          "recall_at_k_against_independent_exact": 0.12000000000000001,
           "minimum_query_recall": 0.0,
           "warmup_query_count": 20
         },
@@ -1225,12 +1225,12 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 19.73208448333139,
-            "p50": 19.182751500011364,
-            "p95": 25.883442250011512
+            "mean": 13.461443983336116,
+            "p50": 13.349102500001209,
+            "p95": 14.21427185003381
           },
-          "recall_at_k_against_independent_exact": 0.45,
-          "minimum_query_recall": 0.2,
+          "recall_at_k_against_independent_exact": 0.38,
+          "minimum_query_recall": 0.0,
           "warmup_query_count": 20
         },
         "1000": {
@@ -1311,11 +1311,11 @@
           "hnsw_index_used": true,
           "query_latency_ms": {
             "count": 60,
-            "mean": 38.64891648333071,
-            "p50": 38.505070000013575,
-            "p95": 41.491776299992004
+            "mean": 28.865761266659245,
+            "p50": 28.157011000018883,
+            "p95": 36.298506000014186
           },
-          "recall_at_k_against_independent_exact": 0.73,
+          "recall_at_k_against_independent_exact": 0.63,
           "minimum_query_recall": 0.4,
           "warmup_query_count": 20
         }
@@ -1398,11 +1398,11 @@
         "hnsw_index_used": true,
         "query_latency_ms": {
           "count": 60,
-          "mean": 7.724782833338395,
-          "p50": 7.697916000012128,
-          "p95": 8.438091999980202
+          "mean": 6.007309683345359,
+          "p50": 6.037991500022599,
+          "p95": 6.6224854499864705
         },
-        "recall_at_k_against_independent_exact": 0.1,
+        "recall_at_k_against_independent_exact": 0.12000000000000001,
         "minimum_query_recall": 0.0,
         "warmup_query_count": 20
       },

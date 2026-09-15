@@ -14,22 +14,43 @@ PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构
 | 项目 | 实测结果与范围 |
 |---|---|
 | 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
-| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34836175013)，版本 `14e38dc`；[数据库测试报告](reports/ci/tests.md) |
+| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34921138106)，版本 `37b940a`；[数据库测试报告](reports/ci/tests.md) |
 | 困难集 / 本地检索 | policy-challenge-v2.1；test Recall@1/3/5 = 0.5873 / 0.7500 / 0.8611；MRR=0.8302，nDCG=0.7819 |
 | Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
-| 1,000 chunks / exact | measured：P50/P95 = 3.2621/3.7750 ms；Recall@5=1.0000 |
-| 1,000 chunks / hnsw | measured：P50/P95 = 3.8911/3.9847 ms；Recall@5=1.0000 |
-| 10,000 chunks / exact | measured：P50/P95 = 12.7817/19.7181 ms；Recall@5=1.0000 |
-| 10,000 chunks / hnsw | measured：P50/P95 = 4.9197/5.1166 ms；Recall@5=0.5900 |
-| 100,000 chunks / exact | measured：P50/P95 = 106.1703/121.5568 ms；Recall@5=1.0000 |
-| 100,000 chunks / hnsw | measured：P50/P95 = 7.9408/8.9148 ms；Recall@5=0.1100 |
+| 1,000 chunks / exact | measured：P50/P95 = 2.5058/2.6536 ms；Recall@5=1.0000 |
+| 1,000 chunks / hnsw | measured：P50/P95 = 2.7874/3.0846 ms；Recall@5=1.0000 |
+| 10,000 chunks / exact | measured：P50/P95 = 8.2161/8.3012 ms；Recall@5=1.0000 |
+| 10,000 chunks / hnsw | measured：P50/P95 = 3.5970/3.7907 ms；Recall@5=0.5800 |
+| 100,000 chunks / exact | measured：P50/P95 = 73.1836/101.6288 ms；Recall@5=1.0000 |
+| 100,000 chunks / hnsw | measured：P50/P95 = 6.0380/6.6225 ms；Recall@5=0.1200 |
 | Vector Benchmark | [硬件、方法、构建耗时与索引大小](reports/vector-scale.md)；合成向量、单客户端、热缓存，不代表语义检索质量 |
-| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 171.5263 / pgvector_exact 3.6588 / pgvector_hnsw 4.2225；[对照报告](reports/store-benchmark.md) |
+| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 120.3357 / pgvector_exact 2.5392 / pgvector_hnsw 2.8683；[对照报告](reports/store-benchmark.md) |
 | Docker | passed：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |
 | 真实 API 流程 | passed；PDF→Embedding→结构化回答→原文/断言校验→物理页引用；[真实 smoke](reports/live-api-smoke.md) |
 
 以上数据来自 JSON 运行快照，使用 `python -m scripts.results_summary` 更新。测试数量始终引用自动报告；本地哈希检索分数不等于真实模型准确率。
-真实 API smoke 已恢复执行；完整质量、分块和验证模式结果以各报告的完成状态为准。
+
+| 真实 RAG 测试集 | 实测结果 |
+|---|---|
+| 版本 / 范围 | policy-challenge-v2.1；54 题；gpt-5.6-luna / verifier gpt-5.6-luna；[完整逐题结果](reports/chunks-api/chunk-api-selected-test.md) |
+| Recall@1/3/5 | 0.5833 / 0.8452 / 0.8810 |
+| MRR / nDCG | 0.8254 / 0.8055 |
+| Correctness / Citation Groundedness / Refusal Accuracy | 0.8333 / 1.0000 / 0.8519 |
+| Quote mismatch / Unsupported / False refusal | 0.0000 / 0.0556 / 0.1667 |
+| Query P50 / P95 | 5426.1470 / 9751.6545 ms；2 workers；不含额外 Judge |
+| 平均应用 cost/query | USD 0.00081014 |
+| 实验与额外评估开销 | [分块对比](reports/chunks-api/chunk-experiment-api.md)；[验证模式](reports/verification/comparison.md)；Judge 不计入用户 query 成本 |
+
+答案正确性与引用支持度分别调用独立 Judge，引用评分看不到 gold evidence。指标分母及限制见评估协议；单次合成集结果仍需真实资料与人工复核。
+真实 API 开发集冻结 **900/0**。900/1200 的四组配置产生相同文本边界，单次得分差异不足以证明分块效应；[边界分析与费用账本](reports/api-results.md)。本机演示已使用冻结配置，代码的通用默认值仍需目标文档验证。
+
+| 验证模式（同一 test） | Correctness | False refusal | P50 / P95 ms | 平均 USD/query |
+|---|---:|---:|---:|---:|
+| off | 0.9762 | 0.0238 | 3527.5054 / 6822.6271 | 0.00057060 |
+| fast | 0.9286 | 0.0238 | 3389.1299 / 6984.6610 | 0.00056931 |
+| strict | 0.8333 | 0.1667 | 5426.1470 / 9751.6545 | 0.00081014 |
+各模式独立生成一次，存在随机性，不能当作相同答案的因果对照。off/fast 在运行时没有语义依据保证；当前 strict 有误拦截，保留风险说明而不根据 test 成绩继续改提示词。
+本轮有记录的实际调用估算总费用 **USD 2.084806**，含索引、额外 Judge、诊断基线和补评；不含税费，不能替代账单。
 HNSW 表格使用 ef_search=100；完整报告另列 400/1000 的召回与延时。默认仍选 Exact，只有目标数据的召回和延时都达标才切换 HNSW。CI 的 Docker 验收来自全新 Linux runner，本机尚未安装 Docker。
 <!-- EXPERIMENT_RESULTS_END -->
 

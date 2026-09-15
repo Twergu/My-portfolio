@@ -30,6 +30,17 @@ const readyDocs = () => state.docs.filter(doc => doc.status === 'ready' && !doc.
 let toastTimer, pollTimer;
 
 const jaPairs = [
+  ['配置已保存。','設定を保存しました。'], ['请前往文档知识库重建索引。','ドキュメント画面でインデックスを再構築してください。'],
+  ['已安排重新处理。','再処理を開始しました。'], ['正在保存…','保存中…'], ['正在测试模型服务…','モデルサービスをテストしています…'],
+  ['密钥已配置，留空保留','キーは設定済みです。変更しない場合は空欄にしてください'], ['输入 API 密钥','APIキーを入力'],
+  ['上一批文件仍在上传，请稍候。','前のファイルをアップロード中です。しばらくお待ちください。'], ['仅支持不超过 20 MB 的 PDF。','20MB以内のPDFのみ対応しています。'],
+  ['正在上传 ','アップロード中：'], [' 已在知识库中。',' は登録済みです。'], [' 上传成功，正在处理。',' をアップロードしました。処理中です。'],
+  ['演示文档已在知识库中。','サンプル資料は登録済みです。'], ['已添加演示员工手册，正在建立索引。','サンプルの社員ハンドブックを追加しました。インデックスを作成中です。'],
+  ['请等待当前回答完成。','回答が完了するまでお待ちください。'], ['回答已复制。','回答をコピーしました。'], ['无法访问剪贴板，请选中文字复制。','クリップボードにアクセスできません。テキストを選択してコピーしてください。'],
+  ['关闭预览','プレビューを閉じる'], ['打开 PDF','PDFを開く'], ['文档尚未处理完成。','資料の処理はまだ完了していません。'], ['DOCUMENT PREVIEW','ドキュメントプレビュー'],
+  ['暂时无法连接知识库','ナレッジベースに接続できません'], ['重新连接','再接続'], ['删除这份文档？','この資料を削除しますか？'],
+  [' 的原文件与知识索引将从本应用中删除。',' の原本とインデックスがアプリから削除されます。'], ['删除文档','資料を削除'], ['文档已删除。','資料を削除しました。'], ['取消','キャンセル'],
+  ['语义检索','意味検索'], ['找到问题相关的知识片段','質問に関連するチャンクを検索'], ['查看最近回答的引用','最近の回答の引用を表示'],
   ['HNSW 需要 PostgreSQL + pgvector 和 AI 问答模式；当前请使用 exact。','HNSWにはPostgreSQL + pgvectorとAI質問応答モードが必要です。現在はexactを使用してください。'], ['企业知识助手','企業ナレッジアシスタント'], ['企业工作空间','企業ワークスペース'], ['本地版本 · Phase 01','ローカル版 · Phase 01'],
   ['发起新问答','新しい質問'], ['工作空间','ワークスペース'], ['知识问答','ナレッジQ&A'], ['文档知识库','ドキュメント'], ['模型设置','モデル設定'],
   ['本次问答','今回の質問'], ['你的问题会显示在这里','質問履歴がここに表示されます'], ['文件保存在本机','ファイルはこのPCに保存されます'],
@@ -51,7 +62,7 @@ const jaPairs = [
 function localized(text) {
   if (state.locale !== 'ja') return text;
   let result = text;
-  for (const [from, to] of jaPairs) result = result.split(from).join(to);
+  for (const [from, to] of [...jaPairs].sort((a,b) => b[0].length - a[0].length)) result = result.split(from).join(to);
   const cleanup = [
     ['界面语言', '表示言語'], ['选择应用界面和提示信息的语言。', 'アプリの表示と案内メッセージの言語を選択します。'], ['简体中文', '中国語（簡体字）'],
     ['连接兼容 OpenAI 的服务，自由选择回答与 Embedding 模型。', 'OpenAI互換サービスに接続し、回答モデルとEmbeddingモデルを選択します。'],
@@ -92,6 +103,10 @@ function applyLocale() {
   if (dropzone) dropzone.setAttribute('aria-label', state.locale === 'ja' ? 'PDFをアップロードまたはドラッグ' : '上传或拖入 PDF');
   document.querySelectorAll('[data-retry]').forEach(button => { button.setAttribute('aria-label', state.locale === 'ja' ? '資料を再構築' : '重新索引'); button.title = state.locale === 'ja' ? '再構築' : '重新索引'; });
   document.querySelectorAll('[data-delete]').forEach(button => { button.setAttribute('aria-label', state.locale === 'ja' ? '資料を削除' : '删除'); button.title = state.locale === 'ja' ? '削除' : '删除'; });
+  document.querySelectorAll('[aria-label],[title],[placeholder]').forEach(node => {
+    if (node.closest(skip)) return;
+    for (const attr of ['aria-label','title','placeholder']) if (node.hasAttribute(attr)) node.setAttribute(attr, localized(node.getAttribute(attr)));
+  });
 }
 
 function toast(message, error = false) {
@@ -155,7 +170,7 @@ function shell() {
 function updateChrome() {
   $('#nav-doc-count').textContent = state.docs.length;
   $('#mode-label').innerHTML = `${icon(state.settings.mode === 'api' ? 'spark' : 'search')}<span>${state.locale === 'ja' ? (state.settings.mode === 'api' ? 'AI質問応答モード' : '原文検索モード') : (state.settings.mode === 'api' ? 'AI 问答模式' : '原文检索模式')}</span>${icon('down')}`;
-  $('#view-title').textContent = {chat:'知识问答', documents:'文档知识库', settings:'模型设置'}[state.view];
+  $('#view-title').textContent = localized({chat:'知识问答', documents:'文档知识库', settings:'模型设置'}[state.view]);
   document.querySelectorAll('.nav-item').forEach(node => node.classList.toggle('active', node.dataset.view === state.view));
   $('#recent-list').innerHTML = state.messages.length ? state.messages.slice(-5).reverse().map(message => `<button class="recent-item" data-message="${message.id}">${icon('chat')}<span>${esc(message.question)}</span></button>`).join('') : `<p class="muted recent-empty">${state.locale === 'ja' ? '質問履歴がここに表示されます' : '你的问题会显示在这里'}</p>`;
 }
@@ -273,12 +288,13 @@ async function submitSettings(test) {
   const buttons = [...form.querySelectorAll('button')];
   buttons.forEach(button => button.disabled = true);
   feedback.innerHTML = `<p class="feedback">${test ? '<i class="spinner"></i>正在测试模型服务…' : '正在保存…'}</p>`;
+  applyLocale();
   try {
     const result = await api(test ? '/settings/test' : '/settings', {method:test ? 'POST' : 'PUT', body:data});
     if (!test) {state.settings = result; $('#api-key').value=''; $('#api-key').placeholder = result.has_key ? '密钥已配置，留空保留' : '输入 API 密钥'; await refreshDocs(); updateChrome();}
     feedback.innerHTML = `<p class="feedback success">${icon('check')}${esc(test ? result.message : '配置已保存。' + (state.docs.some(doc => doc.needs_reindex) ? '请前往文档知识库重建索引。' : ''))}</p>`;
   } catch(error) {feedback.innerHTML = `<p class="feedback failure">${esc(error.message)}</p>`;}
-  finally {buttons.forEach(button => button.disabled = false);}
+  finally {buttons.forEach(button => button.disabled = false); applyLocale();}
 }
 
 async function refreshDocs() {
@@ -306,7 +322,7 @@ async function uploadFiles(fileList) {
     } catch(error) {toast(`${file.name}：${error.message}`, true);}
   }
   state.uploading=false;
-  if ($('#upload-status')) $('#upload-status').innerHTML = `<p class="upload-result">本批 ${files.length} 份文件：已接收 ${succeeded} 份，未接收 ${files.length-succeeded} 份。处理结果见下表。</p>`;
+  if ($('#upload-status')) $('#upload-status').innerHTML = `<p class="upload-result">${state.locale === 'ja' ? `${files.length}件中${succeeded}件を受け付け、${files.length-succeeded}件は受け付けできませんでした。処理結果は以下の一覧を確認してください。` : `本批 ${files.length} 份文件：已接收 ${succeeded} 份，未接收 ${files.length-succeeded} 份。处理结果见下表。`}</p>`;
 }
 
 async function loadSample() {
@@ -332,6 +348,7 @@ async function previewDocument(id) {
     const dialog = $('#preview-dialog');
     dialog.innerHTML = `<div class="dialog-header"><div><p class="eyebrow">DOCUMENT PREVIEW</p><h2 id="preview-title">${esc(data.document.name)}</h2></div><button class="icon-btn" data-action="close-dialog" aria-label="关闭预览">${icon('close')}</button></div><div class="dialog-meta">${data.document.pages} 页 · ${data.chunks.length} 个知识片段 <a class="text-button" href="/api/documents/${id}/file" target="_blank" rel="noopener">打开 PDF${icon('link')}</a></div><div class="preview-chunks">${data.chunks.length ? data.chunks.map(chunk => `<section><a class="page-label" href="/api/documents/${id}/file#page=${chunk.page}" target="_blank" rel="noopener">PDF 第 ${chunk.page} 页${icon('link')}</a><p>${esc(chunk.text)}</p></section>`).join('') : `<p class="muted">${esc(data.document.error || '文档尚未处理完成。')}</p>`}</div>`;
     dialog.showModal();
+    applyLocale();
   } catch(error) {toast(error.message,true);}
 }
 
@@ -357,7 +374,7 @@ document.addEventListener('click', async event => {
   if (action === 'close-dialog') button.closest('dialog').close();
   if (action === 'reindex') {
     button.disabled=true;
-    try {const result=await api('/documents/reindex',{method:'POST'}); toast(`已安排 ${result.queued} 份文档重新建立索引。`); await refreshDocs();} catch(error) {toast(error.message,true);} finally {button.disabled=false;}
+    try {const result=await api('/documents/reindex',{method:'POST'}); toast(state.locale === 'ja' ? `${result.queued}件のインデックス再構築を開始しました。` : `已安排 ${result.queued} 份文档重新建立索引。`); await refreshDocs();} catch(error) {toast(error.message,true);} finally {button.disabled=false;}
   }
   if (button.dataset.prompt) {state.draft=button.dataset.prompt; $('#question').value=state.draft; $('#question').focus();}
   if (button.dataset.source) showSource(button.dataset.source);
@@ -371,13 +388,14 @@ document.addEventListener('click', async event => {
     const dialog=$('#delete-dialog');
     dialog.innerHTML=`<div class="dialog-header"><h2 id="delete-title">删除这份文档？</h2><button class="icon-btn" data-action="close-dialog" aria-label="取消">${icon('close')}</button></div><p class="delete-copy">${esc(doc.name)} 的原文件与知识索引将从本应用中删除。</p><div class="settings-actions"><button class="button secondary" data-action="close-dialog">取消</button><button class="button destructive" id="confirm-delete">删除文档</button></div>`;
     dialog.showModal();
+    applyLocale();
     $('#confirm-delete').onclick=async () => {try {await api(`/documents/${id}`,{method:'DELETE'}); dialog.close(); await refreshDocs(); toast('文档已删除。');} catch(error) {toast(error.message,true);}};
   }
 });
 
 async function init() {
   try {const [config, docs]=await Promise.all([api('/settings'),api('/documents')]); state.settings=config; state.docs=docs.documents; shell(); await refreshDocs();}
-  catch(error) {$('#app').innerHTML=`<div class="boot boot-error"><h1>暂时无法连接知识库</h1><p>${esc(error.message)}</p><button class="button primary" id="retry-connect">重新连接</button></div>`; $('#retry-connect').onclick=init;}
+  catch(error) {$('#app').innerHTML=`<div class="boot boot-error"><h1>暂时无法连接知识库</h1><p>${esc(error.message)}</p><button class="button primary" id="retry-connect">重新连接</button></div>`; $('#retry-connect').onclick=init; applyLocale();}
 }
 init();
 

@@ -1,0 +1,408 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-15T02:27:32.349213+00:00",
+  "mode": "api",
+  "dataset_id": "policy-challenge-v2.1",
+  "tuning_split": "dev",
+  "concurrency": 2,
+  "selection_rule": "Max dev Answer Correctness when judged, then Recall@k, nDCG@k, then fewest chunks; never test metrics.",
+  "status": "completed",
+  "chunk_unit": "Unicode characters, adjusted toward sentence boundaries; physical pages never merged.",
+  "results": [
+    {
+      "size": 450,
+      "overlap": 0,
+      "chunk_count": 100,
+      "indexing_ms": 19682.687500026077,
+      "recall_at_k": 0.9047619047619048,
+      "precision_at_k": 0.25238095238095243,
+      "mrr_at_k": 0.8373015873015872,
+      "ndcg_at_k": 0.8176620781683726,
+      "answer_correctness": 0.7857142857142857,
+      "recall_at_1": 0.5992063492063492,
+      "recall_at_3": 0.8055555555555556,
+      "false_refusal": 0.21428571428571427,
+      "question_p50_ms": 6866.2266499886755,
+      "question_p95_ms": 11097.676844970556,
+      "run_cost_usd": 0.20311336000000002
+    },
+    {
+      "size": 450,
+      "overlap": 60,
+      "chunk_count": 100,
+      "indexing_ms": 16635.56660001632,
+      "recall_at_k": 0.9047619047619048,
+      "precision_at_k": 0.25238095238095243,
+      "mrr_at_k": 0.8253968253968254,
+      "ndcg_at_k": 0.8122741166081126,
+      "answer_correctness": 0.7619047619047619,
+      "recall_at_1": 0.5873015873015873,
+      "recall_at_3": 0.8055555555555556,
+      "false_refusal": 0.23809523809523808,
+      "question_p50_ms": 5991.340600012336,
+      "question_p95_ms": 10409.079210017808,
+      "run_cost_usd": 0.18791011999999999
+    },
+    {
+      "size": 900,
+      "overlap": 0,
+      "chunk_count": 96,
+      "indexing_ms": 24288.330999959726,
+      "recall_at_k": 0.8809523809523809,
+      "precision_at_k": 0.24761904761904763,
+      "mrr_at_k": 0.8353174603174603,
+      "ndcg_at_k": 0.8127627391198815,
+      "answer_correctness": 0.8571428571428571,
+      "recall_at_1": 0.5992063492063492,
+      "recall_at_3": 0.8134920634920635,
+      "false_refusal": 0.14285714285714285,
+      "question_p50_ms": 5988.016599963885,
+      "question_p95_ms": 11451.935389978462,
+      "run_cost_usd": 0.19426016
+    },
+    {
+      "size": 900,
+      "overlap": 120,
+      "chunk_count": 96,
+      "indexing_ms": 22949.619099963456,
+      "recall_at_k": 0.8809523809523809,
+      "precision_at_k": 0.24761904761904763,
+      "mrr_at_k": 0.8353174603174603,
+      "ndcg_at_k": 0.8127627391198815,
+      "answer_correctness": 0.8333333333333334,
+      "recall_at_1": 0.5992063492063492,
+      "recall_at_3": 0.8134920634920635,
+      "false_refusal": 0.14285714285714285,
+      "question_p50_ms": 5800.879049987998,
+      "question_p95_ms": 11267.203410004731,
+      "run_cost_usd": 0.19017516
+    },
+    {
+      "size": 1200,
+      "overlap": 120,
+      "chunk_count": 96,
+      "indexing_ms": 18023.425200022757,
+      "recall_at_k": 0.8809523809523809,
+      "precision_at_k": 0.24761904761904763,
+      "mrr_at_k": 0.8234126984126985,
+      "ndcg_at_k": 0.8073747775596216,
+      "answer_correctness": 0.7619047619047619,
+      "recall_at_1": 0.5873015873015873,
+      "recall_at_3": 0.8134920634920635,
+      "false_refusal": 0.19047619047619047,
+      "question_p50_ms": 5839.233250007965,
+      "question_p95_ms": 11028.485999949044,
+      "run_cost_usd": 0.18900416
+    },
+    {
+      "size": 1200,
+      "overlap": 180,
+      "chunk_count": 96,
+      "indexing_ms": 20143.275999987964,
+      "recall_at_k": 0.8809523809523809,
+      "precision_at_k": 0.24761904761904763,
+      "mrr_at_k": 0.8353174603174603,
+      "ndcg_at_k": 0.8108513293376957,
+      "answer_correctness": 0.7857142857142857,
+      "recall_at_1": 0.5992063492063492,
+      "recall_at_3": 0.8134920634920635,
+      "false_refusal": 0.21428571428571427,
+      "question_p50_ms": 5737.814749998506,
+      "question_p95_ms": 12018.583384994417,
+      "run_cost_usd": 0.19583936
+    }
+  ],
+  "selected": {
+    "size": 900,
+    "overlap": 0
+  },
+  "holdout": {
+    "retrieval": {
+      "any_retrieval_for_unanswerable": {
+        "count": 12,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_3": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_5": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_k": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "ndcg_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "ndcg_at_3": {
+        "count": 42,
+        "mean": 0.7879535408048549,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "ndcg_at_5": {
+        "count": 42,
+        "mean": 0.8055360062360735,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "ndcg_at_k": {
+        "count": 42,
+        "mean": 0.8055360062360735,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "precision_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "precision_at_3": {
+        "count": 42,
+        "mean": 0.38888888888888884,
+        "p50": 0.3333333333333333,
+        "p95": 0.6666666666666666
+      },
+      "precision_at_5": {
+        "count": 42,
+        "mean": 0.24761904761904763,
+        "p50": 0.2,
+        "p95": 0.4
+      },
+      "precision_at_k": {
+        "count": 42,
+        "mean": 0.24761904761904763,
+        "p50": 0.2,
+        "p95": 0.4
+      },
+      "recall_at_1": {
+        "count": 42,
+        "mean": 0.5833333333333334,
+        "p50": 0.5,
+        "p95": 1.0
+      },
+      "recall_at_3": {
+        "count": 42,
+        "mean": 0.8452380952380952,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "recall_at_5": {
+        "count": 42,
+        "mean": 0.8809523809523809,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "recall_at_k": {
+        "count": 42,
+        "mean": 0.8809523809523809,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "retrieved_unique_pages": {
+        "count": 54,
+        "mean": 5.0,
+        "p50": 5.0,
+        "p95": 5.0
+      }
+    },
+    "answer_quality": {
+      "all_claims_grounded": {
+        "count": 39,
+        "mean": 0.9230769230769231,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "answer_correctness": {
+        "count": 42,
+        "mean": 0.8333333333333334,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "citation_groundedness": {
+        "count": 36,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "claim_groundedness": {
+        "count": 39,
+        "mean": 0.9358974358974359,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "correct_refusal": {
+        "count": 12,
+        "mean": 0.9166666666666666,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "expected_facts_coverage_lexical": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "false_refusal": {
+        "count": 42,
+        "mean": 0.16666666666666666,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "generator_false_refusal": {
+        "count": 42,
+        "mean": 0.09523809523809523,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "grounding_false_refusal": {
+        "count": 42,
+        "mean": 0.07142857142857142,
+        "p50": 0.0,
+        "p95": 0.9500000000000028
+      },
+      "grounding_rejected_correct_and_grounded": {
+        "count": 3,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "invalid_model_response": {
+        "count": 54,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "quote_match_failure": {
+        "count": 54,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "reference_exact_match": {
+        "count": 42,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "reference_token_f1_lexical": {
+        "count": 42,
+        "mean": 0.36147340232314,
+        "p50": 0.39642857142857146,
+        "p95": 0.6707729468599036
+      },
+      "refusal_accuracy": {
+        "count": 54,
+        "mean": 0.8518518518518519,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "unsupported_answer": {
+        "count": 54,
+        "mean": 0.05555555555555555,
+        "p50": 0.0,
+        "p95": 0.3500000000000014
+      },
+      "withheld_candidate_correctness": {
+        "count": 3,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      }
+    },
+    "latency_ms": {
+      "generation": {
+        "count": 54,
+        "mean": 3395.700814814815,
+        "p50": 3191.365,
+        "p95": 6278.5334
+      },
+      "provider_http": {
+        "count": 54,
+        "mean": 5537.503222222223,
+        "p50": 5405.0205000000005,
+        "p95": 9730.80815
+      },
+      "query_embedding": {
+        "count": 54,
+        "mean": 329.0717037037037,
+        "p50": 328.206,
+        "p95": 441.1453
+      },
+      "retrieval": {
+        "count": 54,
+        "mean": 13.208777777777778,
+        "p50": 13.192,
+        "p95": 13.8969
+      },
+      "verification": {
+        "count": 39,
+        "mean": 2510.3465128205125,
+        "p50": 2260.541,
+        "p95": 4266.9601
+      },
+      "question_total": {
+        "count": 54,
+        "mean": 5558.685096296594,
+        "p50": 5426.147049991414,
+        "p95": 9751.654520002194
+      }
+    },
+    "cost_usd": {
+      "total": 0.0437474,
+      "known_subtotal": 0.0437474,
+      "unknown_questions": 0,
+      "per_question": {
+        "count": 54,
+        "mean": 0.000810137037037037,
+        "p50": 0.0007945000000000001,
+        "p95": 0.001481866
+      },
+      "average_per_query": 0.000810137037037037
+    },
+    "token_usage": {
+      "embedding_tokens": 1600,
+      "input_tokens": 72417,
+      "output_tokens": 24360,
+      "total_tokens": 98377,
+      "complete": true
+    },
+    "query_count": 54,
+    "status_counts": {
+      "answered": 36,
+      "insufficient_evidence": 15,
+      "unsupported_answer": 3
+    }
+  },
+  "limitations": [
+    "Templated multilingual cases are correlated, not independent statistical samples.",
+    "Dev/test use different organizations and numbers but share rule templates.",
+    "Reference evidence is page-level; retrieval recall does not establish fact coverage.",
+    "Human review on representative private documents remains necessary.",
+    "Page text starts after PDF parsing; end-to-end PDF coverage is tested by live_smoke.",
+    "One pass on a tiny corpus; p95 is descriptive, not a statistically stable production estimate.",
+    "Local hashed retrieval is a baseline, not a multilingual embedding model.",
+    "Changing production defaults is a separate decision; this script only reports results."
+  ]
+}

@@ -7,10 +7,10 @@
 | 1 | 真实 Embedding + LLM | 两页 PDF 的真实端到端 smoke；识别余额不足且不再盲目重试 | 补充额度后已实际通过解析、Embedding、结构化生成、quote/claim 校验和第 2 页引用，见[报告](../reports/live-api-smoke.md) |
 | 2 | 困难 Evaluation Dataset | 新增 48 文档、96 页、108 题；中日英、旧/新/草案、相似制度、数字陷阱、否定、例外、跨文档和无答案 | 结构与页级证据校验通过；同语言所有竞争版本在检索范围内；模板仍相关，尚非人工独立评测集 |
 | 3 | 真实 RAG 质量评估 | Recall@1/3/5、MRR、nDCG；隔离输入的两个独立 Judge 请求评分 Correctness / Citation Groundedness；Refusal Accuracy | 正式真实模型结果见[冻结 test 报告](../reports/chunks-api/chunk-api-selected-test.md)，不以本地原文检索替代生成指标 |
-| 4 | Chunk 参数由实验决定 | 六组 450/900/1200 配置；固定同分排序，只用 dev 选参；API 优先 Answer Correctness，再按 Recall/nDCG/Chunk 数排序 | 本地困难集选参与 test 结果见[报告](../reports/chunks-v2/chunk-experiment-local.md)；不据此声称 API 模型的最优参数 |
+| 4 | Chunk 参数由实验决定 | 六组真实 API 配置全部完成；只用 dev 选出 900/0 并冻结后运行 test | [API 对照](../reports/chunks-api/chunk-experiment-api.md)；900/1200 四组产生同样边界，不能归因参数改善。本机示例使用 900/0，通用默认值保持，待长页验证 |
 | 5 | 校验器误拒答分析 | 分别记录 quote_mismatch、unsupported_answer、invalid_model_response、false_refusal；被拦截候选由独立 Judge 复核 | 真实候选记录见各评估 JSON；引用 Judge 看不到 gold evidence，防止借用未引用证据高估支持度；公开 HTTP 不返回被拦截候选 |
-| 6 | Generator / Verifier 分离 | `chat_model`、`verifier_model` 独立，空 verifier 回退 generator；共享 Provider/连接池 | 路由测试通过，修改不影响 Embedding profile；用户选择 Luna/Luna 经济基线，模型差异不是当前优势 |
-| 7 | Verification 模式 | off：schema/来源编号；fast：再校验原文 quote；strict：再调用模型逐断言验证 | 模式、假 quote、未知语义支持度有测试；off/fast 不宣称语义验证通过 |
+| 6 | Generator / Verifier 分离 | `chat_model`、`verifier_model` 独立；真实对比 Luna 与 gpt-4.1-mini Verifier，各跑完整 dev | [模型试验](../reports/api-results.md)：Mini 只多答对一题且答案独立生成，不足以证明改善，保留经济基线；修改不影响 Embedding profile |
+| 7 | Verification 模式 | off：schema/来源编号；fast：再校验原文 quote；strict：再调用模型逐断言验证 | [三模式真实测试](../reports/verification/comparison.md)全部完成；strict 有误拦截且延迟/成本更高，off/fast 不宣称运行时语义验证通过 |
 | 8 | PostgreSQL 验收 | GitHub Linux runner 使用真实 pgvector 服务；CI 必须有测试 URL，任何 skipped 都算失败 | 实际数据库结果从 Actions 下载保存，见 README；本机没有安装 PostgreSQL |
 | 9 | 1k/10k/100k Exact vs HNSW | 同 seed、384 维、20 查询、3 次重复；独立 float64 NumPy 真值；预热排除；报告构建时间、大小、计划和召回 | 通过真实 GitHub PostgreSQL 运行；只有完成记录才计为 measured，不预设 ANN 一定更好 |
 | 10 | HNSW 生命周期 | 创建移到写入事务和维护路径；重建/删除清理废弃 profile 索引；查询不做 DDL | 真实 PG 测试覆盖旧索引清理、缺索引明确报错、入库前准备和删除清理 |
@@ -29,6 +29,10 @@ Recall 截取实际 Top-K Chunk 后按物理页去重；重复片段不能从预
 `false_refusal` 表示有答案题未交付答案，包含生成拒答及校验拦截，不表示这些拦截都不合理。`grounding_rejected_correct_and_grounded` 才统计被拦截候选经独立 Judge 判断既正确又有依据的情况。未配置 Judge 或发生 Judge 错误时不得输出完整质量验收。
 
 本地 Chunk 对比有部分配置产生相同边界，因为页长短于参数值。这是观测结果；扩大真实长页资料后仍需重做实验。不跨物理页的设计继续由 [ADR 0001](adr/0001-physical-page-chunks.md) 约束。
+
+本轮真实 API 的完整汇总、相同分块边界组、Verifier 试验和避免重复计费的账本见 [实验报告](../reports/api-results.md)。测试集 strict 正确性、引用支持度、拒答准确率和逐题失败原因均公开；不能以已交付答案的引用高分掩盖未交付答案。独立 Judge 遇到一次格式错误，已只补评原答案，原始失败及费用保留；现在格式错误最多重试一次，未恢复时仍让实验失败。
+
+日文浏览器验收还修复了异步保存提示、重建提示、动态导航标题和引用面板按钮的漏译，PDF 原文及文件名继续保留原语言。真实模型日语生成和中文 PDF 引用单独记录为浏览器 smoke，不混入冻结测试集。
 
 ## 测试和凭据隔离
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "created_at": "2026-09-15T01:33:38.161934+00:00",
+  "created_at": "2026-09-15T02:26:36.240219+00:00",
   "environment": {
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
@@ -39,14 +39,14 @@
       "hnsw_index_used": false,
       "query_latency_ms": {
         "count": 60,
-        "mean": 175.24034778333424,
-        "p50": 171.49980100000306,
-        "p95": 196.1325507000012
+        "mean": 121.72291321666269,
+        "p50": 120.33569149997447,
+        "p95": 122.99707195001872
       },
       "recall_at_k_against_independent_exact": 1.0,
       "minimum_query_recall": 1.0,
       "warmup_query_count": 20,
-      "indexing_ms": 331.0392549999932,
+      "indexing_ms": 425.18642300001375,
       "hnsw_index_build_ms": null,
       "database_file_bytes": 8798208
     },
@@ -138,14 +138,14 @@
       "hnsw_index_used": false,
       "query_latency_ms": {
         "count": 60,
-        "mean": 3.2838679666670125,
-        "p50": 3.2833085000021356,
-        "p95": 3.336136499996911
+        "mean": 2.536304100002932,
+        "p50": 2.5391815000261886,
+        "p95": 2.5914293499738505
       },
       "recall_at_k_against_independent_exact": 1.0,
       "minimum_query_recall": 1.0,
       "warmup_query_count": 20,
-      "indexing_ms": 463.20005699999456,
+      "indexing_ms": 334.5600640000157,
       "chunks_relation_bytes": 2162688,
       "hnsw_index_build_ms": null
     },
@@ -229,15 +229,15 @@
       "hnsw_index_used": true,
       "query_latency_ms": {
         "count": 60,
-        "mean": 4.022520716666851,
-        "p50": 4.008961000003808,
-        "p95": 4.132908200006824
+        "mean": 2.8493755166645465,
+        "p50": 2.8683369999953356,
+        "p95": 2.9294214499856253
       },
       "recall_at_k_against_independent_exact": 0.99,
       "minimum_query_recall": 0.8,
       "warmup_query_count": 20,
-      "indexing_ms": 463.20005699999456,
-      "hnsw_index_build_ms": 258.08682800000327
+      "indexing_ms": 334.5600640000157,
+      "hnsw_index_build_ms": 195.5306610000207
     }
   },
   "comparison_complete": true
