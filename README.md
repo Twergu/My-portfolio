@@ -14,17 +14,17 @@ PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构
 | 项目 | 实测结果与范围 |
 |---|---|
 | 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
-| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34921138106)，版本 `37b940a`；[数据库测试报告](reports/ci/tests.md) |
+| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34936340277)，版本 `dd44061`；[数据库测试报告](reports/ci/tests.md) |
 | 困难集 / 本地检索 | policy-challenge-v2.1；test Recall@1/3/5 = 0.5873 / 0.7500 / 0.8611；MRR=0.8302，nDCG=0.7819 |
 | Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
-| 1,000 chunks / exact | measured：P50/P95 = 2.5058/2.6536 ms；Recall@5=1.0000 |
-| 1,000 chunks / hnsw | measured：P50/P95 = 2.7874/3.0846 ms；Recall@5=1.0000 |
-| 10,000 chunks / exact | measured：P50/P95 = 8.2161/8.3012 ms；Recall@5=1.0000 |
-| 10,000 chunks / hnsw | measured：P50/P95 = 3.5970/3.7907 ms；Recall@5=0.5800 |
-| 100,000 chunks / exact | measured：P50/P95 = 73.1836/101.6288 ms；Recall@5=1.0000 |
-| 100,000 chunks / hnsw | measured：P50/P95 = 6.0380/6.6225 ms；Recall@5=0.1200 |
+| 1,000 chunks / exact | measured：P50/P95 = 3.2678/3.5175 ms；Recall@5=1.0000 |
+| 1,000 chunks / hnsw | measured：P50/P95 = 3.9125/3.9688 ms；Recall@5=1.0000 |
+| 10,000 chunks / exact | measured：P50/P95 = 11.0706/11.5921 ms；Recall@5=1.0000 |
+| 10,000 chunks / hnsw | measured：P50/P95 = 4.7553/4.9425 ms；Recall@5=0.5500 |
+| 100,000 chunks / exact | measured：P50/P95 = 102.2489/144.1431 ms；Recall@5=1.0000 |
+| 100,000 chunks / hnsw | measured：P50/P95 = 8.2030/8.9119 ms；Recall@5=0.1400 |
 | Vector Benchmark | [硬件、方法、构建耗时与索引大小](reports/vector-scale.md)；合成向量、单客户端、热缓存，不代表语义检索质量 |
-| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 120.3357 / pgvector_exact 2.5392 / pgvector_hnsw 2.8683；[对照报告](reports/store-benchmark.md) |
+| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 169.2853 / pgvector_exact 3.2762 / pgvector_hnsw 3.9129；[对照报告](reports/store-benchmark.md) |
 | Docker | passed：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |
 | 真实 API 流程 | passed；PDF→Embedding→结构化回答→原文/断言校验→物理页引用；[真实 smoke](reports/live-api-smoke.md) |
 
@@ -55,6 +55,8 @@ HNSW 表格使用 ef_search=100；完整报告另列 400/1000 的召回与延时
 <!-- EXPERIMENT_RESULTS_END -->
 
 ## 运行与测试状态
+
+独立 Judge 也会误判。事后原文复核发现，它曾把资料未说明的“不含税”判为有依据；该答案已被运行时 Verifier 拦截。参见 [依据验证分歧与反例](reports/grounding-case-review.md)。自动 Citation Groundedness 和误拒答诊断不等同于人工验收。
 
 **测试数量不在 README 中写死。** 执行下面命令后，程序从本次 pytest JUnit XML 生成 [测试报告](reports/tests.md) 和 [JSON 数据](reports/tests.json)，记录通过、失败、错误、跳过数量、时间与源码摘要。报告是注明时间的运行快照，跳过不算通过。
 

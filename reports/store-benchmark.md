@@ -1,14 +1,14 @@
 # SQLite vs pgvector benchmark
 
-Generated: 2026-09-15T02:26:36.240219+00:00
+Generated: 2026-09-15T06:19:14.719571+00:00
 
 Seed: 20260914; vectors: 1000; dimensions: 384; queries: 20; repeats: 3.
 
 | Backend | Status | Query p50 (ms) | Query p95 (ms) | Recall@k | Indexing (ms) | HNSW build (ms) |
 |---|---|---:|---:|---:|---:|---:|
-| sqlite_exact | measured | 120.336 | 122.997 | 1.000 | 425.186 | — |
-| pgvector_exact | measured | 2.539 | 2.591 | 1.000 | 334.560 | — |
-| pgvector_hnsw | measured | 2.868 | 2.929 | 0.990 | 334.560 | 195.531 |
+| sqlite_exact | measured | 169.285 | 202.079 | 1.000 | 341.099 | — |
+| pgvector_exact | measured | 3.276 | 5.782 | 1.000 | 500.772 | — |
+| pgvector_hnsw | measured | 3.913 | 5.493 | 0.990 | 500.772 | 255.792 |
 
 Missing measurements are not estimated. No speedup claim is made until both databases have been measured.
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "created_at": "2026-09-15T02:26:36.240219+00:00",
+  "created_at": "2026-09-15T06:19:14.719571+00:00",
   "environment": {
     "python": "3.12.14",
     "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
@@ -39,14 +39,14 @@
       "hnsw_index_used": false,
       "query_latency_ms": {
         "count": 60,
-        "mean": 121.72291321666269,
-        "p50": 120.33569149997447,
-        "p95": 122.99707195001872
+        "mean": 173.09137201666687,
+        "p50": 169.28529100000134,
+        "p95": 202.0792759999985
       },
       "recall_at_k_against_independent_exact": 1.0,
       "minimum_query_recall": 1.0,
       "warmup_query_count": 20,
-      "indexing_ms": 425.18642300001375,
+      "indexing_ms": 341.0988259999925,
       "hnsw_index_build_ms": null,
       "database_file_bytes": 8798208
     },
@@ -138,14 +138,14 @@
       "hnsw_index_used": false,
       "query_latency_ms": {
         "count": 60,
-        "mean": 2.536304100002932,
-        "p50": 2.5391815000261886,
-        "p95": 2.5914293499738505
+        "mean": 3.644128999999907,
+        "p50": 3.2761589999950047,
+        "p95": 5.781595650004334
       },
       "recall_at_k_against_independent_exact": 1.0,
       "minimum_query_recall": 1.0,
       "warmup_query_count": 20,
-      "indexing_ms": 334.5600640000157,
+      "indexing_ms": 500.77191399999776,
       "chunks_relation_bytes": 2162688,
       "hnsw_index_build_ms": null
     },
@@ -229,15 +229,15 @@
       "hnsw_index_used": true,
       "query_latency_ms": {
         "count": 60,
-        "mean": 2.8493755166645465,
-        "p50": 2.8683369999953356,
-        "p95": 2.9294214499856253
+        "mean": 4.117037333332736,
+        "p50": 3.912863499998309,
+        "p95": 5.493102700001629
       },
       "recall_at_k_against_independent_exact": 0.99,
       "minimum_query_recall": 0.8,
       "warmup_query_count": 20,
-      "indexing_ms": 334.5600640000157,
-      "hnsw_index_build_ms": 195.5306610000207
+      "indexing_ms": 500.77191399999776,
+      "hnsw_index_build_ms": 255.79167299999028
     }
   },
   "comparison_complete": true
