@@ -16,6 +16,11 @@ function applyAccess() {
   if (!user) return;
   const admin = user.roles.includes('admin');
   const editor = admin || user.roles.includes('editor');
+  const ja = state.locale === 'ja';
+  const displayName = state.auth.mode === 'local' ? (ja ? 'ローカルユーザー' : '本地用户') : user.username;
+  if ($('.local-user div')) $('.local-user div').innerHTML = `${esc(displayName)}<small>${esc(user.roles.join(' · '))}</small>`;
+  if ($('.local-user b')) $('.local-user b').textContent = 'v0.4';
+  if ($('.workspace small')) $('.workspace small').textContent = state.auth.mode === 'required' ? (ja ? 'アクセス制御が有効' : '已启用访问控制') : (ja ? 'ローカル・単一ユーザー' : '本地单用户模式');
   document.querySelectorAll('[data-action="upload"],[data-action="sample"]').forEach(button => button.disabled = !editor);
   document.querySelectorAll('[data-action="reindex"]').forEach(button => button.disabled = !admin);
   if (!admin) document.querySelectorAll('#settings-form input,#settings-form select,#settings-form button').forEach(el => el.disabled = true);
