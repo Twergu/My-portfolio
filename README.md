@@ -6,36 +6,58 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
-
-## 本轮 v3 实测与配置
-
 <!-- V3_RESULTS_START -->
-真实三路检索 test：Dense / Hybrid / Hybrid+Reranker 的 Recall@5 分别为 88.1% / 88.1% / 100%；重排同时增加真实 API 延时和成本。完整质量和 CI 验收以 [逐项报告](docs/retrieval-optimization-report.md) 与 `reports/v3/` 的状态为准。
+## v3 真实检索与回答质量
+
+数据来自保存的 JSON；54 道 test 问题（42 可回答、12 无答案），Luna / text-embedding-3-small，独立评估 Judge 为 gpt-4.1。
+
+| 检索方案 | Recall@1 | Recall@3 | Recall@5 | MRR | nDCG | 检索 P50/P95 秒 | 错误 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| dense | 0.583 | 0.845 | 0.881 | 0.825 | 0.806 | 0.458/0.553 | 0 |
+| hybrid | 0.631 | 0.810 | 0.881 | 0.861 | 0.818 | 0.420/0.591 | 0 |
+| hybrid_reranked | 0.738 | 1.000 | 1.000 | 0.964 | 0.974 | 6.164/9.052 | 0 |
+
+三路检索报告的 dev 有 1 次格式错误，原始记录保留；后续代码加入一次有上限的格式修复。test 三组均无错误。
+
+| 完整 RAG | 正确率 / n | 引用有据 / n | 拒答准确率 | 误拒答率 | P50/P95 秒 | USD/query |
+|---|---:|---:|---:|---:|---:|---:|
+| strict | 0.905 / 42 | 1.000 / 38 | 0.926 | 0.095 | 13.905/19.923 | 0.002028 |
+| fast | 0.929 / 42 | 1.000 / 40 | 0.963 | 0.048 | 10.498/15.315 | 0.001694 |
+
+完整 RAG 和纯检索实验是不同运行，排序可能不同。费用为配置单价估算；USD/query 排除索引和离线 Judge。fast 没有语义 Verifier，自动 Judge 的高分不能替代运行时保障。
+
+Selectivity 回放：59 条生成断言中 0 条可跳过，完整可省去 0 次 Verifier 请求。这是对固定候选的离线策略检查，不是一次新的 API 延迟实验。
+
+本轮可追溯实验费用小计 USD 0.662463。此前中断运行的用量未知，不能把小计当成全部账单。
+
+数据集未经人工审核；这些结果只代表当前合成回归集。完整逐题原文、tokens、阶段耗时、失败及单价见 [v3 JSON](reports/v3/summary.json)。
 <!-- V3_RESULTS_END -->
+
+“误拒答率”在此表示可回答问题的未交付率，包含错误候选被正确拦截；它不等于 Verifier 误判率。已发现 Judge 对税额限定词的漏判与对额外正确解释的误判，见 [逐例诊断](reports/v3/grounding-diagnostics.md)。
 
 在模型设置中选择 `retrieval_mode=hybrid`、`candidate_k=20`、`reranker_mode=llm` 即启用重排；可指定独立 `reranker_model`。当前默认 Dense/不重排保留便宜路径；Exact 仍是数据库默认模式。`strict + all` 检查全部断言，`selective` 跳过项始终标为未验证。
 
 文档信息面板可编辑政策状态、版本、部门和生效区间；问答输入框上方可设置检索筛选。多人访问须先按 [ACL 配置步骤](docs/access-control.md) 启用 `RAG_AUTH_MODE=required`，不能把 local 开发模式当成身份认证。
 
-## 上轮基线实验结果
+## 工程验收与上轮基线
 
-本轮增加 Hybrid、Reranker、Verifier 校准、文档版本过滤及检索前 ACL，详见 [逐项修改与结果](docs/retrieval-optimization-report.md)。以下旧表为上一轮基线；新的对比见顶部 v3 结果。人工审核、Agent 与人在回路按要求暂缓。
+测试、CI、Docker 和 Vector Benchmark 表格使用最新运行快照；Dense RAG、Chunk 及 off/fast/strict 表格保留上一轮基线。新的 Hybrid / Reranker 对比见顶部 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核、Agent 与人在回路按要求暂缓。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |
 |---|---|
 | 本地测试 | passed，具体数量和时间见[动态报告](reports/tests.md) |
-| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/34936340277)，版本 `dd44061`；[数据库测试报告](reports/ci/tests.md) |
+| CI / PostgreSQL 测试 | success；[验收运行](https://github.com/Twergu/My-portfolio/actions/runs/35040708976)，版本 `4ce795f`；[数据库测试报告](reports/ci/tests.md) |
 | 困难集 / 本地检索 | policy-challenge-v2.1；test Recall@1/3/5 = 0.5873 / 0.7500 / 0.8611；MRR=0.8302，nDCG=0.7819 |
 | Chunk 实验 | 六组配置；dev 选择 450/0，仅适用本地基线；[完整结果](reports/chunks-v2/chunk-experiment-local.md) |
-| 1,000 chunks / exact | measured：P50/P95 = 3.2678/3.5175 ms；Recall@5=1.0000 |
-| 1,000 chunks / hnsw | measured：P50/P95 = 3.9125/3.9688 ms；Recall@5=1.0000 |
-| 10,000 chunks / exact | measured：P50/P95 = 11.0706/11.5921 ms；Recall@5=1.0000 |
-| 10,000 chunks / hnsw | measured：P50/P95 = 4.7553/4.9425 ms；Recall@5=0.5500 |
-| 100,000 chunks / exact | measured：P50/P95 = 102.2489/144.1431 ms；Recall@5=1.0000 |
-| 100,000 chunks / hnsw | measured：P50/P95 = 8.2030/8.9119 ms；Recall@5=0.1400 |
+| 1,000 chunks / exact | measured：P50/P95 = 2.3311/2.3804 ms；Recall@5=1.0000 |
+| 1,000 chunks / hnsw | measured：P50/P95 = 2.7179/3.3895 ms；Recall@5=1.0000 |
+| 10,000 chunks / exact | measured：P50/P95 = 8.3276/9.7683 ms；Recall@5=1.0000 |
+| 10,000 chunks / hnsw | measured：P50/P95 = 3.4084/3.5676 ms；Recall@5=0.6000 |
+| 100,000 chunks / exact | measured：P50/P95 = 91.4987/105.9707 ms；Recall@5=1.0000 |
+| 100,000 chunks / hnsw | measured：P50/P95 = 7.2535/8.1185 ms；Recall@5=0.1500 |
 | Vector Benchmark | [硬件、方法、构建耗时与索引大小](reports/vector-scale.md)；合成向量、单客户端、热缓存，不代表语义检索质量 |
-| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 169.2853 / pgvector_exact 3.2762 / pgvector_hnsw 3.9129；[对照报告](reports/store-benchmark.md) |
+| SQLite vs pgvector / 1k | P50 ms：sqlite_exact 132.0714 / pgvector_exact 2.3453 / pgvector_hnsw 2.7563；[对照报告](reports/store-benchmark.md) |
 | Docker | passed：App + pgvector、PDF 索引与引用、应用重启持久性；[验收数据](reports/ci/container-persistence.json) |
 | 真实 API 流程 | passed；PDF→Embedding→结构化回答→原文/断言校验→物理页引用；[真实 smoke](reports/live-api-smoke.md) |
 

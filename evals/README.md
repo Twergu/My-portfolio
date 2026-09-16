@@ -37,6 +37,8 @@
 
 本地模式仅返回原文，因此回答质量为 N/A。运行时 `claim_groundedness` 是 Verifier 诊断值，off/fast 未做语义验证时为未知。独立 `citation_groundedness` 来自额外 Judge，仍不是人工标签。被拦截候选只供显式内部评估，不进入公开问答响应。未配置 Judge、调用失败或结果不完整不能标为完整质量验收。Judge 也会误判，上线前需人工抽样。
 
+`false_refusal` 衡量可回答问题未交付答案的比例，不等于 Verifier 自身误判率：生成器产生无依据限定词而被正确拦截也计入该指标。v3 实际发现税额限定词被 Judge 漏判，以及 gold 页覆盖不足导致正确补充信息被 Judge 判错；原始分数保留，见 [分歧诊断](../reports/v3/grounding-diagnostics.md)。
+
 ## Latency 与 Cost
 
 报告真实测量 indexing、query embedding、retrieval、generation、verification、provider HTTP、退避和整题耗时，聚合 p50/p95/平均值及样本数。不同阶段存在嵌套关系，不能直接把所有阶段相加。token usage 来自服务实际响应；成本按 `.env` 中配置的每百万 token 单价计算，包含回答与依据校验的两次 LLM 调用。

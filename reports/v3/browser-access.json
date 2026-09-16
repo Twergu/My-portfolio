@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "environment": "Isolated loopback application with fictional fixtures and API disabled",
+  "auth_mode": "required",
+  "checked": [
+    "Anonymous user sees login form only",
+    "Reader login succeeds and displays username",
+    "Only the granted training document appears in document scope",
+    "Upload/sample buttons are disabled for reader",
+    "Japanese UI switch preserves authenticated scope",
+    "Retrieval returns only the authorized training passage and page citation",
+    "Logout returns to Japanese login form and clears prior document/answer content"
+  ],
+  "paid_api_calls": 0,
+  "limitations": "Browser smoke uses SQLite. Full HTTP authorization contract also runs against real PostgreSQL in CI. No production identity was created or altered."
+}

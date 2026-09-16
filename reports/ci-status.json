@@ -1,9 +1,9 @@
 {
-  "id": 34936340277,
+  "id": 35040708976,
   "status": "completed",
   "conclusion": "success",
-  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/34936340277",
-  "head_sha": "dd44061ce2b6436c3d2bb1be2d0b55f3694878b4",
+  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/35040708976",
+  "head_sha": "4ce795fde982262928ba2d76cf90a49fe6b43166",
   "jobs": [
     {
       "name": "verify",
@@ -32,6 +32,16 @@
         },
         {
           "name": "Run python -m pip install -r requirements-lock.txt",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m ruff check .",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m ruff format --check .",
           "status": "completed",
           "conclusion": "success"
         },
