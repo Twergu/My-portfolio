@@ -1,14 +1,25 @@
 # Knowbase · Enterprise Knowledge AI Assistant
 
-PDF 上传 → 逐页解析 → 分块 → Embedding → 向量检索 → 结构化回答 → 原文与断言依据校验 → 物理页引用。中日双语界面、OpenAI 兼容 Provider、PostgreSQL + pgvector、评估数据集、分块实验和 Docker Compose。
+PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid Retrieval → 可选 Reranker → 结构化回答 → 断言依据校验 → 物理页引用。中日双语界面、共享 OpenAI 兼容 Provider、PostgreSQL + pgvector、真实评估和 Docker Compose。
 
-查看 [全部源文件](SOURCE_INDEX.md)、[本轮 17 项优化说明](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
+查看 [全部源文件](SOURCE_INDEX.md)、[本轮 12 项检索与权限优化](docs/retrieval-optimization-report.md)、[上轮 17 项优化记录](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
-## 实验结果
 
-本轮重点是困难检索、可调依据验证、真实模型和数据库/容器验收，详见 [本轮逐项说明](docs/optimization-report.md)。用户于 2026-09-15 补充额度后已恢复真实模型实验；完成状态以运行报告为准，本地检索成绩不代表生成答案准确率。
+## 本轮 v3 实测与配置
+
+<!-- V3_RESULTS_START -->
+真实三路检索 test：Dense / Hybrid / Hybrid+Reranker 的 Recall@5 分别为 88.1% / 88.1% / 100%；重排同时增加真实 API 延时和成本。完整质量和 CI 验收以 [逐项报告](docs/retrieval-optimization-report.md) 与 `reports/v3/` 的状态为准。
+<!-- V3_RESULTS_END -->
+
+在模型设置中选择 `retrieval_mode=hybrid`、`candidate_k=20`、`reranker_mode=llm` 即启用重排；可指定独立 `reranker_model`。当前默认 Dense/不重排保留便宜路径；Exact 仍是数据库默认模式。`strict + all` 检查全部断言，`selective` 跳过项始终标为未验证。
+
+文档信息面板可编辑政策状态、版本、部门和生效区间；问答输入框上方可设置检索筛选。多人访问须先按 [ACL 配置步骤](docs/access-control.md) 启用 `RAG_AUTH_MODE=required`，不能把 local 开发模式当成身份认证。
+
+## 上轮基线实验结果
+
+本轮增加 Hybrid、Reranker、Verifier 校准、文档版本过滤及检索前 ACL，详见 [逐项修改与结果](docs/retrieval-optimization-report.md)。以下旧表为上一轮基线；新的对比见顶部 v3 结果。人工审核、Agent 与人在回路按要求暂缓。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |
@@ -217,10 +228,10 @@ docker compose cp app:/app/reports/vector-scale.json reports/vector-scale.json
 docker compose cp app:/app/reports/vector-scale.md reports/vector-scale.md
 ~~~
 
-使用 docker compose down 停止，命名数据卷保留。当前仍是单用户原型；组织权限、审计、分布式任务调度和对外服务的 TLS 尚未完成。
+使用 docker compose down 停止，命名数据卷保留。默认 `RAG_AUTH_MODE=local` 为单用户开发模式；设置 `required` 并签发用户令牌后启用 ACL，见 [用户与权限配置](docs/access-control.md)。SSO、用户审计、分布式任务和对外 TLS 尚未实现。
 
 ## 当前边界
 
-单 PDF 上限 20 MB、200 页、100 万字符、2,000 个 Chunk；全库最多 100 份。单 worker 索引，PDF 在子进程解析，超时 45 秒终止。不含 OCR、对话记忆、组织权限或生产级质量保证。OneDrive 等同步目录中的文件也可能被该软件同步。
+单 PDF 上限 20 MB、200 页、100 万字符、2,000 个 Chunk；全库最多 100 份。单 worker 索引，PDF 在子进程解析，超时 45 秒终止。不含 OCR、对话记忆、SSO 或生产级质量保证。OneDrive 等同步目录中的文件也可能被该软件同步。
 
 接口文档：[OpenAPI](http://127.0.0.1:8000/docs)。实现细节和官方 API 参考见 [Architecture](docs/architecture.md)。

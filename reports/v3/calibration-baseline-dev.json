@@ -1,0 +1,213 @@
+{
+  "identity": {
+    "dataset_sha256": "9251adaeb9e381a812539b68fc476cb46405e13aea2d5237a220f185b0d86de9",
+    "model": "gpt-5.6-luna",
+    "prompt": "baseline",
+    "split": "dev",
+    "endpoint_sha256": "d9617135d6fdd0a2cde722d637a1dfcc3da37515708b3ea5d66ae607c8ac785e"
+  },
+  "review_status": "AI-authored; human review deferred",
+  "status": "incomplete",
+  "summary": {
+    "positive_class": "supported",
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 0,
+    "precision": null,
+    "recall": null,
+    "false_accept_rate": null,
+    "false_reject_rate": null,
+    "errors": 2,
+    "n": 2
+  },
+  "latency_ms": {
+    "count": 2,
+    "mean": 9142.173999999999,
+    "p50": 9142.173999999999,
+    "p95": 9142.2685
+  },
+  "cost_usd": null,
+  "by_category": {
+    "number": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": null,
+      "false_reject_rate": null,
+      "errors": 1,
+      "n": 1
+    },
+    "supported": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": null,
+      "false_reject_rate": null,
+      "errors": 1,
+      "n": 1
+    }
+  },
+  "cases": [
+    {
+      "id": "claim-01",
+      "category": "supported",
+      "language": "en",
+      "expected": true,
+      "predicted": null,
+      "reason": "",
+      "error": "connection_error",
+      "metrics": {
+        "elapsed_ms": 9142.279,
+        "timings_ms": {
+          "provider_http": 6141.906,
+          "provider_backoff": 3000.206,
+          "verification": 9142.23
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2047.698,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2067.343,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2026.865,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-02",
+      "category": "number",
+      "language": "en",
+      "expected": false,
+      "predicted": null,
+      "reason": "",
+      "error": "connection_error",
+      "metrics": {
+        "elapsed_ms": 9142.069,
+        "timings_ms": {
+          "provider_http": 6141.138,
+          "provider_backoff": 3000.816,
+          "verification": 9142.04
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2047.155,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2050.996,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2042.987,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "verifier"
+          }
+        ],
+        "validation_failures": []
+      }
+    }
+  ]
+}

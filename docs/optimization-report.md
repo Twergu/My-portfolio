@@ -1,5 +1,7 @@
 # 第二轮优化：逐项修改方向与验收
 
+> 本文件是上一轮的历史记录；新增 ACL、Hybrid 和 Reranker 的当前状态见 [本轮 12 项修改](retrieval-optimization-report.md)。
+
 本轮使用 `policy-challenge-v2.1`。用户于 2026-09-15 补充额度后恢复真实 API 验证；模型答案、验证和成本均从实际调用记录中计算。代码发布到独立 `codex/rag-quality-v2` 分支；真实 CI 状态与版本以 [Actions](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2) 和 [README 实验汇总](../README.md) 为准，未完成的实验不计为通过。
 
 | # | 要求 / 修改方向 | 实现与效果 | 验收范围 |

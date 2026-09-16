@@ -38,10 +38,15 @@ Generator 与 Verifier 模型分别配置，Verifier 留空时复用 Generator�
 
 精确检索是 pgvector 的默认路径；HNSW 是显式选择。原生 vector 的 HNSW 有 2,000 维上限（[官方文档](https://github.com/pgvector/pgvector#hnsw)），本地哈希向量是 2,048 维，因此本地模式使用 exact；不得截断向量冒充相同模型。配置和实际维度都参与隔离。HNSW 初次建索引成本与热查询延时需分开报告，近似检索必须报告相对 exact 的 recall。
 
-本应用仍是单用户、单索引进程的原型。数据库换成 PostgreSQL 不等于完成组织权限或分布式任务调度；Compose 默认只在宿主机回环地址发布应用端口。数据库和文件卷需要一起备份。日志记录真实 traceback、文档 ID、处理阶段和索引身份；前端仍显示可读错误，日志不主动记录 API 密钥或请求正文。
+本应用仍使用单索引进程。`RAG_AUTH_MODE=required` 提供用户/角色/文档 ACL；`local` 是显式单用户开发模式。尚无 SSO、用户审计或分布式任务调度；Compose 默认只在宿主机回环地址发布应用端口。数据库和文件卷需要一起备份。日志记录真实 traceback、文档 ID、处理阶段和索引身份；前端仍显示可读错误，日志不主动记录 API 密钥或请求正文。
 
 物理页边界的决定、理由和代价见 [ADR 0001](adr/0001-physical-page-chunks.md)。
 
 HNSW 在写入事务或启动/设置维护时建立，查询只验证索引存在。生命周期操作用 advisory lock 串行化，只清理应用命名空间中的废弃 profile 索引。Exact 禁用 index/bitmap scan；显式 HNSW 禁用 sequential/bitmap scan 和排序，避免普通索引加排序冒充 ANN。基准通过生产 SQL 的 `EXPLAIN DECLARE` 检查游标查询计划，并比较 ef_search=100/400/1000 的召回和延时。应用 ef_search=100，真实召回不达标时应继续使用 Exact。
 
 全新 Compose 启动由 init-db 服务生成随机密码，存入独立持久卷。数据库与非 root App 只读该文件，重启复用，无需 `.env` 即可运行 local 模式。CI 要求真实 pgvector 测试零跳过，再构建容器、索引示例 PDF、检索引用并检查重启持久性。模型 HTTP 与普通测试隔离，CI 不消耗 API 额度。
+
+
+## 检索与权限升级
+
+`principal → role/owner ACL → requested IDs + metadata predicates → query embedding → dense + lexical → RRF → optional reranker → generator → quotes + verifier → citations`。权限范围在所有模型调用之前解析，PDF/分块/文档管理也使用同一权限边界。参见 [访问控制](access-control.md)、[检索与验证 ADR](adr/0002-hybrid-and-verification.md)、[未来 Agent 门槛](adr/0003-agent-gates.md)。

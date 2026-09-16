@@ -128,6 +128,7 @@ async function api(path, options = {}) {
   try { response = await fetch(`/api${path}`, opts); }
   catch { throw new Error('无法连接本地服务，请检查应用是否正在运行。'); }
   const data = await response.json().catch(() => ({}));
+  if (response.status === 401 && path !== '/auth/login') { state.auth = null; showLogin(); }
   if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `请求失败（${response.status}）`);
   return data;
 }
@@ -181,7 +182,7 @@ function renderView() {
   if (state.view === 'chat') renderChat();
   else if (state.view === 'documents') renderDocuments();
   else renderSettings();
-  applyLocale();
+  applyLocale(); applyAccess();
 }
 
 function renderChat() {
@@ -190,7 +191,8 @@ function renderChat() {
     <div id="chat-content" class="chat-content" aria-live="polite"></div>
     <div class="composer-area"><form id="question-form" class="composer"><label for="question" class="sr-only">向知识库提问</label><textarea id="question" placeholder="向知识库提问，例如：员工年假如何申请？" rows="2" maxlength="2000">${esc(state.draft)}</textarea><div class="composer-bottom"><div class="scope-control">${icon('book')}<label class="sr-only" for="scope">检索范围</label><select id="scope" ${state.busy ? 'disabled' : ''}></select></div><div class="send-controls"><span>${state.locale === 'ja' ? 'Enter 送信' : 'Enter 发送'}</span><button type="submit" class="send-button" aria-label="${state.locale === 'ja' ? '質問を送信' : '发送问题'}" ${state.busy ? 'disabled' : ''}>${state.busy ? '<i class="spinner"></i>' : icon('arrow')}</button></div></div></form><p class="composer-note">${icon('lock')}${state.locale === 'ja' ? '選択した資料に基づく回答 · 引用をクリックして原文を確認' : '基于所选文档回答 · 点击引用核对原文'}</p></div>
     </section><aside class="knowledge-rail" id="knowledge-rail"></aside></div>`;
-  renderChatContent(); renderRail(); updateScope();
+  renderFilters();
+  renderChatContent(); renderRail(); updateScope(); applyAccess();
   $('#question-form').addEventListener('submit', event => {event.preventDefault(); askQuestion();});
   $('#question').addEventListener('input', event => state.draft = event.target.value);
   $('#question').addEventListener('keydown', event => {if(event.key === 'Enter' && !event.shiftKey && !event.isComposing) {event.preventDefault(); askQuestion();}});
@@ -259,7 +261,7 @@ function renderDocuments() {
 function renderTable() {
   if (!$('#document-table')) return;
   $('#table-count').textContent = state.docs.length;
-  $('#document-table').innerHTML = state.docs.length ? `<div class="table-scroll"><table><thead><tr><th>文档名称</th><th>状态</th><th>页数 / 片段</th><th>添加时间</th><th><span class="sr-only">操作</span></th></tr></thead><tbody>${state.docs.map(doc => `<tr><td><button class="table-file" data-preview="${doc.id}">${fileIcon()}<span><strong>${esc(doc.name)}</strong><small>${sizeLabel(doc.size)}</small></span></button>${doc.error || doc.warning ? `<p class="doc-error ${doc.error ? '' : 'warning'}">${esc(doc.error || doc.warning)}</p>` : ''}</td><td>${statusBadge(doc)}</td><td class="cell-muted">${doc.pages || '—'} / ${doc.chunk_count || '—'}</td><td class="cell-muted">${new Date(doc.created_at).toLocaleDateString(state.locale === 'ja' ? 'ja-JP' : 'zh-CN')}</td><td><div class="row-actions">${['error','ready','stale'].includes(doc.status) ? `<button class="icon-btn" data-retry="${doc.id}" aria-label="重新索引 ${esc(doc.name)}" title="重新索引">${icon('refresh')}</button><button class="icon-btn danger" data-delete="${doc.id}" aria-label="删除 ${esc(doc.name)}" title="删除">${icon('trash')}</button>` : `<span class="muted">${state.locale === 'ja' ? '処理中' : '处理中'}</span>`}</div></td></tr>`).join('')}</tbody></table></div>` : `<div class="table-empty">${icon('book')}<h3>从第一份文档开始</h3><p>上传企业资料，或导入演示文档体验完整流程。</p><button class="button secondary" data-action="sample">导入演示文档${icon('chevron')}</button></div>`;
+  $('#document-table').innerHTML = state.docs.length ? `<div class="table-scroll"><table><thead><tr><th>文档名称</th><th>状态</th><th>页数 / 片段</th><th>添加时间</th><th><span class="sr-only">操作</span></th></tr></thead><tbody>${state.docs.map(doc => `<tr><td><button class="table-file" data-preview="${doc.id}">${fileIcon()}<span><strong>${esc(doc.name)}</strong><small>${sizeLabel(doc.size)}</small></span></button>${doc.error || doc.warning ? `<p class="doc-error ${doc.error ? '' : 'warning'}">${esc(doc.error || doc.warning)}</p>` : ''}</td><td>${statusBadge(doc)}</td><td class="cell-muted">${doc.pages || '—'} / ${doc.chunk_count || '—'}</td><td class="cell-muted">${new Date(doc.created_at).toLocaleDateString(state.locale === 'ja' ? 'ja-JP' : 'zh-CN')}</td><td><div class="row-actions"><button class="icon-btn" data-metadata="${doc.id}" aria-label="${state.locale==='ja'?'文書情報・権限':'文档信息与权限'}" title="${state.locale==='ja'?'文書情報・権限':'文档信息与权限'}">${icon('settings')}</button>${doc.can_write !== false && ['error','ready','stale'].includes(doc.status) ? `<button class="icon-btn" data-retry="${doc.id}" aria-label="重新索引 ${esc(doc.name)}" title="重新索引">${icon('refresh')}</button><button class="icon-btn danger" data-delete="${doc.id}" aria-label="删除 ${esc(doc.name)}" title="删除">${icon('trash')}</button>` : `<span class="muted">${state.locale === 'ja' ? '処理中' : '处理中'}</span>`}</div></td></tr>`).join('')}</tbody></table></div>` : `<div class="table-empty">${icon('book')}<h3>从第一份文档开始</h3><p>上传企业资料，或导入演示文档体验完整流程。</p><button class="button secondary" data-action="sample">导入演示文档${icon('chevron')}</button></div>`;
   applyLocale();
 }
 
@@ -273,6 +275,8 @@ function renderSettings() {
     <div class="settings-notice">${icon('lock')}${state.locale === 'ja' ? 'AIモードでは文書テキストをEmbeddingに使用し、検索チャンクと質問を上記のモデルサービスへ送信します。' : 'AI 模式会将文档文本用于 Embedding，并将检索到的片段和问题发送到上方配置的模型服务。'}</div><div id="settings-feedback" role="status"></div><div class="settings-actions"><button type="button" class="button secondary" id="test-settings">${icon('link')}${state.locale === 'ja' ? '接続テスト' : '测试连接'}</button><button type="submit" class="button primary" id="save-settings">${state.locale === 'ja' ? '設定を保存' : '保存配置'}${icon('check')}</button></div><p class="settings-footnote">${state.locale === 'ja' ? '接続テストではEmbeddingと回答APIを1回ずつ呼び出すため、料金が発生する場合があります。' : '测试连接会调用一次 Embedding 和一次回答接口，可能产生 API 费用。'}</p></form></div>`;
   const ja = state.locale === 'ja';
   $('#search-mode').closest('.settings-section').insertAdjacentHTML('beforebegin', `<section class="settings-section"><div class="section-heading"><span>02b</span><div><h2>${ja ? '回答の根拠検証' : '回答依据验证'}</h2><p>${ja ? '回答モデルとは別の検証モデルを指定できます。' : '可以使用与回答模型不同的验证模型。'}</p></div></div><div class="field-grid"><div class="field"><label for="verifier-model">${ja ? '検証モデル' : 'Verifier 模型'}</label><input id="verifier-model" name="verifier_model" maxlength="160" value="${esc(config.verifier_model || '')}" placeholder="${ja ? '空欄なら回答モデルを使用' : '留空则使用回答模型'}"></div><div class="field"><label for="verification-mode">${ja ? '検証モード' : 'Verification 模式'}</label><select id="verification-mode" name="verification_mode">${['off','fast','strict'].map(mode => `<option value="${mode}" ${(config.verification_mode || 'strict') === mode ? 'selected' : ''}>${mode}</option>`).join('')}</select></div></div><p>${ja ? 'off：構造と引用番号を確認。fast：原文との一致も確認。strict：追加のモデル呼び出しで各主張の根拠を確認します。off / fast では意味的な裏付けは未検証です。' : 'off：检查结构和来源编号。fast：再检查摘录是否来自原文。strict：追加模型调用，检查每项断言是否有依据。off / fast 的语义依据未经验证。'}</p></section>`);
+  $('#search-mode').closest('.settings-section').insertAdjacentHTML('beforeend', `<div class="field-grid"><div class="field"><label for="retrieval-mode">${ja ? '検索の組み合わせ' : '召回策略'}</label><select id="retrieval-mode" name="retrieval_mode">${['dense','hybrid'].map(x => `<option ${config.retrieval_mode === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div><div class="field"><label for="candidate-k">${ja ? '再ランキング候補数' : '重排候选数量'}</label><input id="candidate-k" name="candidate_k" type="number" min="5" max="100" value="${config.candidate_k || 20}"></div><div class="field"><label for="reranker-mode">${ja ? '再ランキング' : 'Reranker 重排'}</label><select id="reranker-mode" name="reranker_mode">${['off','llm'].map(x => `<option ${config.reranker_mode === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div><div class="field"><label for="reranker-model">${ja ? '再ランキングモデル（空欄なら回答モデル）' : 'Reranker 模型（留空使用回答模型）'}</label><input id="reranker-model" name="reranker_model" maxlength="160" value="${esc(config.reranker_model || '')}"></div><div class="field"><label for="rrf-k">RRF k</label><input id="rrf-k" name="rrf_k" type="number" min="1" max="200" value="${config.rrf_k || 60}"></div></div><p>${ja ? 'hybrid はベクトルと全文検索を統合します。llm は追加の API 呼び出しを使います。Exact が標準です。' : 'hybrid 融合向量与全文检索。llm 重排会增加一次 API 调用。Exact 仍是默认搜索方式。'}</p>`);
+  appendVerificationSettings(config);
   $('#settings-form').addEventListener('submit', event => {event.preventDefault(); submitSettings(false);});
   $('#test-settings').addEventListener('click', () => submitSettings(true));
   applyLocale();
@@ -282,6 +286,7 @@ async function submitSettings(test) {
   const form = $('#settings-form');
   if (!form.reportValidity()) return;
   const data = Object.fromEntries(new FormData(form));
+  data.candidate_k = Number(data.candidate_k); data.rrf_k = Number(data.rrf_k);
   data.chunk_size = Number(data.chunk_size); data.chunk_overlap = Number(data.chunk_overlap); data.top_k = Number(data.top_k); data.min_score = Number(data.min_score); data.clear_key = data.clear_key === 'on';
   if (data.chunk_overlap >= data.chunk_size) return toast(state.locale === 'ja' ? '重複文字数はチャンクサイズより小さくしてください。' : '重叠字符数必须小于分块大小。', true);
   const feedback = $('#settings-feedback');
@@ -337,9 +342,9 @@ async function askQuestion() {
   state.busy=true; state.draft=''; state.source=null;
   const message={id:Date.now().toString(36), question, loading:true, sources:[]};
   state.messages.push(message); renderChat(); updateChrome();
-  try {Object.assign(message, await api('/chat', {method:'POST', body:{question, language:state.locale, document_ids:state.selected ? [state.selected] : []}}));}
+  try {Object.assign(message, await api('/chat', {method:'POST', body:{question, filters:state.filters || {}, language:state.locale, document_ids:state.selected ? [state.selected] : []}}));}
   catch(error) {message.error=error.message;}
-  finally {message.loading=false; state.busy=false; if(state.view === 'chat') renderChat(); updateChrome(); await refreshDocs().catch(error => toast(error.message,true));}
+  finally {message.loading=false; state.busy=false; if(state.auth?.user && state.view === 'chat') renderChat(); if(state.auth?.user) updateChrome(); await refreshDocs().catch(error => toast(error.message,true));}
 }
 
 async function previewDocument(id) {
@@ -379,6 +384,7 @@ document.addEventListener('click', async event => {
   if (button.dataset.prompt) {state.draft=button.dataset.prompt; $('#question').value=state.draft; $('#question').focus();}
   if (button.dataset.source) showSource(button.dataset.source);
   if (button.dataset.preview) previewDocument(button.dataset.preview);
+  if (button.dataset.metadata) editMetadata(button.dataset.metadata);
   if (button.dataset.message) {state.view='chat'; renderView(); $(`#message-${button.dataset.message}`)?.scrollIntoView({behavior:'smooth'});}
   if (button.dataset.copy) {try {await navigator.clipboard.writeText(state.messages.find(message => message.id === button.dataset.copy).answer); toast('回答已复制。');} catch {toast('无法访问剪贴板，请选中文字复制。',true);}}
   if (button.dataset.retryQuestion) {state.draft=state.messages.find(message => message.id === button.dataset.retryQuestion).question; askQuestion();}
@@ -394,7 +400,7 @@ document.addEventListener('click', async event => {
 });
 
 async function init() {
-  try {const [config, docs]=await Promise.all([api('/settings'),api('/documents')]); state.settings=config; state.docs=docs.documents; shell(); await refreshDocs();}
+  try {state.auth = await api('/auth/status'); if (!state.auth.user) return showLogin(); const [config, docs]=await Promise.all([api('/settings'),api('/documents')]); state.settings=config; state.docs=docs.documents; shell(); await refreshDocs();}
   catch(error) {$('#app').innerHTML=`<div class="boot boot-error"><h1>暂时无法连接知识库</h1><p>${esc(error.message)}</p><button class="button primary" id="retry-connect">重新连接</button></div>`; $('#retry-connect').onclick=init; applyLocale();}
 }
 init();
@@ -405,7 +411,7 @@ function metricsHTML(message) {
   const m = message.metrics;
   if (!m) return '';
   const ja = state.locale === 'ja';
-  const labels = {query_embedding:ja?'質問のEmbedding':'问题向量化', retrieval:ja?'検索':'检索', generation:ja?'回答生成':'回答生成', verification:ja?'根拠検証':'依据校验'};
+  const labels = {query_embedding:ja?'質問のEmbedding':'问题向量化', retrieval:ja?'検索':'检索', reranking:ja?'再ランキング':'重排', generation:ja?'回答生成':'回答生成', verification:ja?'根拠検証':'依据校验'};
   const phases = Object.entries(labels).filter(([key]) => m.timings_ms?.[key] !== undefined).map(([key,label]) => `${label}: ${(m.timings_ms[key]/1000).toFixed(3)}s`).join(' · ');
   const usage = m.token_usage || {};
   const cost = m.cost_usd == null ? (ja?'費用不明':'费用未知') : `USD ${Number(m.cost_usd).toFixed(6)}`;

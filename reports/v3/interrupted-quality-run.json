@@ -1,0 +1,11 @@
+{
+  "status": "interrupted_without_final_report",
+  "requested_queries": 54,
+  "last_observed_completed_progress": 41,
+  "final_completed_count": null,
+  "answer_quality": null,
+  "token_usage": null,
+  "cost_usd": null,
+  "reason": "The prior exec session is no longer available and no final report was written. Progress messages cannot recover exact responses, usage or final metrics.",
+  "follow_up": "Added atomic per-question checkpoints and configuration-bound resume. A new measured run is reported separately; this interrupted run is not counted as free or successful."
+}
