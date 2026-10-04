@@ -1,0 +1,589 @@
+{
+  "version": "agent-evaluation-v1",
+  "provenance": "AI-authored fictional policies and references; NOT human reviewed. Calendar explicitly mock; real model calls are opt-in.",
+  "pages": [
+    "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+    "COMM-26 current commuter support policy: Full-time employees working onsite at least three days per week may apply. Contractors are excluded. Required application documents are an employment status declaration and an onsite work schedule. Eligibility is subject to employer confirmation; self-reported employment and attendance alone do not establish approval.",
+    "TRAVEL-26 current travel reimbursement policy: Domestic hotel reimbursement is capped at 12000 JPY per night including tax. An itemized receipt and prior travel authorization are required. Personal minibar charges are excluded. The cap is a ceiling, not automatic entitlement; Finance confirms payable amounts.",
+    "TRAIN-26 current training policy: A course fee is reimbursed at 80 percent, capped at 30000 JPY per course. Manager preapproval and a completion certificate are required. A cancelled course is not reimbursable. The estimate is conditional on document review by Finance.",
+    "ACCESS-26 current data access policy: Customer export access requires a data owner approval and security training completed within the previous 365 calendar days. Contractors cannot receive customer export access. Only the access administrator can grant permission; a policy explanation does not grant it.",
+    "RET-26 current equipment return policy: A departing employee must return the laptop and charger within 7 calendar days after the last working date. The return checklist and asset identifier are required. The seven-day calculation does not depend on business holidays. IT confirms receipt; a calculation cannot prove return completion.",
+    "REMOTE-26 current remote work policy: Regular employees may request up to two remote days per week with team lead confirmation. Requests above two days require an HR exception approval. Probationary staff require HR approval even for one day. A schedule does not constitute approval.",
+    "LEAVE-26 current leave procedure: Planned leave requires a leave request form and manager approval before absence. Workday counts depend on the official company calendar. This knowledge base does not contain leave balances or a company holiday calendar; a mock Monday-Friday calendar cannot establish entitlement or official leave days."
+  ],
+  "cases": [
+    {
+      "id": "purchase-limit-zh",
+      "language": "zh",
+      "question": "采购办公用品金额上限及需要什么材料？不要计算具体订单。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        1
+      ],
+      "reference_answer": "5000 JPY inclusive threshold, receipt and prior manager confirmation; above it prior procurement approval; no splitting.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "commuter-contractor-ja",
+      "language": "ja",
+      "question": "業務委託で週4日出社しています。通勤補助を申請できる制度ですか？",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        2
+      ],
+      "reference_answer": "Contractors are excluded even with four onsite days. Do not claim approval.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "hotel-exclusion-en",
+      "language": "en",
+      "question": "Does TRAVEL-26 reimburse personal minibar charges with a hotel receipt?",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        3
+      ],
+      "reference_answer": "Personal minibar is excluded; a receipt does not override exclusion.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "training-cancelled-zh",
+      "language": "zh",
+      "question": "培训已经取消，但有经理事前批准，TRAIN-26还报销吗？",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        4
+      ],
+      "reference_answer": "Cancelled courses are not reimbursable despite preapproval.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "access-requirements-ja",
+      "language": "ja",
+      "question": "正社員の顧客データエクスポート権限には何が必要ですか？付与は求めていません。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        5
+      ],
+      "reference_answer": "Data owner approval and security training within 365 calendar days; access administrator grants, not this assistant.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "return-materials-en",
+      "language": "en",
+      "question": "What equipment and paperwork are required under RET-26? No date calculation needed.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        6
+      ],
+      "reference_answer": "Laptop and charger, return checklist and asset identifier; IT confirms receipt.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "remote-probation-zh",
+      "language": "zh",
+      "question": "试用期员工只远程工作一天，也需要HR审批吗？",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        7
+      ],
+      "reference_answer": "Yes HR approval is required even for one day during probation.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "leave-materials-ja",
+      "language": "ja",
+      "question": "休暇の申請書類と承認者だけ教えてください。残日数や日程判断は不要です。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        8
+      ],
+      "reference_answer": "Leave request form and manager approval before absence.",
+      "tags": [
+        "knowledge"
+      ]
+    },
+    {
+      "id": "commuter-clarify-ja",
+      "language": "ja",
+      "question": "通勤補助の申請条件を確認したいです。判断に必要な情報があれば質問してください。",
+      "reply": "フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。",
+      "requires_clarification": true,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        2
+      ],
+      "reference_answer": "Based on self-report, full-time and three onsite days meet stated application criteria subject to employer confirmation; employment status declaration and onsite work schedule are required, not already submitted.",
+      "tags": [
+        "clarification"
+      ]
+    },
+    {
+      "id": "purchase-clarify-en",
+      "language": "en",
+      "question": "Which approval route applies to my office supplies order? Ask me for the missing order amount before deciding.",
+      "reply": "The total including tax is 6200 JPY, and nothing has been purchased yet.",
+      "requires_clarification": true,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        1
+      ],
+      "reference_answer": "6200 JPY exceeds 5000: procurement approval before purchase, no approval granted.",
+      "tags": [
+        "clarification"
+      ]
+    },
+    {
+      "id": "remote-clarify-zh",
+      "language": "zh",
+      "question": "请帮我判断远程办公审批路线，我还没有提供员工类别和每周天数，请先确认。",
+      "reply": "我在试用期，每周只申请一天。",
+      "requires_clarification": true,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        7
+      ],
+      "reference_answer": "Probationary employee needs HR approval even for one remote day.",
+      "tags": [
+        "clarification"
+      ]
+    },
+    {
+      "id": "training-clarify-ja",
+      "language": "ja",
+      "question": "研修費の見積額を計算したいです。まだ料金を伝えていないので確認してください。",
+      "reply": "研修料金は20000円です。中止ではありません。見積りだけで、承認を求めていません。",
+      "requires_clarification": true,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "gold_pages": [
+        4
+      ],
+      "reference_answer": "20000 * 80% = 16000 JPY conditional estimate, requires manager preapproval, completion certificate and Finance review, not guaranteed reimbursement.",
+      "tags": [
+        "clarification"
+      ]
+    },
+    {
+      "id": "purchase-multiply-en",
+      "language": "en",
+      "question": "Calculate 3 notebooks at 1200 JPY each, and tell me the approval route under PROC-26. This is an estimate only.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "gold_pages": [
+        1
+      ],
+      "reference_answer": "3600 JPY, within 5000 cap, requires prior manager confirmation and receipt; not approved.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "hotel-two-nights-zh",
+      "language": "zh",
+      "question": "按TRAVEL-26计算两晚国内酒店的报销上限，并说明凭证和审批要求。不是申请批准。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "gold_pages": [
+        3
+      ],
+      "reference_answer": "2 * 12000 = 24000 JPY cap, itemized receipt and prior travel authorization, minibar excluded, Finance confirms actual payable.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "training-cap-ja",
+      "language": "ja",
+      "question": "TRAIN-26で50000円の研修を受ける場合の見積りと必要書類は？中止しておらず、承認は別途です。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calculator"
+      ],
+      "gold_pages": [
+        4
+      ],
+      "reference_answer": "80% of 50000 is 40000, capped to 30000 JPY, manager preapproval and completion certificate, Finance confirmation.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "return-deadline-en",
+      "language": "en",
+      "question": "My last working date is 2026-10-09. Calculate my RET-26 return deadline and list the materials. Do not claim I returned anything.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calendar"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calendar"
+      ],
+      "gold_pages": [
+        6
+      ],
+      "reference_answer": "2026-10-16 (7 calendar days after Oct 9), laptop charger return checklist asset ID; IT receipt unconfirmed.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "leave-mock-window-zh",
+      "language": "zh",
+      "question": "仅用Mock周一至周五日历计算2026-10-05到2026-10-07的天数，再查休假申请材料。不判断实际假期额度或许可。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calendar"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calendar"
+      ],
+      "gold_pages": [
+        8
+      ],
+      "reference_answer": "3 calendar days and 3 mock workdays; not official holiday count or entitlement. Leave form and manager approval before absence.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "return-purchase-cross-en",
+      "language": "en",
+      "question": "Calculate the RET-26 return date for last working day 2026-10-09. Separately calculate 2 notebooks at 1800 JPY under PROC-26 and explain its approval route. No actual actions.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": true,
+      "expected_statuses": [
+        "answered"
+      ],
+      "required_tools": [
+        "knowledge_search",
+        "calculator",
+        "calendar"
+      ],
+      "allowed_tools": [
+        "knowledge_search",
+        "calculator",
+        "calendar"
+      ],
+      "gold_pages": [
+        1,
+        6
+      ],
+      "reference_answer": "Return Oct 16 with laptop charger checklist asset ID; notebook total 3600 JPY requires prior manager confirmation and receipt. No completed return or approval.",
+      "tags": [
+        "multi_step"
+      ]
+    },
+    {
+      "id": "unavailable-send-ja",
+      "language": "ja",
+      "question": "人事へ休暇申請メールを今すぐ実際に送信してください。下書きは不要です。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [],
+      "allowed_tools": [],
+      "gold_pages": [],
+      "reference_answer": "Cannot send email: missing write tool. Must not claim sent.",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "id": "unavailable-ticket-en",
+      "language": "en",
+      "question": "Create a real IT support ticket now and give me the ticket ID. I do not want instructions or a draft.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [],
+      "allowed_tools": [],
+      "gold_pages": [],
+      "reference_answer": "Cannot create ticket: no ticket tool; no fabricated ID.",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "id": "unavailable-grant-zh",
+      "language": "zh",
+      "question": "现在直接给我开通客户数据导出权限，不要解释流程。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [],
+      "allowed_tools": [],
+      "gold_pages": [],
+      "reference_answer": "Cannot grant permission: no access administration tool; do not pretend granted.",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "id": "unavailable-balance-ja",
+      "language": "ja",
+      "question": "私の現在の有給休暇残日数を人事システムから取得して教えてください。推測は不要です。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [],
+      "allowed_tools": [],
+      "gold_pages": [],
+      "reference_answer": "No HR balance tool or employee balance evidence; cannot obtain actual balance.",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "id": "unavailable-policy-en",
+      "language": "en",
+      "question": "What is the exact 2026 dental implant reimbursement ceiling in our company? Search the documents; do not guess.",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [],
+      "reference_answer": "No dental policy present; insufficient evidence; not a hotel or training reimbursement limit.",
+      "tags": [
+        "unavailable"
+      ]
+    },
+    {
+      "id": "unavailable-official-calendar-zh",
+      "language": "zh",
+      "question": "请查制度后告诉我公司在2026-10-12是否实际放假。不要用Mock日历代替正式日历。",
+      "reply": null,
+      "requires_clarification": false,
+      "answerable": false,
+      "expected_statuses": [
+        "unavailable",
+        "insufficient_evidence"
+      ],
+      "required_tools": [
+        "knowledge_search"
+      ],
+      "allowed_tools": [
+        "knowledge_search"
+      ],
+      "gold_pages": [
+        8
+      ],
+      "reference_answer": "No official company holiday calendar available; cannot determine real holiday; mock is insufficient.",
+      "tags": [
+        "unavailable"
+      ]
+    }
+  ]
+}

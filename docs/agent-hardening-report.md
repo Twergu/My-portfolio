@@ -26,15 +26,25 @@
 
 ## P0-2 完整 CI / PostgreSQL / Docker
 
-执行中。
+完成。[GitHub Actions 37181289264](https://github.com/Twergu/My-portfolio/actions/runs/37181289264) 在提交 `4e1902bdf49541275cedeaf74c38258f856d9604` 全绿：248 passed、0 failed、0 errors、0 skipped。真实 PostgreSQL 17 + pgvector 服务执行数据库用例，Agent HTTP/ACL/多轮集成测试同时覆盖 SQLite 与 PostgreSQL。
+
+修改 `tests/test_agent_integration.py` 复用双数据库 fixture；`scripts/container_smoke.py` 增加容器内 Agent API 和前端可用性检查。Docker Compose 构建、健康、PDF 上传索引/下载、重启后的持久化均通过。容器 Smoke 使用本地检索模式检查 Agent 的 API 配置门禁，不伪称调用真实模型；真实模型证据见 P0-1。CI 仍要求任何 skipped 导致失败。后续修改会再跑最终完整 CI。
 
 ## P1-3 Agent Evaluation
 
-待执行。
+完成。新增 `evals/make_agent.py`、`evals/agent_dataset.json`、`evals/agent_metrics.py`、`scripts/agent_evaluate.py` 与 `docs/agent-evaluation.md`，扩展 `evals/judge.py` 的 Agent 证据语义。24 个独立中日英场景，规划和最终回答分开评分，保留每次原始模型输出及失败，每题保存 JSON/Markdown，禁止覆盖已有报告。
+
+对应 `tests/test_agent_evaluation.py` 与既有 Evaluation 测试共 21 passed。评分验证覆盖拒答/异常分母、未交付与已交付 groundedness、续接累计 trace 防重复计数、未知成本保持 null、数据集可重建。最初沙箱临时目录失败保留在 `evaluation-baseline.json`，不计作模型质量实验。
+
+[真实基线](../reports/agent-hardening/evaluation-baseline-live.md)：24/24 完成，Task Success 50.0%，Planning Success 87.5%，Tool Selection 91.7%，Clarification 95.8%；18 个可回答任务中交付 7 个，独立 Correctness/Groundedness 均通过，其余计为失败。P50/P95 12.259/18.122 秒，USD 0.002236/task（排除 Judge 与索引）。失败包括不连续 quote、无文档支持的额外限定、错误自述归因及多余追问。这是回归集，包含歧义问题且未经人工审核，不宣称是泛化准确率或已稳定上线。
 
 ## P1-4 Latency
 
-待执行。
+实施中。基线平均每任务 Planner 4.726 秒、Generator 3.608 秒、Verifier 2.394 秒、Knowledge Search 0.221 秒。`backend/agent.py` 新增可选 `answer_after`：最后一次只读工具成功且提供非空文本/来源后可直接交给 Generator；省去只负责 `prepare_answer` 的模型往返。空结果、失败和重复调用均不能走捷径，保留全部成功前提，并由 AgentService 再次 ACL 检查与 Strict/all 验证。
+
+新增编排与双数据库 HTTP 安全回归，本地相关测试通过（数据库用例在最终 CI 实际执行）。[第一轮对照](../reports/agent-hardening/latency-first-attempt.md)保存了未达到目标的优化：Planner 次数 2.67→2.00，P50 12.259→10.997 秒，但 P95 18.122→20.132 秒、Task Success 50.0%→45.8%。不将此报告当作最终成功。
+
+确认其中一例 business_task 检索直接交接而未进行 Calculator，故在后端增加限制：业务知识检索必须再规划；只有直接知识问答，或已经有制度前提的最终 Calculator/Calendar 调用可以提前交接。新增防过早交接测试与中途权限撤销测试。收紧后的相关测试 83 passed、18 PostgreSQL skipped；同一 24 题再次实测中，保留第一次失败运行。
 
 ## P2-5 Policy Claim 约束
 

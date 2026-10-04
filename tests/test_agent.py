@@ -218,6 +218,60 @@ def test_reaching_tool_budget_still_allows_evidence_handoff():
     assert state.status == "ready"
 
 
+def test_final_tool_handoff_removes_only_redundant_planner_turn():
+    final = call(query="policy")
+    final["action"]["answer_after"] = True
+    final["intent"] = "knowledge_question"
+    planner = ScriptedPlanner(final)
+    state = AgentRunner(planner, [mock_search([])]).start("Check policy", context())
+    assert state.status == "ready" and state.selected_observation_ids == ["tool_1"]
+    assert len(planner.messages) == 1 and state.steps == 1 and state.tool_calls == 1
+    assert any(e.event == "tool_handoff" for e in state.trace)
+    assert not hasattr(state, "answer")
+
+
+@pytest.mark.parametrize("empty_or_error", ["empty", "error"])
+def test_handoff_does_not_bypass_empty_results_or_errors(empty_or_error):
+    def handler(*args):
+        if empty_or_error == "error":
+            raise ToolFailure("access_denied")
+        return ToolOutput(provenance="retrieved", data={"sources": []})
+
+    final = call(query="policy")
+    final["action"]["answer_after"] = True
+    final["intent"] = "knowledge_question"
+    planner = ScriptedPlanner(final, unavailable())
+    tool = ReadOnlyTool("search", "Empty or denied", SearchArgs, handler)
+    state = AgentRunner(planner, [tool]).start("Check", context())
+    assert state.status == "unavailable" and not state.selected_observation_ids
+    assert len(planner.messages) == 2
+
+
+def test_handoff_keeps_previous_premises_and_still_rejects_duplicate_execution():
+    final = call(query="two")
+    final["action"]["answer_after"] = True
+    final["intent"] = "knowledge_question"
+    calls = []
+    planner = ScriptedPlanner(call(query="one"), final)
+    state = AgentRunner(planner, [mock_search(calls)]).start("Check", context())
+    assert state.selected_observation_ids == ["tool_1", "tool_2"] and len(calls) == 2
+    final["action"]["arguments"] = {"query": "one"}
+    planner = ScriptedPlanner(call(query="one"), final, ready("tool_1"))
+    calls = []
+    state = AgentRunner(planner, [mock_search(calls)]).start("Check", context())
+    assert len(calls) == 1 and state.observations[1].error == "duplicate_call"
+    assert len(planner.messages) == 3
+
+
+def test_business_search_cannot_prematurely_handoff_and_skip_dependent_tools():
+    first = call(query="policy")
+    first["action"]["answer_after"] = True
+    planner = ScriptedPlanner(first, ready("tool_1"))
+    state = AgentRunner(planner, [mock_search([])]).start("Calculate under policy", context())
+    assert state.status == "ready" and len(planner.messages) == 2
+    assert not any(e.event == "tool_handoff" for e in state.trace)
+
+
 def test_step_budget_is_preserved_across_resume():
     planner = ScriptedPlanner(clarify("Which department?"))
     runner = AgentRunner(planner, limits=AgentLimits(max_steps=1))

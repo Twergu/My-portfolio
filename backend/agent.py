@@ -32,6 +32,7 @@ class CallTool(AgentModel):
     type: Literal["call_tool"]
     tool: ToolName
     arguments: dict[str, JsonValue]
+    answer_after: bool = False
 
 
 class Clarify(AgentModel):
@@ -205,6 +206,13 @@ and grounding stage; select their observation IDs. This action is NOT a verified
 If available tools cannot perform the task, return unavailable with missing_tool. If searches return no relevant
 evidence, return unavailable with no_evidence. Never claim an external write or submission has been performed.
 Avoid repeating equivalent calls. Ask questions and write the concise goal in the requested language (zh/ja/en).
+For a final tool call whose successful result should suffice, set answer_after=true to hand observations directly
+to the separate Generator/Strict Verifier without another planning turn. A knowledge_search may use this ONLY for
+knowledge_question, never for business_task: business tasks must inspect the policy before deciding which
+calculation/date lookup is needed. After gathering policy premises, the last calculation/date lookup may use it.
+Do not set it when a dependent tool call is still needed. Empty/error results continue planning.
+The Generator can still ask indispensable clarification or refuse;
+this flag never creates a final answer, skips verification, or grants permission.
 The schema and tool catalogue below are server controlled.
 """
 
@@ -296,6 +304,22 @@ class AgentRunner:
             if state.tool_calls >= self.limits.max_tool_calls:
                 return self._stop(state, "limit_reached", "tool_limit")
             self._call_tool(state, action, metrics)
+            last = state.observations[-1]
+            handoff_allowed = decision.intent == "knowledge_question" or (
+                action.tool in ("calculator", "calendar")
+                and any(o.tool == "knowledge_search" and o.status == "ok" for o in state.observations[:-1])
+            )
+            if (
+                action.answer_after
+                and handoff_allowed
+                and last.status == "ok"
+                and (last.output.data.get("sources") or last.output.data.get("text"))
+            ):
+                # The model requests handoff, not acceptance. Retain all successful
+                # premises; AgentService rechecks scope and runs strict grounding.
+                state.selected_observation_ids = [o.id for o in state.observations if o.status == "ok"]
+                state.trace.append(TraceEvent(step=state.steps, event="tool_handoff", tool=last.tool))
+                return self._stop(state, "ready")
         return self._stop(state, "limit_reached", "step_limit")
 
     def _call_tool(self, state, action, metrics):

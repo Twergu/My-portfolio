@@ -59,7 +59,7 @@ def validated_judgment(schema, messages, settings, key, provider, metrics, stage
             messages = messages + [{"role": "user", "content": correction}]
 
 
-def judge_answer(result, query, dataset, settings, key, provider, model, metrics):
+def judge_answer(result, query, dataset, settings, key, provider, model, metrics, *, agent_mode=False):
     if result["status"] != "answered":
         return {
             "answer_correctness": 0.0 if query["answerable"] else None,
@@ -97,7 +97,12 @@ def judge_answer(result, query, dataset, settings, key, provider, model, metrics
             "numbers, units, employee category, negation and exceptions. Equivalent wording is acceptable. "
             "An answer to an unanswerable question is incorrect. Return only JSON: "
             '{"answer_correct":true,"reason":"explanation"}. '
-            "Assess answer correctness and completeness only. Citation support is evaluated separately.",
+            "Assess answer correctness and completeness only. Citation support is evaluated separately."
+            + (
+                " In Agent tasks distinguish conditional estimates from approvals and self-reports from verified facts; mock calendars cannot establish actual entitlement."
+                if agent_mode
+                else ""
+            ),
         },
         {
             "role": "user",
@@ -128,7 +133,12 @@ def judge_answer(result, query, dataset, settings, key, provider, model, metrics
             "Equivalent wording and logically entailed conclusions are allowed; exact wording is not required. "
             "A cross-document claim must cite all premises it needs. Do not assume an uncited policy contains a missing premise. "
             'Return only JSON: {"citations":[{"claim_index":1,"supported":true,"reason":"why"}]}. '
-            "List every one-based claim index exactly once.",
+            "List every one-based claim index exactly once."
+            + (
+                " Company policy needs document evidence. User evidence proves only self-report, tool calculations only arithmetic/dates. Conditional eligibility needs both cited policy and relevant reported facts. Mock data cannot establish actual approval."
+                if agent_mode
+                else ""
+            ),
         },
         {"role": "user", "content": json.dumps({"question": query["question"], "claims": claims}, ensure_ascii=False)},
     ]

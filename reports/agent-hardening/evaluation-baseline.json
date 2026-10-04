@@ -1,0 +1,100 @@
+{
+  "label": "baseline",
+  "generated_at": "2026-10-04T10:55:36.290334+00:00",
+  "scope": "Real Embedding + Planner + Generator + Strict Verifier + independent Judge API; isolated real SQLite search, deterministic Calculator, explicitly mock workweek Calendar; fictional AI-authored policies, NOT human-reviewed. No external writes.",
+  "dataset_sha256": "7e2f341eac8a60c72d1a200d5c623662713a1546d5e320022e8cb88f05700d20",
+  "source_sha256": "4bfcb9160cc5f8713fc7fd2d893e71a76ffbc029f76b06a79323b0e9102d3948",
+  "settings": {
+    "mode": "api",
+    "base_url": "https://api.openai.com/v1",
+    "chat_model": "gpt-5.6-luna",
+    "verifier_model": "gpt-5.6-luna",
+    "verification_mode": "strict",
+    "verification_strategy": "all",
+    "verifier_prompt": "baseline",
+    "embedding_model": "text-embedding-3-small",
+    "top_k": 3,
+    "min_score": 0.25,
+    "chunk_size": 900,
+    "chunk_overlap": 0,
+    "search_mode": "exact",
+    "retrieval_mode": "hybrid",
+    "candidate_k": 20,
+    "rrf_k": 60,
+    "reranker_mode": "off",
+    "reranker_model": ""
+  },
+  "judge_model": "gpt-4.1",
+  "expected_cases": 24,
+  "cases": [],
+  "model_calls": [],
+  "error_type": "PermissionError",
+  "indexing_operations": [],
+  "summary": {
+    "completed": 0,
+    "expected": 24,
+    "complete": false,
+    "task_success": null,
+    "planning_success": null,
+    "tool_selection_accuracy": null,
+    "clarification_accuracy": null,
+    "answer_correctness": null,
+    "grounded_answer_rate": null,
+    "grounded_rate_among_delivered": null,
+    "answerable_tasks": 0,
+    "delivered_answers": 0,
+    "tool_calls": 0,
+    "tool_calls_per_task": null,
+    "planner_calls_per_task": null,
+    "duplicate_calls": 0,
+    "latency_ms": {
+      "count": 0,
+      "mean": null,
+      "p50": null,
+      "p95": null
+    },
+    "phase_latency_ms": {
+      "agent_planning": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "agent_tool_knowledge_search": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "agent_tool_calendar": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "agent_tool_calculator": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "generation": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "verification": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      }
+    },
+    "cost_per_task_usd": null,
+    "known_cost_usd": 0,
+    "unknown_cost_tasks": 0,
+    "token_usage": {},
+    "statuses": {}
+  }
+}

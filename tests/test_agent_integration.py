@@ -249,13 +249,32 @@ def test_task_invalidates_when_scope_or_evidence_changes(api, change):
     assert not app.state.agent.tasks
 
 
-def test_midflight_revocation_stops_before_embedding_and_hides_all_results(api):
+@pytest.mark.parametrize("handoff", [False, True])
+def test_midflight_revocation_stops_before_embedding_and_hides_all_results(api, handoff):
     client, app, models, _ = api
-    models.decisions = [search()]
+    decision = search()
+    decision["action"]["answer_after"] = handoff
+    models.decisions = [decision]
     models.hook = lambda: app.state.knowledge.store.grant_document("visible", "reader", None)
     response = client.post("/api/agent", json={"question": "Policy"})
     assert response.status_code == 409 and [role for role, _ in models.calls] == ["planner"]
     assert "sources" not in response.json()
+
+
+@pytest.mark.parametrize("supported", [True, False])
+def test_direct_tool_handoff_still_runs_strict_verifier_and_acl(api, supported):
+    client, app, models, _ = api
+    final = search()
+    final["action"]["answer_after"] = True
+    final["intent"] = "knowledge_question"
+    models.decisions, models.supported = [final], supported
+    data = client.post("/api/agent", json={"question": "Purchasing policy"}).json()
+    assert [role for role, _ in models.calls] == ["planner", "embedding", "generator", "verifier"]
+    assert data["status"] == ("answered" if supported else "unsupported_answer")
+    assert "CONFIDENTIAL_OTHER_ROLE" not in json.dumps(models.calls)
+    assert not app.state.agent.tasks
+    if not supported:
+        assert not data["claims"] and not data["sources"]
 
 
 def test_client_cannot_forge_state_or_expand_tool_scope(api):
