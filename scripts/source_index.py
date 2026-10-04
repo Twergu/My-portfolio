@@ -61,7 +61,10 @@ def main():
         path.relative_to(ROOT)
         for path in (ROOT / "reports").rglob("*")
         if path.is_file()
-        and path.suffix in (".md", ".json")
+        and (
+            path.suffix in (".md", ".json")
+            or ("agent-stage3" in path.parts and path.suffix in (".jpg", ".txt", ".tap"))
+        )
         and not any(part.startswith("store-benchmark-") for part in path.parts)
     )
     lines = [

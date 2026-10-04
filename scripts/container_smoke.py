@@ -35,6 +35,10 @@ def main():
         assert result["status"] == "retrieval_only" and result["sources"]
         for source in result["sources"]:
             assert client.get(source["url"].split("#")[0]).content.startswith(b"%PDF-")
+        agent = client.post("/api/agent", json={"question": "申請方法を確認してください", "language": "ja"})
+        agent.raise_for_status()
+        assert agent.json()["failure_code"] == "api_required" and not agent.json()["sources"]
+        assert "chatRequest" in client.get("/agent.js").text
     Path("reports").mkdir(exist_ok=True)
     output = Path("reports/container-persistence.json" if args.check_persistence else "reports/container-smoke.json")
     output.write_text(
@@ -44,6 +48,8 @@ def main():
                 "storage": "pgvector",
                 "pdf_citations": True,
                 "restart_persistence": args.check_persistence,
+                "agent_api_and_frontend": True,
+                "model_scope": "Local mode API gate only; full Agent contracts run separately with controlled models and real pgvector",
             },
             indent=2,
         )

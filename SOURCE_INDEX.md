@@ -26,6 +26,7 @@
 
 ## 前端
 
+- [dist/agent.js](dist/agent.js)
 - [dist/app.js](dist/app.js)
 - [dist/favicon.svg](dist/favicon.svg)
 - [dist/governance.js](dist/governance.js)
@@ -35,6 +36,9 @@
 ## 后端
 
 - [backend/__init__.py](backend/__init__.py)
+- [backend/agent.py](backend/agent.py)
+- [backend/agent_service.py](backend/agent_service.py)
+- [backend/agent_tools.py](backend/agent_tools.py)
 - [backend/config.py](backend/config.py)
 - [backend/governance.py](backend/governance.py)
 - [backend/lexical.py](backend/lexical.py)
@@ -52,7 +56,11 @@
 ## 测试
 
 - [tests/conftest.py](tests/conftest.py)
+- [tests/frontend/agent.test.cjs](tests/frontend/agent.test.cjs)
 - [tests/test_access.py](tests/test_access.py)
+- [tests/test_agent.py](tests/test_agent.py)
+- [tests/test_agent_integration.py](tests/test_agent_integration.py)
+- [tests/test_agent_japanese_regression.py](tests/test_agent_japanese_regression.py)
 - [tests/test_challenge.py](tests/test_challenge.py)
 - [tests/test_checkpoint.py](tests/test_checkpoint.py)
 - [tests/test_evaluation.py](tests/test_evaluation.py)
@@ -69,6 +77,9 @@
 ## 评估数据与协议
 
 - [evals/__init__.py](evals/__init__.py)
+- [evals/agent-ja-regression.json](evals/agent-ja-regression.json)
+- [evals/agent-planning-smoke.json](evals/agent-planning-smoke.json)
+- [evals/agent-workflows.json](evals/agent-workflows.json)
 - [evals/claim_calibration.json](evals/claim_calibration.json)
 - [evals/dataset.json](evals/dataset.json)
 - [evals/hard_dataset.json](evals/hard_dataset.json)
@@ -80,12 +91,17 @@
 
 ## 运行与实验脚本
 
+- [scripts/agent_diagnose.py](scripts/agent_diagnose.py)
+- [scripts/agent_live_smoke.py](scripts/agent_live_smoke.py)
+- [scripts/agent_planner_smoke.py](scripts/agent_planner_smoke.py)
+- [scripts/agent_verifier_replay.py](scripts/agent_verifier_replay.py)
 - [scripts/analyze_api_results.py](scripts/analyze_api_results.py)
 - [scripts/benchmark_scale.py](scripts/benchmark_scale.py)
 - [scripts/benchmark_stores.py](scripts/benchmark_stores.py)
 - [scripts/build_calibration.py](scripts/build_calibration.py)
 - [scripts/calibrate_verifier.py](scripts/calibrate_verifier.py)
 - [scripts/check.py](scripts/check.py)
+- [scripts/check_frontend.py](scripts/check_frontend.py)
 - [scripts/checkpoint.py](scripts/checkpoint.py)
 - [scripts/chunk_experiment.py](scripts/chunk_experiment.py)
 - [scripts/container_smoke.py](scripts/container_smoke.py)
@@ -106,6 +122,10 @@
 - [docs/adr/0001-physical-page-chunks.md](docs/adr/0001-physical-page-chunks.md)
 - [docs/adr/0002-hybrid-and-verification.md](docs/adr/0002-hybrid-and-verification.md)
 - [docs/adr/0003-agent-gates.md](docs/adr/0003-agent-gates.md)
+- [docs/agent-hardening-report.md](docs/agent-hardening-report.md)
+- [docs/agent-stage1.md](docs/agent-stage1.md)
+- [docs/agent-stage2.md](docs/agent-stage2.md)
+- [docs/agent-stage3.md](docs/agent-stage3.md)
 - [docs/architecture.md](docs/architecture.md)
 - [docs/change-report.md](docs/change-report.md)
 - [docs/optimization-report.md](docs/optimization-report.md)
@@ -123,6 +143,26 @@
 
 报告包含运行时间与验证范围，blocked/skipped 表示尚未实测或未执行。
 
+- [reports/agent-hardening/p0-after-live.json](reports/agent-hardening/p0-after-live.json)
+- [reports/agent-hardening/p0-before-live.json](reports/agent-hardening/p0-before-live.json)
+- [reports/agent-hardening/p0-before.json](reports/agent-hardening/p0-before.json)
+- [reports/agent-hardening/p0-verifier-replay.json](reports/agent-hardening/p0-verifier-replay.json)
+- [reports/agent-stage1/planner-smoke-live.json](reports/agent-stage1/planner-smoke-live.json)
+- [reports/agent-stage1/planner-smoke-sandbox-failed.json](reports/agent-stage1/planner-smoke-sandbox-failed.json)
+- [reports/agent-stage2/live-smoke-before-clarification.json](reports/agent-stage2/live-smoke-before-clarification.json)
+- [reports/agent-stage2/live-smoke-first.json](reports/agent-stage2/live-smoke-first.json)
+- [reports/agent-stage2/live-smoke.json](reports/agent-stage2/live-smoke.json)
+- [reports/agent-stage3/agent-calendar-ja.jpg](reports/agent-stage3/agent-calendar-ja.jpg)
+- [reports/agent-stage3/agent-clarification-mobile-ja.jpg](reports/agent-stage3/agent-clarification-mobile-ja.jpg)
+- [reports/agent-stage3/agent-home.jpg](reports/agent-stage3/agent-home.jpg)
+- [reports/agent-stage3/agent-withheld-ja.jpg](reports/agent-stage3/agent-withheld-ja.jpg)
+- [reports/agent-stage3/browser-api-metrics.json](reports/agent-stage3/browser-api-metrics.json)
+- [reports/agent-stage3/frontend-tests.json](reports/agent-stage3/frontend-tests.json)
+- [reports/agent-stage3/frontend-tests.tap](reports/agent-stage3/frontend-tests.tap)
+- [reports/agent-stage3/ja-calendar-result.txt](reports/agent-stage3/ja-calendar-result.txt)
+- [reports/agent-stage3/ja-clarification-result.txt](reports/agent-stage3/ja-clarification-result.txt)
+- [reports/agent-stage3/ja-rag-regression.txt](reports/agent-stage3/ja-rag-regression.txt)
+- [reports/agent-stage3/zh-cancel-result.txt](reports/agent-stage3/zh-cancel-result.txt)
 - [reports/api-baseline-v1/chunk-api-900-120-dev.json](reports/api-baseline-v1/chunk-api-900-120-dev.json)
 - [reports/api-baseline-v1/chunk-api-900-120-dev.md](reports/api-baseline-v1/chunk-api-900-120-dev.md)
 - [reports/api-baseline-v1/README.md](reports/api-baseline-v1/README.md)

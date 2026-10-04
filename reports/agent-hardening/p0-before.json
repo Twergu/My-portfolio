@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-10-04T05:46:06.054930+00:00",
+  "scope": "Real API on fictional policies; raw prompts/outputs explicitly recorded offline",
+  "settings": {
+    "mode": "api",
+    "base_url": "https://api.openai.com/v1",
+    "chat_model": "gpt-5.6-luna",
+    "verifier_model": "gpt-5.6-luna",
+    "verification_mode": "strict",
+    "verification_strategy": "all",
+    "verifier_prompt": "baseline",
+    "embedding_model": "text-embedding-3-small",
+    "top_k": 3,
+    "min_score": 0.25,
+    "chunk_size": 900,
+    "chunk_overlap": 0,
+    "search_mode": "exact",
+    "retrieval_mode": "hybrid",
+    "candidate_k": 20,
+    "rrf_k": 60,
+    "reranker_mode": "off",
+    "reranker_model": ""
+  },
+  "cases": [],
+  "model_calls": [],
+  "error_type": "PermissionError",
+  "operations": []
+}

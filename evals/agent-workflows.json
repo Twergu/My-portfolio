@@ -1,0 +1,40 @@
+{
+  "version": "agent-tools-stage2-v1",
+  "provenance": "AI-authored fictional policies and scenarios; not human reviewed",
+  "pages": [
+    "Aster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases totaling at most 5000 JPY require line-manager confirmation. Higher totals require department-head confirmation. Submit an item list, the total budget and the required manager confirmation. This policy describes the process and does not grant approval automatically.",
+    "Aster Labs fictional training policy, current from 2026-01-01. Submit a training request at least 3 calendar days before the course start date. Required documents are the course schedule and line-manager approval. The advance-notice requirement uses calendar days, not working days.",
+    "Aster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility requires full-time employment and at least 3 on-site workdays per week. Submit an employment-type declaration and an on-site work schedule. Self-reported facts can support only a conditional eligibility assessment, subject to employer confirmation."
+  ],
+  "cases": [
+    {
+      "id": "purchasing-zh",
+      "language": "zh",
+      "question": "我想购买3本办公笔记本，每本1200日元。请根据采购规定计算总额，并告诉我需要提交什么。",
+      "tools": ["knowledge_search", "calculator"],
+      "expected_value": "3600"
+    },
+    {
+      "id": "training-ja",
+      "language": "ja",
+      "question": "研修の開始日は2026年10月12日です。研修規程に基づく申請期限の日付を計算して、必要書類も教えてください。",
+      "tools": ["knowledge_search", "calendar"],
+      "expected_value": "2026-10-09"
+    },
+    {
+      "id": "commuting-en",
+      "language": "en",
+      "question": "Can I apply for the commuting allowance, and what do I need to submit?",
+      "reply": "I am a full-time employee and work on site 3 days per week.",
+      "tools": ["knowledge_search"],
+      "requires_clarification": true
+    },
+    {
+      "id": "mock-calendar-zh",
+      "language": "zh",
+      "question": "请用当前模拟日历计算2026年10月2日至10月6日（包含首尾）有几个工作日，并说明这是否已经确认了公司节假日。",
+      "tools": ["calendar"],
+      "requires_mock_label": true
+    }
+  ]
+}

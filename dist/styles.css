@@ -24,3 +24,39 @@
 #login-error {color: #b23f4e;}
 #session-control {max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px;}
 @media(max-width:600px){#session-control{max-width:75px}.retrieval-filters .field-grid{grid-template-columns:1fr}.topbar-actions{gap:5px}}
+
+/* Business Agent: same workspace, explicit task and evidence states. */
+.chat-mode-row{display:flex;align-items:center;gap:16px;margin:0 44px 12px;flex-wrap:wrap}
+.chat-mode-switch{display:inline-flex;padding:4px;background:#eef2f8;border:1px solid #e3e9f3;border-radius:10px;gap:3px}
+.chat-mode-switch button{display:flex;align-items:center;gap:7px;border:0;border-radius:7px;background:transparent;color:#61718b;padding:9px 15px;font-size:13px;white-space:nowrap}
+.chat-mode-switch button[aria-pressed=true]{background:#fff;color:#3358c7;box-shadow:0 1px 4px #24396015;font-weight:600}
+.chat-mode-switch .icon{width:16px;height:16px}.chat-mode-switch button:disabled{cursor:default;opacity:.65}
+.chat-mode-description{font-size:12px;color:#78869b}.agent-welcome{margin-top:30px}
+.agent-example-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:24px;text-align:left}
+.agent-example{border:1px solid #e1e7f0;background:#fff;border-radius:12px;padding:18px 16px;text-align:left;color:#52627c;transition:border-color .15s,box-shadow .15s}
+.agent-example:hover{border-color:#98b0ea;box-shadow:0 5px 18px #3254a10d}
+.agent-example strong{display:flex;align-items:center;justify-content:space-between;color:#304a72;font-size:14px;margin-bottom:9px;gap:10px}
+.agent-example strong .icon{width:15px;flex-shrink:0}.agent-example>span{font-size:12px;line-height:1.8;display:block}
+.agent-example-note{font-size:11px;color:#7a889d;margin:13px 0 20px;line-height:1.8}
+.agent-capabilities{display:flex;justify-content:center;gap:20px;font-size:12px;color:#647c9b;flex-wrap:wrap;margin-bottom:22px}
+.agent-capabilities span{display:flex;align-items:center;gap:6px}.agent-capabilities .icon{width:16px;height:16px}
+.agent-task-banner{display:flex;justify-content:space-between;align-items:center;gap:15px;border:1px solid #cbdaf5;background:#f1f6ff;padding:12px 15px;border-radius:10px;margin-bottom:10px;font-size:13px;color:#375581}
+.agent-task-banner p{font-size:11px;line-height:1.7;margin:4px 0 0;color:#5b7191}.agent-task-banner button{white-space:nowrap;font-size:12px}
+.agent-api-notice{background:#fff6df;padding:12px 15px;border-radius:9px;margin-bottom:10px;color:#856123;font-size:12px;line-height:1.8}.agent-api-notice button{margin-left:12px;font-size:12px}
+.agent-api-notice[hidden]{display:none}.composer textarea:disabled{opacity:.65}.scope-control select:disabled,.retrieval-filters input:disabled,.retrieval-filters select:disabled{opacity:.65;cursor:not-allowed}
+.agent-status{display:inline-block;font-size:11px;padding:4px 9px;margin:0 0 12px;border-radius:6px;background:#f0f3f8;color:#66758e}
+.status-answered{background:#eaf6f0;color:#267352}.status-needs_input{background:#edf3ff;color:#3e62ab}
+.status-unsupported_answer,.status-error,.status-invalid_model_response{background:#fff0ed;color:#a04c3a}
+.agent-questions{background:#f5f8fe;border:1px solid #dce6f6;border-radius:10px;padding:17px 20px;color:#3f5576;font-size:14px}
+.agent-question-list{padding-left:21px;margin:12px 0;line-height:1.9;overflow-wrap:anywhere}.agent-questions>p{font-size:12px;color:#6b7f9c;line-height:1.7;margin:10px 0 0}
+.reply-label{display:block;font-size:11px;font-weight:500;color:#6f83a5;margin-bottom:6px}
+.source-group-title{font-size:11px;color:#72829c;margin:17px 0 6px;letter-spacing:.03em}.source-group .answer-sources{margin-top:7px}
+.source-tool{border-color:#d6e8e1;background:#f8fcfa}.source-tool>b{background:#e5f3ec;color:#397764}.source-user{border-color:#e2dff0;background:#fcfbff}.source-user>b{background:#efebf8;color:#75619b}
+.source-symbol{display:flex;align-items:center;justify-content:center;flex-shrink:0;width:39px;height:43px;border-radius:9px;background:#eef4f7;color:#527586}
+.agent-notices{margin:14px 0;color:#856c3d;font-size:12px;line-height:1.7}.agent-notices p{display:flex;gap:7px;margin:6px 0}.agent-notices .icon{width:15px;height:15px;flex-shrink:0;margin-top:3px}
+.tool-fields{font-size:12px;border:1px solid #e2e8ee;border-radius:9px;margin:20px 0;overflow:hidden}.tool-fields>div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px;padding:10px 12px;border-bottom:1px solid #edf0f4}.tool-fields>div:last-child{border:0}.tool-fields dt{color:#7b889b}.tool-fields dd{margin:0;color:#334e6b;overflow-wrap:anywhere;white-space:pre-wrap}
+.agent-trace{border:1px solid #e3e9f1;border-radius:10px;margin:18px 0 12px;font-size:12px;color:#526682}
+.agent-trace summary{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;list-style:none}.agent-trace summary:after{content:'+';margin-left:auto;color:#7b8ca7}.agent-trace[open] summary:after{content:'−'}.agent-trace summary>span{font-size:11px;color:#7e8da2}.agent-trace summary .icon{width:16px;height:16px}.agent-trace ol{list-style:none;padding:0 15px 8px;margin:0}.agent-trace li{display:flex;align-items:flex-start;gap:11px;padding:10px 0;line-height:1.6}.agent-trace li+li{border-top:1px solid #eff2f6}.agent-trace strong{display:block;font-weight:500}.agent-trace small{display:block;color:#7b8aa0;font-size:11px}.trace-marker{display:flex;border-radius:50%;padding:4px;color:#8b7a5a;background:#f5f1e8}.trace-marker.done{color:#46846a;background:#edf6f1}.trace-marker .icon{width:13px;height:13px}.trace-step{margin-left:auto;white-space:nowrap;color:#94a0b2;font-size:10px;padding-top:3px}
+.answer-body{min-width:0}.source-quote,.answer-text{overflow-wrap:anywhere}.inline-error .text-button{margin-left:10px}
+@media(max-width:1250px){.chat-mode-row{margin-left:35px;margin-right:35px}.agent-example-grid{gap:8px}.agent-example{padding:14px 12px}}
+@media(max-width:760px){.chat-mode-row{margin:0 22px 10px;gap:8px}.chat-mode-description{font-size:11px}.chat-mode-switch button{padding:7px 12px;font-size:12px}.agent-welcome{margin-top:15px}.agent-example-grid{grid-template-columns:1fr;gap:8px;margin-top:18px}.agent-example{padding:12px 14px}.agent-example strong{margin-bottom:4px;font-size:13px}.agent-example>span{font-size:11px}.agent-capabilities{gap:14px}.agent-task-banner{align-items:flex-start;padding:10px 12px}.agent-questions{padding:14px;font-size:13px}.agent-trace summary{gap:6px;flex-wrap:wrap}.topbar .mode-pill>span{display:none}.chat-content{min-height:120px}.composer-area{max-height:55dvh;overflow-y:auto}}

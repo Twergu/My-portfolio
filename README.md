@@ -4,6 +4,10 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 查看 [全部源文件](SOURCE_INDEX.md)、[本轮 12 项检索与权限优化](docs/retrieval-optimization-report.md)、[上轮 17 项优化记录](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
+Agent 已完成[第三阶段：页面与多轮交互](docs/agent-stage3.md)。聊天页可切换“知识问答 / 业务 Agent”，支持补充信息、结束任务、分类来源和实际工具执行记录。中日文浏览器联调已运行真实 API：采购与培训正常回答；一例日文续接被严格验证拦截，失败记录保留，不能把页面接通等同于模型质量满分。工作日日历仍明确为模拟数据。[第二阶段真实工具验收](docs/agent-stage2.md)与[第一阶段编排记录](docs/agent-stage1.md)保留作历史说明。
+
+前端测试使用 Node.js 24 内置测试器，无 npm 依赖：`python -m scripts.check_frontend`。数量从实际运行输出生成，见[前端测试报告](reports/agent-stage3/frontend-tests.json)；Python 测试与覆盖率仍见[动态报告](reports/tests.md)。CI 已增加前端检查步骤，新增 Agent 尚未重新运行远程 CI。
+
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
 <!-- V3_RESULTS_START -->
@@ -41,7 +45,7 @@ Selectivity 回放：59 条生成断言中 0 条可跳过，完整可省去 0 �
 
 ## 工程验收与上轮基线
 
-测试、CI、Docker 和 Vector Benchmark 表格使用最新运行快照；Dense RAG、Chunk 及 off/fast/strict 表格保留上一轮基线。新的 Hybrid / Reranker 对比见顶部 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核、Agent 与人在回路按要求暂缓。
+测试、CI、Docker 和 Vector Benchmark 表格使用注明版本的运行快照；Dense RAG、Chunk 及 off/fast/strict 表格保留上一轮基线。新的 Hybrid / Reranker 对比见顶部 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核与人在回路继续暂缓；Agent 的阶段状态见顶部说明，既有 CI 记录不代表新增 Agent 代码已在远程验收。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |
@@ -121,7 +125,7 @@ py -3 -m venv .venv
 2. 就绪后，在「知识问答」选择资料范围并提问。点击引用查看摘录和 PDF 实际页。
 3. 顶栏或模型设置可切换「日本語」，选择保存在当前浏览器。日文界面发送 language: "ja"，全汉字问题也要求日语回答；API 接受 zh、ja、en。
 
-支持有文字层的日文 PDF 与汉字、平假名、片假名检索。AI 日语质量取决于配置模型。扫描件仍需 OCR，多栏和表格质量取决于源文档。问答每次独立检索，刷新页面不保留对话。
+支持有文字层的日文 PDF 与汉字、平假名、片假名检索。AI 日语质量取决于配置模型。扫描件仍需 OCR，多栏和表格质量取决于源文档。普通知识问答每次独立检索；Agent 在等待补充信息时继续原任务。刷新页面不保留对话或任务句柄，服务器任务从创建起最多保留 15 分钟。
 
 ## 模型 API 与真实验证
 

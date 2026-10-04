@@ -41,8 +41,38 @@ CONTRACT = (
     "Include each supplied claim_index exactly once."
 )
 
+AGENT_EVIDENCE_RULES = (
+    "Source metadata identifies document, tool, or user evidence. User evidence is self-reported, not verified HR data. "
+    "Calculations establish only results of supplied operands; verify their applicability against the user's inputs "
+    "and policy. A mock calendar can support only explicitly conditional/simulated working-day conclusions, never "
+    "confirmed company holidays. Calendar dates alone cannot establish balances, availability or approval. "
+    "Business eligibility requires relevant document rules and evidence for every material user condition; "
+    "qualify conclusions based on user statements. Cite all sources needed for an inference. "
+    "Company rules and mandatory application steps require document evidence, not user assertions or tool outputs. "
+    "Document metadata about status/effective dates is evidence too; do not treat archived/draft policy as current. "
+    "No tool can submit an application, send a message or approve a request. Never claim these actions happened. "
+)
 
-def verify_claims(question, claims, settings, api_key, provider, metrics, *, prompt="calibrated"):
+AGENT_GENERATION_RULES = (
+    "Each eligibility assessment must cite BOTH the document defining every eligibility condition AND the user "
+    "report establishing those conditions in that same claim, even if other claims cite them. "
+    "State in the same assessment that it is conditional on self-reported facts and pending employer confirmation. "
+    "Separate policy requirements from user intentions, capability and completed actions. For required materials "
+    "write an explicit normative sentence, e.g. 申請には書類の提出が必要です, not an ambiguous promise such as "
+    "書類を提出します. Cite the document rule for a requirement, not the user's willingness to comply. "
+)
+
+AGENT_VERIFICATION_RULES = (
+    "Distinguish modality: a normative application instruction or list of required materials is not a claim "
+    "that the user has submitted them. In a procedural context, 申請にはXを提出します may describe what the "
+    "policy requires; evaluate that reading against the cited document. A user saying 提出できます does not "
+    "prove actual submission. Reject claims such as 提出済み, already submitted, approved or guaranteed future "
+    "execution unless independently evidenced. An eligibility assessment must itself cite the applicable "
+    "document rule and the material user facts; do not borrow uncited rules from another claim or the question. "
+)
+
+
+def verify_claims(question, claims, settings, api_key, provider, metrics, *, prompt="calibrated", agent_mode=False):
     if prompt not in ("baseline", "calibrated"):
         raise ValueError("Unknown verifier prompt")
     with metrics.measure("verification"):
@@ -50,7 +80,12 @@ def verify_claims(question, claims, settings, api_key, provider, metrics, *, pro
             settings,
             api_key,
             [
-                {"role": "system", "content": (BASELINE if prompt == "baseline" else CALIBRATED) + CONTRACT},
+                {
+                    "role": "system",
+                    "content": (BASELINE if prompt == "baseline" else CALIBRATED)
+                    + (AGENT_EVIDENCE_RULES + AGENT_VERIFICATION_RULES if agent_mode else "")
+                    + CONTRACT,
+                },
                 {"role": "user", "content": json.dumps({"question": question, "claims": claims}, ensure_ascii=False)},
             ],
             metrics=metrics,

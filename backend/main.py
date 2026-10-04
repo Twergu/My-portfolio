@@ -23,6 +23,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, SecretStr, field_validator
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
+from .agent_service import install_agent_routes
 from .config import DATA_DIR, ROOT, Settings, environment_settings
 from .governance import LOCAL_ADMIN, DocumentMetadata, RetrievalFilters
 from .providers import ModelError, OpenAICompatibleProvider
@@ -616,5 +617,6 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
         finally:
             service.record_metrics("question", outcome, measurements.as_dict())
 
+    install_agent_routes(app, service, identify)
     app.mount("/", StaticFiles(directory=ROOT / "dist", html=True), name="ui")
     return app

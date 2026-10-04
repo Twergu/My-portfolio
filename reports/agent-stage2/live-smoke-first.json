@@ -1,0 +1,31 @@
+{
+  "dataset": "agent-tools-stage2-v1",
+  "dataset_provenance": "AI-authored fictional policies and scenarios; not human reviewed",
+  "generated_at": "2026-10-04T04:11:59.209627+00:00",
+  "settings": {
+    "mode": "api",
+    "base_url": "https://api.openai.com/v1",
+    "chat_model": "gpt-5.6-luna",
+    "verifier_model": "gpt-5.6-luna",
+    "verification_mode": "strict",
+    "verification_strategy": "all",
+    "verifier_prompt": "baseline",
+    "embedding_model": "text-embedding-3-small",
+    "top_k": 3,
+    "min_score": 0.25,
+    "chunk_size": 900,
+    "chunk_overlap": 0,
+    "search_mode": "exact",
+    "retrieval_mode": "hybrid",
+    "candidate_k": 20,
+    "rrf_k": 60,
+    "reranker_mode": "off",
+    "reranker_model": ""
+  },
+  "scope": "Real Embedding, Planner, Generator, Verifier; real isolated SQLite retrieval, deterministic math/dates, explicitly mock workweek calendar. No customer documents or external writes.",
+  "status": "failed",
+  "cases": [],
+  "operations": [],
+  "error_type": "PermissionError",
+  "estimated_cost_usd": null
+}

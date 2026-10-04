@@ -1,7 +1,7 @@
 /* Metadata, session and access controls. Authorization is enforced by the server. */
 function showLogin() {
   const ja = state.locale === 'ja';
-  state.docs = []; state.messages = []; state.selected = ''; state.source = null;
+  resetChatIdentity(); clearTimeout(pollTimer);
   $('#app').innerHTML = `<main class="boot"><h1>Knowbase</h1><p>${ja ? '管理者が発行したアクセストークンでログインしてください。' : '请使用管理员签发的访问令牌登录。'}</p><form id="login-form"><label for="login-token">${ja ? 'アクセストークン' : '访问令牌'}</label><input id="login-token" type="password" required autocomplete="off" minlength="20" maxlength="200"><button class="button primary">${ja ? 'ログイン' : '登录'}</button><p id="login-error" role="alert"></p></form></main>`;
   $('#login-form').onsubmit = async event => {
     event.preventDefault();
@@ -19,7 +19,7 @@ function applyAccess() {
   const ja = state.locale === 'ja';
   const displayName = state.auth.mode === 'local' ? (ja ? 'ローカルユーザー' : '本地用户') : user.username;
   if ($('.local-user div')) $('.local-user div').innerHTML = `${esc(displayName)}<small>${esc(user.roles.join(' · '))}</small>`;
-  if ($('.local-user b')) $('.local-user b').textContent = 'v0.4';
+  if ($('.local-user b')) $('.local-user b').textContent = 'v0.5';
   if ($('.workspace small')) $('.workspace small').textContent = state.auth.mode === 'required' ? (ja ? 'アクセス制御が有効' : '已启用访问控制') : (ja ? 'ローカル・単一ユーザー' : '本地单用户模式');
   document.querySelectorAll('[data-action="upload"],[data-action="sample"]').forEach(button => button.disabled = !editor);
   document.querySelectorAll('[data-action="reindex"]').forEach(button => button.disabled = !admin);
@@ -29,7 +29,7 @@ function applyAccess() {
     button.id = 'session-control'; button.className = 'text-button';
     button.textContent = state.auth.mode === 'local' ? (state.locale === 'ja' ? 'ローカル利用' : '本地单用户') : `${user.username} · ${state.locale === 'ja' ? 'ログアウト' : '退出'}`;
     button.disabled = state.auth.mode === 'local';
-    button.onclick = async () => { await api('/auth/logout', {method:'POST'}); state.auth = null; showLogin(); };
+    button.onclick = async () => {button.disabled=true; resetChatIdentity(); try {await api('/auth/logout', {method:'POST'}); state.auth=null; showLogin();} catch(error) {if (state.auth?.user) shell(); toast(error.message,true);}};
     $('.topbar-actions').append(button);
   }
 }

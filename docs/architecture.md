@@ -50,3 +50,13 @@ HNSW 在写入事务或启动/设置维护时建立，查询只验证索引存�
 ## 检索与权限升级
 
 `principal → role/owner ACL → requested IDs + metadata predicates → query embedding → dense + lexical → RRF → optional reranker → generator → quotes + verifier → citations`。权限范围在所有模型调用之前解析，PDF/分块/文档管理也使用同一权限边界。参见 [访问控制](access-control.md)、[检索与验证 ADR](adr/0002-hybrid-and-verification.md)、[未来 Agent 门槛](adr/0003-agent-gates.md)。
+
+## 通用 Agent 编排与实际工具
+
+`backend/agent.py` 提供独立的任务编排核心：用户输入 → JSON 决策 → 追问 / 只读工具调度 / 证据交接 / 无法完成。工具由服务器注册，名称、参数和结果均校验，执行预算贯穿多轮追问；身份或权限范围版本变化会阻止继续使用旧任务。Planner 复用现有 Provider 和 Generator 模型，独立记录调用角色与耗时。
+
+`backend/agent_service.py` 提供 `/api/agent`、任务回复与取消接口，服务器持有用户绑定的短期任务状态。每次模型操作前重新检查身份、文档范围与配置，权限/证据变化后停止旧任务。Knowledge Search 复用现有检索，日期/金额使用确定性工具，最终通过 `answer_from_sources` 复用引用及断言验证。Agent 固定 strict/all，文档、工具和用户自述分别标记来源，模拟日历不能被解释为已确认的企业日历。
+
+Planner 与生成阶段都可以追问；`ready` 只表示进入结果生成，不代表已验证或业务已批准。第一阶段检查只调用模拟工具，[第二阶段检查](agent-stage2.md)已实际完成 PDF→Embedding→检索→日期/计算→生成/验证。[第三阶段](agent-stage3.md)通过聊天页提供完整入口；内存会话只适用于当前单进程应用，重启失效。
+
+`dist/agent.js` 负责请求路由、临时任务句柄和分类证据显示。任务等待补充时锁定模式、文档与 metadata 筛选，回复请求仅上传新文本。句柄与对话不写入 localStorage。退出登录时清除上下文并递增客户端身份代次，迟到的响应或 401 不得恢复旧数据或退出新会话；真正的权限与状态仍由服务器检查。执行记录来自响应中的实际事件，在同步请求结束后展示，不模拟实时进度或暴露模型推理。工具、自述来源没有 PDF 链接，文档链接由本地文档 ID 和物理页码构造。

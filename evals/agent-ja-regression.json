@@ -1,0 +1,254 @@
+{
+  "provenance": "Recorded real API failure on AI-authored fictional policies, not human reviewed; original stage3 candidate was not logged",
+  "source_report": "reports/agent-hardening/p0-before-live.json",
+  "sha256": "f43fbe8c66399812a6382f2d5b2323d5b8625980aba18abd1bf551b44a6c4c3c",
+  "generator_input": {
+    "question": "[{\"text\": \"通勤補助の申請条件を確認したいです。判断に必要な情報があれば質問してください。\", \"responding_to\": []}, {\"text\": \"フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。\", \"responding_to\": [\"雇用形態はフルタイムですか？\", \"週に何日、出社勤務をしていますか？\"]}]",
+    "sources": [
+      {
+        "id": 1,
+        "name": "fictional-policy.pdf",
+        "page": 3,
+        "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+        "kind": "document",
+        "provenance": "retrieved",
+        "metadata": {
+          "policy_status": "unclassified",
+          "effective_from": null,
+          "effective_to": null,
+          "department": "",
+          "document_version": ""
+        }
+      },
+      {
+        "id": 2,
+        "name": "fictional-policy.pdf",
+        "page": 1,
+        "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+        "kind": "document",
+        "provenance": "retrieved",
+        "metadata": {
+          "policy_status": "unclassified",
+          "effective_from": null,
+          "effective_to": null,
+          "department": "",
+          "document_version": ""
+        }
+      },
+      {
+        "id": 3,
+        "name": "fictional-policy.pdf",
+        "page": 2,
+        "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+        "kind": "document",
+        "provenance": "retrieved",
+        "metadata": {
+          "policy_status": "unclassified",
+          "effective_from": null,
+          "effective_to": null,
+          "department": "",
+          "document_version": ""
+        }
+      },
+      {
+        "id": 4,
+        "name": "User input 1",
+        "page": null,
+        "text": "通勤補助の申請条件を確認したいです。判断に必要な情報があれば質問してください。",
+        "kind": "user",
+        "provenance": "self_report",
+        "metadata": {
+          "responding_to": [],
+          "reference_date": "2026-10-04",
+          "timezone": "Asia/Tokyo"
+        }
+      },
+      {
+        "id": 5,
+        "name": "User input 2",
+        "page": null,
+        "text": "フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。",
+        "kind": "user",
+        "provenance": "self_report",
+        "metadata": {
+          "responding_to": [
+            "雇用形態はフルタイムですか？",
+            "週に何日、出社勤務をしていますか？"
+          ],
+          "reference_date": "2026-10-04",
+          "timezone": "Asia/Tokyo"
+        }
+      }
+    ]
+  },
+  "generator_output": {
+    "status": "answered",
+    "claims": [
+      {
+        "text": "2026年1月1日からの通勤補助ポリシーでは、フルタイム勤務かつ週3日以上の出社勤務が申請条件です。",
+        "evidence": [
+          {
+            "source_id": 1,
+            "quote": "Aster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility requires full-time employment and at least 3 on-site workdays per week."
+          }
+        ]
+      },
+      {
+        "text": "あなたの申告内容は、フルタイム勤務で週3日出社のため、記載された条件を満たします。",
+        "evidence": [
+          {
+            "source_id": 5,
+            "quote": "フルタイム勤務で、週3日出社しています。"
+          }
+        ]
+      },
+      {
+        "text": "申請には雇用形態申告書と出社勤務スケジュールを提出します。",
+        "evidence": [
+          {
+            "source_id": 1,
+            "quote": "Submit an employment-type declaration and an on-site work schedule."
+          },
+          {
+            "source_id": 5,
+            "quote": "雇用形態申告書と出社勤務スケジュールを提出できます。"
+          }
+        ]
+      },
+      {
+        "text": "自己申告だけでは最終的な適格性は確定せず、雇用主による確認が必要です。",
+        "evidence": [
+          {
+            "source_id": 1,
+            "quote": "Self-reported facts can support only a conditional eligibility assessment, subject to employer confirmation."
+          }
+        ]
+      }
+    ]
+  },
+  "verifier_input": {
+    "question": "[{\"text\": \"通勤補助の申請条件を確認したいです。判断に必要な情報があれば質問してください。\", \"responding_to\": []}, {\"text\": \"フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。\", \"responding_to\": [\"雇用形態はフルタイムですか？\", \"週に何日、出社勤務をしていますか？\"]}]",
+    "claims": [
+      {
+        "claim_index": 1,
+        "text": "2026年1月1日からの通勤補助ポリシーでは、フルタイム勤務かつ週3日以上の出社勤務が申請条件です。",
+        "cited_passages": [
+          {
+            "source_id": 1,
+            "quote": "Aster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility requires full-time employment and at least 3 on-site workdays per week.",
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "unclassified",
+              "effective_from": null,
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          }
+        ]
+      },
+      {
+        "claim_index": 2,
+        "text": "あなたの申告内容は、フルタイム勤務で週3日出社のため、記載された条件を満たします。",
+        "cited_passages": [
+          {
+            "source_id": 5,
+            "quote": "フルタイム勤務で、週3日出社しています。",
+            "text": "フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。",
+            "kind": "user",
+            "provenance": "self_report",
+            "metadata": {
+              "responding_to": [
+                "雇用形態はフルタイムですか？",
+                "週に何日、出社勤務をしていますか？"
+              ],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            }
+          }
+        ]
+      },
+      {
+        "claim_index": 3,
+        "text": "申請には雇用形態申告書と出社勤務スケジュールを提出します。",
+        "cited_passages": [
+          {
+            "source_id": 1,
+            "quote": "Submit an employment-type declaration and an on-site work schedule.",
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "unclassified",
+              "effective_from": null,
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "source_id": 5,
+            "quote": "雇用形態申告書と出社勤務スケジュールを提出できます。",
+            "text": "フルタイム勤務で、週3日出社しています。雇用形態申告書と出社勤務スケジュールを提出できます。",
+            "kind": "user",
+            "provenance": "self_report",
+            "metadata": {
+              "responding_to": [
+                "雇用形態はフルタイムですか？",
+                "週に何日、出社勤務をしていますか？"
+              ],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            }
+          }
+        ]
+      },
+      {
+        "claim_index": 4,
+        "text": "自己申告だけでは最終的な適格性は確定せず、雇用主による確認が必要です。",
+        "cited_passages": [
+          {
+            "source_id": 1,
+            "quote": "Self-reported facts can support only a conditional eligibility assessment, subject to employer confirmation.",
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "unclassified",
+              "effective_from": null,
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "verifier_output": {
+    "verdicts": [
+      {
+        "claim_index": 1,
+        "supported": true,
+        "reason": "引用されたポリシー本文は、2026年1月1日からの適用として、フルタイム勤務かつ週3日以上の出社勤務を要件として明記しています。"
+      },
+      {
+        "claim_index": 2,
+        "supported": false,
+        "reason": "ユーザー申告はフルタイム勤務・週3日出社で要件に合致することを条件付きで示しますが、ポリシー本文は自己申告だけでは最終的な適格性を確定できず、雇用主の確認が必要としています。"
+      },
+      {
+        "claim_index": 3,
+        "supported": false,
+        "reason": "ポリシーは書類の提出を求めていますが、ユーザーが述べているのは雇用形態申告書と出社勤務スケジュールを提出できるという意思・可能性であり、実際に提出することまでは示していません。"
+      },
+      {
+        "claim_index": 4,
+        "supported": true,
+        "reason": "ポリシー本文は、自己申告は条件付きの適格性判断にのみ利用でき、雇用主の確認を受ける必要があると明記しています。"
+      }
+    ]
+  }
+}

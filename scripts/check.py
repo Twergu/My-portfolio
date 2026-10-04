@@ -45,7 +45,7 @@ def main():
         for file in sorted((ROOT / folder).rglob("*")):
             if (
                 file.is_file()
-                and file.suffix in (".py", ".js", ".css", ".html", ".json", ".jsonl")
+                and file.suffix in (".py", ".js", ".cjs", ".css", ".html", ".json", ".jsonl")
                 and "__pycache__" not in file.parts
             ):
                 digest.update(file.relative_to(ROOT).as_posix().encode())

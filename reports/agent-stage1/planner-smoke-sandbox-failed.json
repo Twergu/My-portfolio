@@ -1,0 +1,359 @@
+{
+  "dataset": "agent-planning-stage1-v1",
+  "generated_at": "2026-10-04T03:48:37.357263+00:00",
+  "model": "gpt-5.6-luna",
+  "scope": "Real planner API + explicitly mock knowledge tool; no embedding, retrieval or final grounding.",
+  "dataset_provenance": "AI-authored fictional fixtures, not human reviewed",
+  "cases": [
+    {
+      "id": "procurement-zh",
+      "question": "请查一下采购办公耗材要提交哪些材料。",
+      "status": "error",
+      "expected_status": "ready",
+      "passed": false,
+      "intent": null,
+      "goal": null,
+      "questions": [],
+      "failure_code": "planner_error",
+      "trace": [
+        {
+          "step": 1,
+          "event": "error",
+          "tool": null,
+          "observation_id": null,
+          "code": "planner_error"
+        }
+      ],
+      "metrics": {
+        "elapsed_ms": 9129.745,
+        "timings_ms": {
+          "provider_http": 6126.035,
+          "provider_backoff": 3000.6,
+          "agent_planning": 9126.78
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2043.247,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2027.87,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2054.918,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "travel-ja",
+      "question": "出張精算の手続きを進めたいです。規程を確認し、必要書類を整理する準備をしてください。",
+      "status": "error",
+      "expected_status": "ready",
+      "passed": false,
+      "intent": null,
+      "goal": null,
+      "questions": [],
+      "failure_code": "planner_error",
+      "trace": [
+        {
+          "step": 1,
+          "event": "error",
+          "tool": null,
+          "observation_id": null,
+          "code": "planner_error"
+        }
+      ],
+      "metrics": {
+        "elapsed_ms": 9103.797,
+        "timings_ms": {
+          "provider_http": 6101.425,
+          "provider_backoff": 3000.364,
+          "agent_planning": 9101.923
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2042.999,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2031.855,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2026.571,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "onboarding-en",
+      "question": "What documents does the company require for onboarding a new employee?",
+      "status": "error",
+      "expected_status": "ready",
+      "passed": false,
+      "intent": null,
+      "goal": null,
+      "questions": [],
+      "failure_code": "planner_error",
+      "trace": [
+        {
+          "step": 1,
+          "event": "error",
+          "tool": null,
+          "observation_id": null,
+          "code": "planner_error"
+        }
+      ],
+      "metrics": {
+        "elapsed_ms": 9139.212,
+        "timings_ms": {
+          "provider_http": 6136.331,
+          "provider_backoff": 3000.256,
+          "agent_planning": 9136.705
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2060.04,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2032.146,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2044.145,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "eligibility-zh",
+      "question": "帮我确认我是否符合公司通勤补助申请条件。",
+      "status": "error",
+      "expected_status": "needs_input",
+      "passed": false,
+      "intent": null,
+      "goal": null,
+      "questions": [],
+      "failure_code": "planner_error",
+      "trace": [
+        {
+          "step": 1,
+          "event": "error",
+          "tool": null,
+          "observation_id": null,
+          "code": "planner_error"
+        }
+      ],
+      "metrics": {
+        "elapsed_ms": 9098.876,
+        "timings_ms": {
+          "provider_http": 6097.135,
+          "provider_backoff": 3000.292,
+          "agent_planning": 9097.546
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 0,
+          "complete": false,
+          "attempts_without_usage": 3
+        },
+        "request_count": 1,
+        "attempt_count": 3,
+        "retry_count": 2,
+        "cost_usd": null,
+        "known_cost_usd": 0.0,
+        "cost_status": "unknown",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [
+          "failed_attempt_without_usage"
+        ],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2041.741,
+            "attempt": 1,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2022.45,
+            "attempt": 2,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2032.944,
+            "attempt": 3,
+            "status_code": null,
+            "error": "connection_error",
+            "role": "planner"
+          }
+        ],
+        "validation_failures": []
+      }
+    }
+  ],
+  "status": "failed",
+  "cost_usd": null
+}

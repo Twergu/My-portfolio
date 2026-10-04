@@ -21,10 +21,14 @@ const paths = {
   copy: '<rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V3H3v13h5"/>',
   menu: '<path d="M3 6h18M3 12h18M3 18h18"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  calculator: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M8 6h8M8 11h1M15 11h1M8 15h1M15 15h1M8 19h1M15 19h1"/>',
+  user: '<circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
+  steps: '<circle cx="5" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 5h8a4 4 0 0 1 0 8H9a3 3 0 0 0 0 6h8"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',
 };
 const icon = (name, cls = '') => `<svg class="icon ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name] || paths.files}</svg>`;
 const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-const state = {view:'chat', docs:[], settings:null, messages:[], selected:'', draft:'', busy:false, uploading:false, source:null, locale:localStorage.getItem('knowbase-locale') || (navigator.language?.toLowerCase().startsWith('ja') ? 'ja' : 'zh')};
+const state = {view:'chat', docs:[], settings:null, messages:[], selected:'', draft:'', busy:false, uploading:false, source:null, chatMode:'rag', agentTask:null, chatEpoch:0, locale:localStorage.getItem('knowbase-locale') || (navigator.language?.toLowerCase().startsWith('ja') ? 'ja' : 'zh')};
 const $ = selector => document.querySelector(selector);
 const readyDocs = () => state.docs.filter(doc => doc.status === 'ready' && !doc.needs_reindex);
 let toastTimer, pollTimer;
@@ -84,12 +88,12 @@ function applyLocale() {
   const navigation = $('nav');
   if (navigation) navigation.setAttribute('aria-label', state.locale === 'ja' ? 'メインナビゲーション' : '主导航');
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  const skip = '.recent-item,.answer-text,.source-quote,.preview-chunks,.user-question,.citation-card,.rail-doc,.table-file,.source-file';
+  const skip = '.recent-item,.answer-text,.source-quote,.preview-chunks,.user-question,.citation-card,.rail-doc,.table-file,.source-file,.agent-question-list,.tool-value';
   const nodes = [];
   while (walker.nextNode()) if (!walker.currentNode.parentElement.closest(skip)) nodes.push(walker.currentNode);
   nodes.forEach(node => { const value = localized(node.nodeValue); if (value !== node.nodeValue) node.nodeValue = value; });
   const question = $('#question');
-  if (question) question.placeholder = state.locale === 'ja' ? 'ナレッジベースに質問：例）年次有給休暇はどのように申請しますか？' : '向知识库提问，例如：员工年假如何申请？';
+  if (question) question.placeholder = chatPlaceholder();
   const scope = $('#scope');
   if (scope?.options[0]) scope.options[0].textContent = state.locale === 'ja' ? `準備完了の資料 (${readyDocs().length})` : `全部就绪文档 (${readyDocs().length})`;
   const localeButton = $('.locale-toggle');
@@ -119,6 +123,7 @@ function toast(message, error = false) {
 }
 
 async function api(path, options = {}) {
+  const epoch = state.chatEpoch;
   const opts = {...options};
   if (opts.body && !(opts.body instanceof FormData)) {
     opts.headers = {'Content-Type':'application/json', ...opts.headers};
@@ -128,8 +133,8 @@ async function api(path, options = {}) {
   try { response = await fetch(`/api${path}`, opts); }
   catch { throw new Error('无法连接本地服务，请检查应用是否正在运行。'); }
   const data = await response.json().catch(() => ({}));
-  if (response.status === 401 && path !== '/auth/login') { state.auth = null; showLogin(); }
-  if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : `请求失败（${response.status}）`);
+  if (response.status === 401 && path !== '/auth/login' && epoch === state.chatEpoch) { state.auth = null; showLogin(); }
+  if (!response.ok) {const error = new Error(typeof data.detail === 'string' ? data.detail : `请求失败（${response.status}）`); error.status = response.status; throw error;}
   return data;
 }
 
@@ -170,6 +175,7 @@ function shell() {
 
 function updateChrome() {
   $('#nav-doc-count').textContent = state.docs.length;
+  $('#mode-label').setAttribute('aria-label', aText('打开模型设置','モデル設定を開く'));
   $('#mode-label').innerHTML = `${icon(state.settings.mode === 'api' ? 'spark' : 'search')}<span>${state.locale === 'ja' ? (state.settings.mode === 'api' ? 'AI質問応答モード' : '原文検索モード') : (state.settings.mode === 'api' ? 'AI 问答模式' : '原文检索模式')}</span>${icon('down')}`;
   $('#view-title').textContent = localized({chat:'知识问答', documents:'文档知识库', settings:'模型设置'}[state.view]);
   document.querySelectorAll('.nav-item').forEach(node => node.classList.toggle('active', node.dataset.view === state.view));
@@ -187,23 +193,27 @@ function renderView() {
 
 function renderChat() {
   $('#main').innerHTML = `<div class="chat-layout"><section class="chat-workspace">
-    <div class="chat-heading"><div><h1>知识问答 <span class="tiny-tag">KNOWLEDGE AI</span></h1><p>从你的企业文档中，找到有据可查的答案。</p></div><button class="button secondary compact" data-action="upload">${icon('plus')}添加文档</button></div>
+    <div class="chat-heading"><div><h1>${isAgent()?aText('业务 Agent','業務 Agent'):'知识问答'} <span class="tiny-tag">${isAgent()?'BUSINESS ASSISTANT':'KNOWLEDGE AI'}</span></h1><p>${isAgent()?aText('结合规定与工具，整理有依据的办理方案。','規程とツールを組み合わせ、根拠のある手順を整理します。'):'从你的企业文档中，找到有据可查的答案。'}</p></div><button class="button secondary compact" data-action="upload">${icon('plus')}添加文档</button></div>
+    ${chatModeHTML()}
     <div id="chat-content" class="chat-content" aria-live="polite"></div>
     <div class="composer-area"><form id="question-form" class="composer"><label for="question" class="sr-only">向知识库提问</label><textarea id="question" placeholder="向知识库提问，例如：员工年假如何申请？" rows="2" maxlength="2000">${esc(state.draft)}</textarea><div class="composer-bottom"><div class="scope-control">${icon('book')}<label class="sr-only" for="scope">检索范围</label><select id="scope" ${state.busy ? 'disabled' : ''}></select></div><div class="send-controls"><span>${state.locale === 'ja' ? 'Enter 送信' : 'Enter 发送'}</span><button type="submit" class="send-button" aria-label="${state.locale === 'ja' ? '質問を送信' : '发送问题'}" ${state.busy ? 'disabled' : ''}>${state.busy ? '<i class="spinner"></i>' : icon('arrow')}</button></div></div></form><p class="composer-note">${icon('lock')}${state.locale === 'ja' ? '選択した資料に基づく回答 · 引用をクリックして原文を確認' : '基于所选文档回答 · 点击引用核对原文'}</p></div>
     </section><aside class="knowledge-rail" id="knowledge-rail"></aside></div>`;
   renderFilters();
+  $('.composer-area').insertAdjacentHTML('afterbegin', `${agentTaskHTML()}<div id="agent-api-notice" class="agent-api-notice" hidden>${aText('Agent 需要已配置的 API 模型。','Agentには設定済みのAPIモデルが必要です。')}<button class="text-button" data-view="settings">${aText('前往模型设置','モデル設定を開く')}</button></div>`);
+  if (isAgent()) $('.composer-note').innerHTML = `${icon('lock')}${aText('只读业务协助 · 核对依据后再办理','業務の確認・案内のみ · 根拠を確認してから手続きへ')}`;
   renderChatContent(); renderRail(); updateScope(); applyAccess();
   $('#question-form').addEventListener('submit', event => {event.preventDefault(); askQuestion();});
   $('#question').addEventListener('input', event => state.draft = event.target.value);
   $('#question').addEventListener('keydown', event => {if(event.key === 'Enter' && !event.shiftKey && !event.isComposing) {event.preventDefault(); askQuestion();}});
   $('#scope').addEventListener('change', event => state.selected = event.target.value);
-  applyLocale();
+  applyLocale(); applyChatControls();
 }
 
 function updateScope() {
   if (!$('#scope')) return;
-  if (state.selected && !readyDocs().some(doc => doc.id === state.selected)) state.selected='';
+  if (state.selected && !readyDocs().some(doc => doc.id === state.selected) && !state.agentTask) state.selected='';
   $('#scope').innerHTML = `<option value="">全部就绪文档 (${readyDocs().length})</option>` + readyDocs().map(doc => `<option value="${doc.id}" ${state.selected === doc.id ? 'selected' : ''}>${esc(doc.name)}</option>`).join('');
+  if (state.selected && !readyDocs().some(doc => doc.id === state.selected)) $('#scope').insertAdjacentHTML('beforeend', `<option selected value="${esc(state.selected)}">${esc(state.agentTask?.documentNames?.[0] || aText('当前任务的文档','現在のタスクの資料'))}</option>`);
   applyLocale();
 }
 
@@ -211,13 +221,14 @@ function renderChatContent() {
   const container = $('#chat-content');
   if (!container) return;
   if (!state.messages.length) {
+    if (isAgent()) {container.innerHTML = agentWelcomeHTML(); return;}
     container.innerHTML = `<div class="welcome"><div class="welcome-symbol">${icon('spark')}</div><p class="eyebrow">让知识，成为答案</p><h2>今天，想了解什么？</h2><p class="welcome-copy">上传团队文档，提问业务问题。<br>每个答案，都有原文可循。</p>
       <div class="start-cards"><button class="start-card" data-action="upload"><span class="card-symbol blue">${icon('upload')}</span><strong>上传你的第一份文档</strong><span>制度、手册、项目资料 · PDF</span><i>${icon('chevron')}</i></button><button class="start-card" data-action="sample"><span class="card-symbol amber">${icon('book')}</span><strong>用演示文档体验</strong><span>员工手册 · 3 页示例内容</span><i>${icon('chevron')}</i></button></div>
       <div class="try-questions"><span>试着问问</span><button data-prompt="员工年假如何申请？">员工年假如何申请？${icon('chevron')}</button><button data-prompt="差旅报销需要哪些材料？">差旅报销需要哪些材料？${icon('chevron')}</button></div>
     </div>`;
     return;
   }
-  container.innerHTML = `<div class="messages">${state.messages.map(message => `<article class="exchange" id="message-${message.id}"><div class="user-question"><span class="user-avatar">${state.locale === 'ja' ? '私' : '我'}</span><h2>${esc(message.question)}</h2></div><div class="assistant-answer"><span class="ai-avatar">${icon('spark')}</span><div class="answer-body"><div class="answer-byline">Knowbase <span>${message.loading ? (state.locale === 'ja' ? 'ドキュメントを検索しています' : '正在检索文档') : message.mode === 'api' ? (state.locale === 'ja' ? 'AI回答' : 'AI 回答') : (state.locale === 'ja' ? '原文検索' : '原文检索')}</span></div>${message.loading ? `<div class="thinking"><i></i><i></i><i></i><span>${state.locale === 'ja' ? '関連情報を検索しています…' : '正在查找相关内容…'}</span></div>` : message.error ? `<div class="inline-error">${esc(message.error)}<button class="text-button" data-retry-question="${message.id}">${state.locale === 'ja' ? 'もう一度質問' : '重新提问'}</button></div>` : `<div class="answer-text">${answerHTML(message)}</div>${message.sources.length ? `<div class="answer-sources">${message.sources.map(source => `<button class="citation-card" data-source="${message.id}:${source.number}"><b>${source.number}</b><span>${esc(source.name)}<small>${state.locale === 'ja' ? `PDF ${source.page}ページ` : `PDF 第 ${source.page} 页`}</small></span>${icon('link')}</button>`).join('')}</div>` : ''}${metricsHTML(message)}<div class="answer-footer"><span>${message.refused ? (state.locale === 'ja' ? '引用できる回答が見つかりません' : '未找到可引用的答案') : (state.locale === 'ja' ? `${message.sources.length}件の引用 · ${(message.elapsed_ms/1000).toFixed(1)}秒` : `${message.sources.length} 个引用 · ${(message.elapsed_ms/1000).toFixed(1)} 秒`)}</span><button class="icon-btn" data-copy="${message.id}" aria-label="${state.locale === 'ja' ? '回答をコピー' : '复制回答'}">${icon('copy')}</button></div>`}</div></div></article>`).join('')}</div>`;
+  container.innerHTML = `<div class="messages">${state.messages.map(renderMessageHTML).join("")}</div>`;
   container.scrollTop = container.scrollHeight;
 }
 
@@ -230,12 +241,11 @@ function renderRail() {
   if (!rail) return;
   const last = [...state.messages].reverse().find(message => message.sources?.length);
   if (state.source) {
-    const source = state.source;
-    rail.innerHTML = `<div class="rail-title"><h2>引用来源</h2><button class="icon-btn" data-action="close-source" aria-label="返回文档列表">${icon('close')}</button></div><div class="source-file">${fileIcon()}<strong>${esc(source.name)}</strong></div><div class="source-meta"><span>${state.locale === 'ja' ? `PDF ${source.page}ページ` : `PDF 第 ${source.page} 页`}</span><span>引用 ${source.number}</span></div><p class="nav-label">原文片段</p><blockquote class="source-quote">${esc(source.text)}</blockquote><a class="button primary full" href="${esc(source.url)}" target="_blank" rel="noopener">在 PDF 中查看${icon('link')}</a><p class="rail-note">页码对应 PDF 的实际页序。请结合原文上下文核对回答。</p>`;
+    rail.innerHTML = sourceRailHTML(state.source);
     applyLocale();
     return;
   }
-  rail.innerHTML = `<div class="rail-title"><h2>我的知识库</h2><button class="icon-btn" data-view="documents" aria-label="管理文档">${icon('settings')}</button></div><div class="rail-stats"><div><strong>${readyDocs().length}<span>份</span></strong><small>就绪文档</small></div><div><strong>${readyDocs().reduce((n,doc) => n + doc.chunk_count, 0)}<span>个</span></strong><small>知识片段</small></div></div><div class="rail-section-title"><span>文档来源</span><button class="text-button" data-action="upload">${icon('plus')}添加</button></div>
+  rail.innerHTML = `<div class="rail-title"><h2>我的知识库</h2><button class="icon-btn" data-view="documents" aria-label="管理文档">${icon('settings')}</button></div><div class="rail-stats"><div><strong>${readyDocs().length}<span>份</span></strong><small>就绪文档</small></div><div><strong>${readyDocs().reduce((n,doc) => n + doc.chunk_count, 0)}<span>${aText("个","個")}</span></strong><small>知识片段</small></div></div><div class="rail-section-title"><span>文档来源</span><button class="text-button" data-action="upload">${icon('plus')}添加</button></div>
     <div class="rail-docs">${state.docs.length ? state.docs.slice(0,6).map(doc => `<button class="rail-doc" data-preview="${doc.id}">${fileIcon()}<span><strong>${esc(doc.name)}</strong><small>${doc.pages ? (state.locale === 'ja' ? `${doc.pages}ページ · ` : `${doc.pages} 页 · `) : ''}${sizeLabel(doc.size)}</small>${statusBadge(doc)}</span></button>`).join('') : `<div class="rail-empty">${icon('files')}<strong>知识库还没有文档</strong><p>添加 PDF 后，即可开始<br>检索与问答。</p><button class="button secondary" data-action="upload">${icon('upload')}上传 PDF</button></div>`}</div>
     ${last ? `<button class="rail-last-source text-button" data-source="${last.id}:${last.sources[0].number}">查看最近回答的引用${icon('chevron')}</button>` : ''}
     <div class="how-it-works"><p class="nav-label">一份文档，如何成为答案</p><ol><li><span>1</span><div>解析文档<small>提取文字，保留页码</small></div></li><li><span>2</span><div>${state.settings.mode === 'api' ? '语义检索' : '检索相关内容'}<small>${state.settings.mode === 'api' ? '找到问题相关的知识片段' : '配置模型后启用语义检索'}</small></div></li><li><span>3</span><div>带着依据回答<small>点击引用，回到原文</small></div></li></ol></div>
@@ -303,8 +313,11 @@ async function submitSettings(test) {
 }
 
 async function refreshDocs() {
-  state.docs = (await api('/documents')).documents;
-  updateChrome(); updateScope(); renderTable(); renderRail();
+  const epoch = state.chatEpoch;
+  const result = await api('/documents');
+  if (epoch !== state.chatEpoch || !state.auth?.user) return;
+  state.docs = result.documents;
+  updateChrome(); updateScope(); renderTable(); renderRail(); applyChatControls();
   clearTimeout(pollTimer);
   if (state.docs.some(doc => ['queued','parsing','embedding'].includes(doc.status))) pollTimer = setTimeout(() => refreshDocs().catch(error => toast(error.message, true)), 2000);
 }
@@ -336,15 +349,7 @@ async function loadSample() {
 }
 
 async function askQuestion() {
-  const question = state.draft.trim();
-  if (!question || state.busy) return;
-  if (!readyDocs().length) {toast('请先上传或导入文档，等待索引就绪后再提问。'); return;}
-  state.busy=true; state.draft=''; state.source=null;
-  const message={id:Date.now().toString(36), question, loading:true, sources:[]};
-  state.messages.push(message); renderChat(); updateChrome();
-  try {Object.assign(message, await api('/chat', {method:'POST', body:{question, filters:state.filters || {}, language:state.locale, document_ids:state.selected ? [state.selected] : []}}));}
-  catch(error) {message.error=error.message;}
-  finally {message.loading=false; state.busy=false; if(state.auth?.user && state.view === 'chat') renderChat(); if(state.auth?.user) updateChrome(); await refreshDocs().catch(error => toast(error.message,true));}
+  return sendChatMessage();
 }
 
 async function previewDocument(id) {
@@ -367,6 +372,8 @@ function showSource(value) {
 document.addEventListener('click', async event => {
   const button = event.target.closest('button,a[data-view]');
   if (!button) return;
+  if (button.disabled) return;
+  if (button.dataset.chatMode) {if (taskLocked()) return; state.chatMode=button.dataset.chatMode; renderChat(); return;}
   if (button.dataset.view) {event.preventDefault(); state.view=button.dataset.view; $('#sidebar').classList.remove('open'); renderView(); return;}
   const action=button.dataset.action;
   if (action === 'upload') $('#file-input').click();
@@ -374,7 +381,8 @@ document.addEventListener('click', async event => {
   if (action === 'menu') $('#sidebar').classList.toggle('open');
   if (action === 'toggle-locale') {state.locale = state.locale === 'ja' ? 'zh' : 'ja'; localStorage.setItem('knowbase-locale', state.locale); shell();}
   if (button.dataset.locale) {state.locale = button.dataset.locale; localStorage.setItem('knowbase-locale', state.locale); shell();}
-  if (action === 'new-chat') {if(state.busy) return toast('请等待当前回答完成。'); state.messages=[]; state.source=null; state.draft=''; state.view='chat'; renderView(); $('#sidebar').classList.remove('open'); $('#question').focus();}
+  if (action === 'new-chat') {if(state.busy) return toast('请等待当前回答完成。'); if (!await endAgentTask()) return; state.chatEpoch++; state.messages=[]; state.source=null; state.draft=''; state.view='chat'; renderView(); $('#sidebar').classList.remove('open'); $('#question').focus();}
+  if (action === 'end-agent-task') {if (await endAgentTask()) {state.draft=''; renderChat();}}
   if (action === 'close-source') {state.source=null; $('#knowledge-rail').classList.remove('source-open'); renderRail();}
   if (action === 'close-dialog') button.closest('dialog').close();
   if (action === 'reindex') {
@@ -387,7 +395,7 @@ document.addEventListener('click', async event => {
   if (button.dataset.metadata) editMetadata(button.dataset.metadata);
   if (button.dataset.message) {state.view='chat'; renderView(); $(`#message-${button.dataset.message}`)?.scrollIntoView({behavior:'smooth'});}
   if (button.dataset.copy) {try {await navigator.clipboard.writeText(state.messages.find(message => message.id === button.dataset.copy).answer); toast('回答已复制。');} catch {toast('无法访问剪贴板，请选中文字复制。',true);}}
-  if (button.dataset.retryQuestion) {state.draft=state.messages.find(message => message.id === button.dataset.retryQuestion).question; askQuestion();}
+  if (button.dataset.retryQuestion && !taskLocked()) {const message=state.messages.find(m => m.id === button.dataset.retryQuestion); state.chatMode=message.kind === 'agent'?'agent':'rag'; state.draft=message.transcript?.join('\n') || message.question; renderChat(); $('#question').focus();}
   if (button.dataset.retry) {try {await api(`/documents/${button.dataset.retry}/retry`,{method:'POST'}); await refreshDocs(); toast('已安排重新处理。');} catch(error) {toast(error.message,true);}}
   if (button.dataset.delete) {
     const id=button.dataset.delete; const doc=state.docs.find(item => item.id === id);
@@ -411,7 +419,7 @@ function metricsHTML(message) {
   const m = message.metrics;
   if (!m) return '';
   const ja = state.locale === 'ja';
-  const labels = {query_embedding:ja?'質問のEmbedding':'问题向量化', retrieval:ja?'検索':'检索', reranking:ja?'再ランキング':'重排', generation:ja?'回答生成':'回答生成', verification:ja?'根拠検証':'依据校验'};
+  const labels = {agent_planning:ja?'タスク計画':'任务规划', agent_tool_calendar:ja?'日付ツール':'日期工具', agent_tool_calculator:ja?'計算ツール':'计算工具', query_embedding:ja?'質問のEmbedding':'问题向量化', retrieval:ja?'検索':'检索', reranking:ja?'再ランキング':'重排', generation:ja?'回答生成':'回答生成', verification:ja?'根拠検証':'依据校验'};
   const phases = Object.entries(labels).filter(([key]) => m.timings_ms?.[key] !== undefined).map(([key,label]) => `${label}: ${(m.timings_ms[key]/1000).toFixed(3)}s`).join(' · ');
   const usage = m.token_usage || {};
   const cost = m.cost_usd == null ? (ja?'費用不明':'费用未知') : `USD ${Number(m.cost_usd).toFixed(6)}`;

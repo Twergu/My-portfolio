@@ -13,7 +13,7 @@ from .providers import ModelError as ModelError
 from .providers import normalize
 from .reranking import rerank
 from .telemetry import Metrics
-from .verification import needs_semantic_verification, verify_claims
+from .verification import AGENT_EVIDENCE_RULES, AGENT_GENERATION_RULES, needs_semantic_verification, verify_claims
 
 
 def chunks_from_pages(pages, size=900, overlap=120):
@@ -195,6 +195,22 @@ class GeneratedAnswer(StrictModel):
         return self
 
 
+class AgentGeneratedAnswer(StrictModel):
+    status: Literal["answered", "insufficient_evidence", "needs_input"]
+    claims: list[Claim] = Field(max_length=20)
+    questions: list[str] = Field(default_factory=list, max_length=3)
+
+    @model_validator(mode="after")
+    def coherent_status(self):
+        if (self.status == "answered") != bool(self.claims):
+            raise ValueError("Only answered may contain claims.")
+        if (self.status == "needs_input") != bool(self.questions):
+            raise ValueError("Only needs_input requires questions.")
+        if any(not question.strip() or len(question) > 2000 for question in self.questions):
+            raise ValueError("Clarification questions must be nonempty and bounded.")
+        return self
+
+
 class Verdict(StrictModel):
     claim_index: int = Field(ge=1)
     supported: bool
@@ -237,6 +253,27 @@ def answer(
 ):
     metrics = metrics if metrics is not None else Metrics()
     sources = retrieve(store, question, settings, api_key, document_ids, provider=provider, metrics=metrics)
+    return answer_from_sources(
+        question, settings, api_key, sources, preferred_language, provider, metrics, include_candidate=include_candidate
+    )
+
+
+def answer_from_sources(
+    question,
+    settings,
+    api_key,
+    sources,
+    preferred_language=None,
+    provider=None,
+    metrics=None,
+    *,
+    include_candidate=False,
+    agent_mode=False,
+):
+    """Use already-authorized evidence without a second retrieval or embedding call."""
+    metrics = metrics if metrics is not None else Metrics()
+    if agent_mode:
+        settings = settings.model_copy(update={"verification_mode": "strict", "verification_strategy": "all"})
     retrieved = list(sources)
     language = answer_language(question, preferred_language)
     generated = None
@@ -262,6 +299,15 @@ def answer(
         }[language]
         context = [
             {"id": source["number"], "name": source["name"], "page": source["page"], "text": source["text"]}
+            | (
+                {
+                    "kind": source.get("kind"),
+                    "provenance": source.get("provenance"),
+                    "metadata": source.get("metadata", {}),
+                }
+                if agent_mode
+                else {}
+            )
             for source in sources
         ]
         messages = [
@@ -272,15 +318,29 @@ def answer(
                 "Resolve the requested effective date, region, employee type and policy version before answering. "
                 "Drafts and archived policies are not current policy. Combine documents for exceptions when needed. "
                 "Do not invent policy, figures, dates, units, links or filenames. "
+                + (
+                    AGENT_EVIDENCE_RULES
+                    + AGENT_GENERATION_RULES
+                    + "Give a concise conclusion, relevant conditions, required materials and next steps where evidence supports them. "
+                    if agent_mode
+                    else ""
+                )
                 + language_instruction
-                + " Return ONLY a JSON object with status (answered or insufficient_evidence) and claims. "
-                "For insufficient_evidence, claims must be []. Otherwise each claim is one atomic factual sentence "
+                + (
+                    " Return ONLY JSON with status (answered, insufficient_evidence, or needs_input), claims, and optionally questions. "
+                    "If policy evidence is available but indispensable personal facts are missing, use needs_input, claims: [], "
+                    "and questions: [up to three concise questions]. Ask for missing personal facts, not missing policy. "
+                    "This is a second opportunity to clarify even if the planner handed off too early. "
+                    if agent_mode
+                    else " Return ONLY a JSON object with status (answered or insufficient_evidence) and claims. "
+                )
+                + "For insufficient_evidence, claims must be []. Otherwise each claim is one atomic factual sentence "
                 "with text and evidence: [{source_id: integer, quote: exact passage copied from that source}]. "
                 "Every claim must be entailed by its cited evidence, including conditions, exceptions and negation. "
                 "Copy each quote as ONE contiguous substring without paraphrasing, combining distant sentences or adding ellipses. "
                 "For a policy exception, cite both the exception and every unchanged general rule needed for your claim. "
                 "Cite the passage establishing the employee category and effective period when your claim depends on them. "
-                "For an unanswerable request, use insufficient_evidence; do not answer with claims about missing information. "
+                "For insufficient policy evidence use insufficient_evidence; do not answer with claims about missing information. "
                 "Do not put citation markers in text. Do not add uncited introductions or conclusions. "
                 'Example JSON: {"status":"answered","claims":[{"text":"A supported fact.",'
                 '"evidence":[{"source_id":1,"quote":"The exact supporting source sentence."}]}]}',
@@ -290,13 +350,15 @@ def answer(
         with metrics.measure("generation"):
             raw = provider.chat(settings, api_key, messages, metrics=metrics, response_format={"type": "json_object"})
         try:
-            generated = GeneratedAnswer.model_validate_json(raw)
+            generated = (AgentGeneratedAnswer if agent_mode else GeneratedAnswer).model_validate_json(raw)
         except (ValidationError, ValueError):
             generated = None
         if generated is None:
             status = "invalid_model_response"
         elif generated.status == "insufficient_evidence":
             status = "insufficient_evidence"
+        elif generated.status == "needs_input":
+            status = "needs_input"
         elif any(e.source_id not in {s["number"] for s in sources} for c in generated.claims for e in c.evidence):
             status = "unsupported_answer"
             support = {
@@ -336,6 +398,15 @@ def answer(
                             "quote": evidence.quote,
                             "text": source_map[evidence.source_id]["text"],
                         }
+                        | (
+                            {
+                                "kind": source_map[evidence.source_id].get("kind"),
+                                "provenance": source_map[evidence.source_id].get("provenance"),
+                                "metadata": source_map[evidence.source_id].get("metadata", {}),
+                            }
+                            if agent_mode
+                            else {}
+                        )
                         for evidence in claim.evidence
                     ],
                 }
@@ -350,7 +421,14 @@ def answer(
             try:
                 verdicts = (
                     verify_claims(
-                        question, selected, settings, api_key, provider, metrics, prompt=settings.verifier_prompt
+                        question,
+                        selected,
+                        settings,
+                        api_key,
+                        provider,
+                        metrics,
+                        prompt=settings.verifier_prompt,
+                        agent_mode=agent_mode,
                     )
                     if selected
                     else []
@@ -416,6 +494,9 @@ def answer(
         "elapsed_ms": measurements["elapsed_ms"],
         "metrics": measurements,
     }
+    if agent_mode and generated and generated.status == "needs_input":
+        response["questions"] = generated.questions
+        response["answer"] = "\n".join(generated.questions)
     # Offline evaluation may inspect withheld candidates. Public HTTP responses
     # never request this option and continue to withhold unverified answer text.
     if include_candidate and generated and generated.status == "answered":

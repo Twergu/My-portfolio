@@ -208,7 +208,7 @@ class OpenAICompatibleProvider:
         return vectors
 
     def chat(self, settings, api_key, messages, metrics=None, *, role="generator", **options):
-        if role not in ("generator", "verifier", "judge", "reranker"):
+        if role not in ("generator", "verifier", "judge", "reranker", "planner"):
             raise ValueError("Unknown model role.")
         model = (
             settings.effective_verifier_model
