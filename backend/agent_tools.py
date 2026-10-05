@@ -2,12 +2,13 @@
 
 from dataclasses import dataclass
 from datetime import date, timedelta
-from decimal import ROUND_HALF_UP, Decimal, localcontext
+from decimal import Decimal
 from typing import Annotated, Literal
 
 from pydantic import Field, StringConstraints, field_validator, model_validator
 
 from .agent import AgentModel, ReadOnlyTool, Text, ToolOutput
+from .calculations import decimal_result
 from .rag import retrieve
 
 
@@ -69,6 +70,10 @@ Operand = Annotated[str, StringConstraints(pattern=r"^-?\d{1,12}(\.\d{1,6})?$")]
 class CalculatorArguments(AgentModel):
     operation: Literal["sum", "subtract", "multiply", "divide", "percent_of"]
     operands: list[Operand] = Field(min_length=2, max_length=10, description="Decimal strings, not expressions")
+    result_unit: Literal["JPY", "USD", "EUR", "CNY", "count", "percent", "days", "hours"] | None = Field(
+        default=None,
+        description="Optional result unit explicitly grounded in user/policy inputs; no automatic unit conversion",
+    )
 
     @model_validator(mode="after")
     def arity(self):
@@ -81,12 +86,19 @@ class CalculatorArguments(AgentModel):
 
 def calendar_result(args, context, calendar):
     start = date.fromisoformat(args.start_date) if args.start_date else context.reference_date
-    common = {"reference_date": context.reference_date.isoformat(), "timezone": context.timezone}
+    common = {
+        "reference_date": context.reference_date.isoformat(),
+        "timezone": context.timezone,
+        "operation": args.operation,
+        "start_date": start.isoformat(),
+        "unit": "calendar_days",
+    }
     if args.operation == "date_offset":
         result = start + timedelta(days=args.offset_days)
         data = common | {
             "text": f"Date calculation: {start.isoformat()} plus {args.offset_days} calendar days = {result.isoformat()}.",
             "date": result.isoformat(),
+            "offset_days": args.offset_days,
         }
         return ToolOutput(provenance="calculated", data=data)
     if args.operation == "next_weekday":
@@ -94,6 +106,8 @@ def calendar_result(args, context, calendar):
         data = common | {
             "text": f"Relative to {start.isoformat()}, weekday {args.weekday} (Monday=0) in calendar week offset {args.week_offset} is {result.isoformat()}.",
             "date": result.isoformat(),
+            "weekday": args.weekday,
+            "week_offset": args.week_offset,
         }
         return ToolOutput(provenance="calculated", data=data)
     end = date.fromisoformat(args.end_date)
@@ -111,6 +125,10 @@ def calendar_result(args, context, calendar):
         | {
             "text": f"From {start.isoformat()} to {end.isoformat()} inclusive: {span} calendar days and {len(working_days)} working days under calendar '{calendar.name}'. Calendar provenance: {calendar.provenance}. This does not establish employee availability, entitlement or approval.",
             "calendar": calendar.name,
+            "end_date": end.isoformat(),
+            "inclusive": True,
+            "workweek": list(calendar.workweek),
+            "holidays": [day.isoformat() for day in calendar.holidays],
             "calendar_days": span,
             "working_days": len(working_days),
             "working_dates": working_days,
@@ -119,30 +137,17 @@ def calendar_result(args, context, calendar):
 
 
 def calculator_result(args):
-    with localcontext() as ctx:
-        ctx.prec = 40
-        values = [Decimal(value) for value in args.operands]
-        match args.operation:
-            case "sum":
-                result = sum(values)
-            case "subtract":
-                result = values[0] - values[1]
-            case "multiply":
-                result = values[0] * values[1]
-            case "divide":
-                result = values[0] / values[1]
-            case "percent_of":
-                result = values[0] * values[1] / 100
-        rounded = result.quantize(Decimal("0.000001"), rounding=ROUND_HALF_UP)
-        value = format(rounded, "f").rstrip("0").rstrip(".") or "0"
+    value, rounded = decimal_result(args.operation, args.operands)
     return ToolOutput(
         provenance="calculated",
         data={
             "operation": args.operation,
             "operands": args.operands,
             "result": value,
-            "rounded": rounded != result,
-            "text": f"Calculation {args.operation} on operands {', '.join(args.operands)} gives {value} (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence.",
+            "rounded": rounded,
+            "result_unit": args.result_unit,
+            "unit_provenance": "planner_input" if args.result_unit else "unspecified",
+            "text": f"Calculation {args.operation} on operands {', '.join(args.operands)} gives {value} (at most 6 decimal places, half-up rounding). Input result-unit label: {args.result_unit or 'unspecified'}; no unit conversion performed. The operands and unit label were supplied by the planner; their applicability requires user or document evidence.",
         },
     )
 

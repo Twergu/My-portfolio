@@ -15,6 +15,7 @@ from typing import Annotated, Callable, Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field, JsonValue, StringConstraints, ValidationError
 
+from .clarification import CLARIFICATION_RULES, clarification_context
 from .config import Settings
 from .providers import ModelError, OpenAICompatibleProvider
 from .telemetry import Metrics
@@ -230,8 +231,15 @@ class AgentRunner:
             if not isinstance(tool, ReadOnlyTool) or tool.name in self._tools:
                 raise ValueError("Register distinct, server-owned read-only tools.")
             self._tools[tool.name] = tool
-        self._system = SYSTEM_PROMPT + _json(
-            {"decision_schema": Decision.model_json_schema(), "tools": [tool.schema() for tool in self._tools.values()]}
+        self._system = (
+            SYSTEM_PROMPT
+            + CLARIFICATION_RULES
+            + _json(
+                {
+                    "decision_schema": Decision.model_json_schema(),
+                    "tools": [tool.schema() for tool in self._tools.values()],
+                }
+            )
         )
 
     def start(
@@ -269,6 +277,7 @@ class AgentRunner:
             "timezone": state.context.timezone,
             "language": state.context.language,
             "user_turns": [turn.model_dump() for turn in state.turns],
+            "clarification_context": clarification_context(state.turns),
             "tool_observations": [observation.model_dump() for observation in state.observations],
             "remaining_steps": self.limits.max_steps - state.steps,
             "remaining_tool_calls": self.limits.max_tool_calls - state.tool_calls,

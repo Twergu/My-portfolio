@@ -8,7 +8,8 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
-from .agent_grounding import policy_failures
+from .agent_grounding import policy_failures, render_calculation
+from .clarification import CLARIFICATION_RULES
 from .lexical import reciprocal_rank_fusion
 from .providers import ModelError as ModelError
 from .providers import normalize
@@ -196,9 +197,13 @@ class GeneratedAnswer(StrictModel):
         return self
 
 
+class CalculationReference(StrictModel):
+    calculation_source_id: int = Field(ge=1)
+
+
 class AgentGeneratedAnswer(StrictModel):
     status: Literal["answered", "insufficient_evidence", "needs_input"]
-    claims: list[Claim] = Field(max_length=20)
+    claims: list[Claim | CalculationReference] = Field(max_length=20)
     questions: list[str] = Field(default_factory=list, max_length=3)
 
     @model_validator(mode="after")
@@ -272,6 +277,7 @@ def answer_from_sources(
     agent_mode=False,
     policy_as_of=None,
     historical_policy=False,
+    clarification=None,
 ):
     """Use already-authorized evidence without a second retrieval or embedding call."""
     metrics = metrics if metrics is not None else Metrics()
@@ -280,6 +286,7 @@ def answer_from_sources(
     retrieved = list(sources)
     language = answer_language(question, preferred_language)
     generated = None
+    calculation_details = {}
     status, claims, support = (
         "insufficient_evidence",
         [],
@@ -324,6 +331,7 @@ def answer_from_sources(
                 + (
                     AGENT_EVIDENCE_RULES
                     + AGENT_GENERATION_RULES
+                    + CLARIFICATION_RULES
                     + "Give a concise conclusion, relevant conditions, required materials and next steps where evidence supports them. "
                     if agent_mode
                     else ""
@@ -331,13 +339,14 @@ def answer_from_sources(
                 + language_instruction
                 + (
                     " Return ONLY JSON with status (answered, insufficient_evidence, or needs_input), claims, and optionally questions. "
-                    "If policy evidence is available but indispensable personal facts are missing, use needs_input, claims: [], "
+                    "If indispensable facts prevent the requested result AND a conditional explanation would not "
+                    "fulfill that request, use needs_input, claims: [], "
                     "and questions: [up to three concise questions]. Ask for missing personal facts, not missing policy. "
                     "This is a second opportunity to clarify even if the planner handed off too early. "
                     if agent_mode
                     else " Return ONLY a JSON object with status (answered or insufficient_evidence) and claims. "
                 )
-                + "For insufficient_evidence, claims must be []. Otherwise each claim is one atomic factual sentence "
+                + "For insufficient_evidence, claims must be []. Each free-text claim is one atomic factual sentence "
                 "with text and evidence: [{source_id: integer, quote: exact passage copied from that source}]. "
                 "Every claim must be entailed by its cited evidence, including conditions, exceptions and negation. "
                 "Copy each quote as ONE contiguous substring without paraphrasing, combining distant sentences or adding ellipses. "
@@ -348,12 +357,72 @@ def answer_from_sources(
                 'Example JSON: {"status":"answered","claims":[{"text":"A supported fact.",'
                 '"evidence":[{"source_id":1,"quote":"The exact supporting source sentence."}]}]}',
             },
-            {"role": "user", "content": json.dumps({"question": question, "sources": context}, ensure_ascii=False)},
+            {
+                "role": "user",
+                "content": json.dumps(
+                    {"question": question, "sources": context}
+                    | (
+                        {
+                            "policy_scope": {
+                                "as_of": policy_as_of.isoformat() if policy_as_of else None,
+                                "historical": historical_policy,
+                            }
+                        }
+                        if agent_mode
+                        else {}
+                    )
+                    | ({"clarification_context": clarification} if agent_mode and clarification else {}),
+                    ensure_ascii=False,
+                ),
+            },
         ]
         with metrics.measure("generation"):
             raw = provider.chat(settings, api_key, messages, metrics=metrics, response_format={"type": "json_object"})
+        if agent_mode:
+            try:
+                AgentGeneratedAnswer.model_validate_json(raw)
+            except ValidationError:
+                event = {"role": "generator", "code": "invalid_schema", "repair_attempted": len(raw) <= 20000}
+                metrics.validation_failures.append(event)
+                if event["repair_attempted"]:
+                    # One bounded model repair, never silently drop mixed claims /
+                    # questions or accept an unvalidated candidate. No retry of a
+                    # failed quote/provenance/Verifier verdict happens here.
+                    repair = [
+                        messages[0]
+                        | {
+                            "content": messages[0]["content"] + " Your prior output violated the JSON contract. "
+                            "Return answered with nonempty claims and questions: [], OR needs_input with claims: [] "
+                            "and nonempty questions, OR insufficient_evidence with both empty. Never mix answers "
+                            "and questions. Use the same evidence and clarify only indispensable missing inputs. "
+                        },
+                        *messages[1:],
+                        {
+                            "role": "user",
+                            "content": json.dumps(
+                                {"invalid_candidate_for_schema_repair_only": raw}, ensure_ascii=False
+                            ),
+                        },
+                    ]
+                    with metrics.measure("generation"):
+                        raw = provider.chat(
+                            settings, api_key, repair, metrics=metrics, response_format={"type": "json_object"}
+                        )
         try:
             generated = (AgentGeneratedAnswer if agent_mode else GeneratedAnswer).model_validate_json(raw)
+            if agent_mode:
+                normalized = []
+                source_map = {source["number"]: source for source in sources}
+                for index, claim in enumerate(generated.claims, 1):
+                    if isinstance(claim, CalculationReference):
+                        source = source_map.get(claim.calculation_source_id)
+                        if source is None:
+                            raise ValueError("Unknown calculation source")
+                        rendered, details = render_calculation(source, sources, language)
+                        claim = Claim.model_validate(rendered)
+                        calculation_details[index] = details
+                    normalized.append(claim)
+                generated.claims = normalized
         except (ValidationError, ValueError):
             generated = None
         if generated is None:
@@ -476,9 +545,14 @@ def answer_from_sources(
             claims = [
                 claim.model_dump()
                 | {
+                    **(
+                        {"rendering": "server_calculation", "calculation": calculation_details[index]}
+                        if index in calculation_details
+                        else {}
+                    ),
                     "supported": True
                     if settings.verification_mode == "strict" and index not in support.get("skipped_claim_indices", [])
-                    else None
+                    else None,
                 }
                 for index, claim in enumerate(generated.claims, 1)
             ]

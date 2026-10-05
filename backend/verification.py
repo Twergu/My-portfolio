@@ -26,6 +26,10 @@ BASELINE = (
     "A real quote or matching citation ID alone is insufficient. "
     "Use no external knowledge. Contradictory, partially supported or uncertain claims are false. "
     "Equivalent wording and logically entailed conclusions are allowed; a claim need not repeat the source verbatim. "
+    "Distinguish a numeric approval-route threshold from an absolute cap or prohibition. Read the FULL cited "
+    "context: if amounts above a threshold have a different approval route, that threshold is not an absolute "
+    "maximum purchase amount. Reject that misstatement even if another claim correctly describes the higher "
+    "approval route. Preserve genuine caps when the source actually caps payment or eligibility. "
 )
 CALIBRATED = (
     BASELINE + "Judge entailment of each claim, not completeness of the entire answer. "
@@ -54,6 +58,9 @@ AGENT_EVIDENCE_RULES = (
 )
 
 AGENT_GENERATION_RULES = (
+    "Describe approval thresholds as routing boundaries, not absolute purchase maxima when the policy provides "
+    "an approval path above them. Explain both sides and preserve inclusive/exclusive boundaries. Do not confuse "
+    "such routing thresholds with an actual reimbursement cap. "
     "Each eligibility assessment must cite BOTH the document defining every eligibility condition AND the user "
     "report establishing those conditions in that same claim, even if other claims cite them. "
     "State that an assessment based on personal reports is conditional on those self-reported facts. "
@@ -64,8 +71,12 @@ AGENT_GENERATION_RULES = (
     "書類を提出します. Cite the document rule for a requirement, not the user's willingness to comply. "
     "Backend policy grounding requires an applicable document citation for every free-form claim. Documents must be "
     "classified current with no contrary effective dates; archived policy applies only to an explicit historical scope. "
-    "Without applicable document evidence, a calculation claim may ONLY copy its tool metadata.standalone_text "
-    "exactly and cite that tool's exact source text. Do not paraphrase it into eligibility or business permission. "
+    'For a standalone calculation ALWAYS output {"calculation_source_id": tool_source_id} as a claim item. '
+    "Do not supply text, evidence, a unit override or a claim type with that reference. The SERVER renders the "
+    "actual structured result and fixed citations. Never write or paraphrase a separate calculation sentence. "
+    "Policy-dependent conclusions still use text/evidence citing the applicable document plus necessary tools/inputs. "
+    "If applicability to the user's item/category is not explicitly established, state that condition in the "
+    "routing explanation (if these items fall within the policy category), rather than assert an unproven category. "
     "User input alone never supports company rules. Do not give standalone user-only claims. "
 )
 

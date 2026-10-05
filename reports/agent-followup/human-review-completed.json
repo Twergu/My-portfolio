@@ -1,0 +1,70 @@
+{
+  "dataset_sha256": "51f4eb0e66c9fec198472aafd20c3bd21bc249681f3b61ff4755a45213004412",
+  "status": "reviewed",
+  "human_reviewed": 8,
+  "total": 8,
+  "reviewer": "本对话用户",
+  "reviewed_at": "2026-10-05T06:58:44.229401+00:00",
+  "candidate_correctness": 0.5,
+  "candidate_groundedness": 0.5,
+  "scope": "Accuracy of this mix of frozen/constructed candidates, not live Agent task success. Human identity is attested by the reviewer, not verified by this script.",
+  "frozen_verifier_agrees_on_H01": false,
+  "annotations": [
+    {
+      "id": "H01",
+      "answer_correct": false,
+      "all_claims_supported": false,
+      "reference_approved": true,
+      "notes": "超过 5,000 JPY 需购买前取得采购部门批准。"
+    },
+    {
+      "id": "H02",
+      "answer_correct": true,
+      "all_claims_supported": true,
+      "reference_approved": true,
+      "notes": "5,001 大于 5,000，走采购部门事前批准路径。"
+    },
+    {
+      "id": "H03",
+      "answer_correct": false,
+      "all_claims_supported": false,
+      "reference_approved": true,
+      "notes": "恰好 5,000 属于 at-most 路线，按原文需要收据和经理确认。"
+    },
+    {
+      "id": "H04",
+      "answer_correct": false,
+      "all_claims_supported": false,
+      "reference_approved": true,
+      "notes": "计算不构成许可，办理要求应另按 PROC-26 说明。"
+    },
+    {
+      "id": "H05",
+      "answer_correct": true,
+      "all_claims_supported": true,
+      "reference_approved": true,
+      "notes": "保留原文要求，同时标注收据时点歧义供制度维护人确认。"
+    },
+    {
+      "id": "H06",
+      "answer_correct": true,
+      "all_claims_supported": true,
+      "reference_approved": true,
+      "notes": "按自述作明确附条件说明，保留 contractor 排除、雇主确认和必要材料"
+    },
+    {
+      "id": "H07",
+      "answer_correct": true,
+      "all_claims_supported": true,
+      "reference_approved": true,
+      "notes": "单课程条件估算 16,000 JPY，仍需经理事前批准、完成证明及 Finance 审核。"
+    },
+    {
+      "id": "H08",
+      "answer_correct": false,
+      "all_claims_supported": false,
+      "reference_approved": true,
+      "notes": "正式日历、额度和经理批准不能从计算确定。"
+    }
+  ]
+}

@@ -27,10 +27,13 @@ def save(report, output):
     output.with_suffix(".md").write_text(markdown(report), encoding="utf-8")
 
 
-def run(output, label):
+def run(output, label, case_ids=None):
     path = ROOT / "evals/agent_dataset.json"
     dataset = json.loads(path.read_text(encoding="utf-8"))
     validate_dataset(dataset)
+    selected = [case for case in dataset["cases"] if not case_ids or case["id"] in case_ids]
+    if case_ids and set(case_ids) != {case["id"] for case in selected}:
+        raise ValueError("Unknown or empty case selection")
     settings = environment_settings().model_copy(
         update={
             "mode": "api",
@@ -62,7 +65,8 @@ def run(output, label):
         ).hexdigest(),
         "settings": settings.model_dump(),
         "judge_model": judge,
-        "expected_cases": len(dataset["cases"]),
+        "expected_cases": len(selected),
+        "selected_case_ids": [case["id"] for case in selected],
         "cases": [],
         "model_calls": provider.records,
     }
@@ -95,7 +99,7 @@ def run(output, label):
                         {"id": doc_id, "pages": [{"page": i, "text": t} for i, t in enumerate(dataset["pages"], 1)]}
                     ]
                 }
-                for case in dataset["cases"]:
+                for case in selected:
                     row = {"id": case["id"], "contract": case, "turns": [], "call_start": len(provider.records)}
                     judgment, judge_metrics, pending = {}, Metrics(), None
                     measurements_start = len(service.measurements)
@@ -180,7 +184,10 @@ if __name__ == "__main__":
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--output", required=True)
     parser.add_argument("--label", default="baseline")
+    parser.add_argument(
+        "--case", action="append", dest="case_ids", help="Run a named frozen scenario; repeat for a subset"
+    )
     args = parser.parse_args()
     if not args.live:
         parser.error("--live explicitly permits paid model requests and raw diagnostics on fictional data")
-    run(args.output, args.label)
+    run(args.output, args.label, args.case_ids)

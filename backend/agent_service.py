@@ -13,8 +13,9 @@ from fastapi import HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from .agent import AgentContext, AgentLimits, AgentRunner, AgentState, ProviderPlanner, Text, TraceEvent
-from .agent_grounding import standalone_tool_text
+from .agent_grounding import bind_unit_evidence, standalone_tool_text
 from .agent_tools import CalendarConfig, build_tools
+from .clarification import clarification_context
 from .governance import RetrievalFilters
 from .rag import answer_from_sources, answer_language
 from .telemetry import Metrics
@@ -108,15 +109,17 @@ def evidence_sources(state):
                 },
             }
         )
+    sources = [source | {"number": index} for index, source in enumerate(sources, 1)]
     for source in sources:
         if source.get("kind") == "tool":
+            source["metadata"]["unit_evidence"] = bind_unit_evidence(source, sources)
             standalone = standalone_tool_text(source, state.context.language)
             source["metadata"]["standalone_text"] = standalone
             if standalone:
                 # This server-rendered calculation is evidence, not merely a UI
                 # label. Make it quotable without weakening exact-text matching.
                 source["text"] += "\n" + standalone
-    return [source | {"number": index} for index, source in enumerate(sources, 1)]
+    return sources
 
 
 class AgentService:
@@ -286,6 +289,7 @@ class AgentService:
                         agent_mode=True,
                         policy_as_of=task.request.filters.as_of or context.reference_date,
                         historical_policy=task.request.filters.as_of is not None,
+                        clarification=clarification_context(state.turns),
                     )
                     response.update(result)
                     if result["status"] == "needs_input":

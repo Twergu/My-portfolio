@@ -10,6 +10,8 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
+新增：计算 Claim 使用工具编号引用，由服务器渲染结构化数值/日期及固定引用；澄清共享逐轮问答与政策日期上下文。八例候选已由本对话用户逐题审核，保留[实际标注](evals/agent-human-review-v1.annotations.json)，属于有参考答案的辅助审核。见[本轮修改与验收](docs/agent-followup-report.md)、[人工审核包](docs/agent-human-review-v1.md)。下表保留上一轮冻结基线。
+
 <!-- AGENT_RESULTS_START -->
 ## Agent 真实评估与运行边界
 
