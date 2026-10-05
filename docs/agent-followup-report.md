@@ -12,7 +12,9 @@ Calendar 保留开始/结束日期、基准日期、时区、首尾包含规则�
 
 涉及 `backend/calculations.py`、`agent_tools.py`、`agent_grounding.py`、`agent_service.py`、`rag.py`、`verification.py`。`tests/test_agent_calculations.py` 覆盖三语言、两种工具、单位替换、伪造 ID/结果/类型、夹带审批、Verifier 否定时隐藏、以及三项原始失败的受控合同回归。只把原候选的计算项换成结构化引用，不改历史报告或其他断言。该受控测试不是新的真实 API 成绩。
 
-首项相关回归：98 passed、24 PostgreSQL skipped；数据库测试将在本轮真实 CI 执行。
+首项相关回归：98 passed、24 PostgreSQL skipped；数据库测试在真实 CI 单独验收，不能把本地跳过算作通过。
+
+后续真实运行又发现一项语义误拒答：服务器只写“2026-10-09 加七个日历日为 2026-10-16”，Verifier 却将它读成公司返还期限，要求提供制度条文。后端现在将经过结构化结果验证的 `rendering=server_calculation` 标记传给 Verifier；模型无法提交这个字段。Verifier 仍须验证运算、日期、单位及限制，但不能给纯计算凭空添加制度含义。自由文本制度推论仍需文档，标记不能覆盖矛盾内容，否定 verdict 仍使回答隐藏。新增伪造标记及正反例回归。
 
 ## 2. Clarification 的完整性
 
@@ -24,7 +26,7 @@ Calendar 保留开始/结束日期、基准日期、时区、首尾包含规则�
 
 相关回归：63 passed、3 PostgreSQL skipped。随后真实运行发现 Generator 同时返回 answered/claims 和 questions，违反原有互斥状态合同。新增一次有上限的模型格式修复；不静默删除问题/断言、不重试已经被 quote/provenance/Verifier 拒绝的答案。修复后仍执行全部 Strict 检查，重复无效输出继续隐藏。新增三个正反例验证次数上限及 Verifier 拒绝仍生效。
 
-最终本地完整回归为 312 passed、37 PostgreSQL skipped；跳过不计通过。真实 API 与 CI 最终结果见下方。
+最终本地完整回归为 313 passed、37 PostgreSQL skipped；跳过不计通过。Ruff 检查及格式检查通过。真实 API 与 CI 最终结果见下方。
 
 ## 3. 人工审核集
 
@@ -44,6 +46,8 @@ Calendar 保留开始/结束日期、基准日期、时区、首尾包含规则�
 
 完整 [24 题实测](../reports/agent-followup/full-live.json)在最后的格式修复/审批门槛提示加入**之前**完成：自动 Task Success 19/24，Correctness 13/18，Grounded Answer Rate 15/18，交付 15 个回答，三个原计算失败场景均完成。P50/P95 为 10.357/20.126 秒，估算 USD 0.002460/task，排除索引与 Judge；[同集对照](../reports/agent-followup/full-comparison.md)保留全部失败。自动“正确”中采购题再次把分界写成上限，与用户确认的政策解释冲突，因此这些分数不是人工准确率；不改动原自动评分。这一轮另有输出状态混合、必要引用缺失、再次追问及 Judge 对完整性的争议。
 
-格式修复后[五题再次实测](../reports/agent-followup/five-cases-final-live.json)：交付 4/5，四个交付均通过独立正确性/依据检查，但冻结 Task Success 仍为 3/5。通勤题直接正确说明申请条件，没有多余追问，按旧“必须澄清”标签仍计失败，不调整旧标签；跨政策题有一条日期结论未引用证明七日规则的文档，被 Strict 拒绝，其计算项没有发生原来的格式误拦截。该轮尚未包含随后新增的门槛提示，最终门槛提示的实测是上面的八题 Verifier 校准，不能把不同版本拼成一轮全量成功结果。
+格式修复后[五题再次实测](../reports/agent-followup/five-cases-final-live.json)：交付 4/5，四个交付均通过独立正确性/依据检查，但冻结 Task Success 仍为 3/5。通勤题直接正确说明申请条件，没有多余追问，按旧“必须澄清”标签仍计失败，不调整旧标签；跨政策题的纯日期计算被 Verifier 误读成制度期限而拒绝。该计算文本明确限定为计算、不构成业务许可，因此这是 Verifier 误拒答；是否完整解释 RET-26 七日规则应另作回答完整性检查。原始判定继续保留。
+
+最后的[真实 Verifier 回放](../reports/agent-followup/calculation-verifier-replay.json)保留该失败候选的全部原文和证据，仅为后端重新验证过的计算引用加入服务器标记：四条断言全部通过；另设的“计算即公司期限且用户已合规”反例仍被拒绝。`python -m scripts.agent_calculation_replay --live --output <new-path.json>` 可复现，保存原始输入、输出和用量。两个请求分别耗时 8.800 / 2.744 秒，配置单价估算共 USD 0.001640；这只是 Verifier 回放，不能作为整条 Agent 的延迟。此回放包含最终提示修复；24 题、五题和人工校准分别对应先前开发阶段，不能拼成最新版本的一轮全量成功结果。
 
 真实 PostgreSQL/Docker CI 正在进行。工作日日历仍为 Mock；ACL、Citation、Strict 均保留。语义推论、澄清必要性和单位/类别适用性仍依赖模型；缺失引用仍会拒答，人工集也只有八例且不是盲评。既有 24 题属于冻结合成回归集，对“解释条件是否必须追问”的标注边界应另行审核新版本，不能改写旧成绩。

@@ -478,6 +478,7 @@ def answer_from_sources(
                 {
                     "claim_index": index,
                     "text": claim.text,
+                    **({"rendering": "server_calculation"} if index in calculation_details else {}),
                     "cited_passages": [
                         {
                             "source_id": evidence.source_id,

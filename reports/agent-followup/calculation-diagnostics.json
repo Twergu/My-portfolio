@@ -1,0 +1,172 @@
+{
+  "scope": "Diagnostics from saved real calls; no new API calls or edits to previous scores. Structured-reference counts are based on the last Generator response per case; only cases with returned runtime verdicts are included. Not a causal or human-correctness metric.",
+  "runs": [
+    {
+      "report": "five-cases-live.json",
+      "source_sha256": "7929804093883ac88458a695af7280f91632195a4ab9f9044901d7c28710f582",
+      "structured_calculations_verified": 5,
+      "supported": 5,
+      "details": [
+        {
+          "case_id": "training-clarify-ja",
+          "claim_index": 2,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "purchase-multiply-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "unsupported_answer"
+        },
+        {
+          "case_id": "leave-mock-window-zh",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 3,
+          "source_id": 5,
+          "supported": true,
+          "case_status": "answered"
+        }
+      ]
+    },
+    {
+      "report": "full-live.json",
+      "source_sha256": "501d5f823f967833a49227aa0c27e9366f223b4c075291e66bd4dfb7cd924a6a",
+      "structured_calculations_verified": 8,
+      "supported": 8,
+      "details": [
+        {
+          "case_id": "training-clarify-ja",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "purchase-multiply-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "hotel-two-nights-zh",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "unsupported_answer"
+        },
+        {
+          "case_id": "training-cap-ja",
+          "claim_index": 2,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-deadline-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "leave-mock-window-zh",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 3,
+          "source_id": 5,
+          "supported": true,
+          "case_status": "answered"
+        }
+      ]
+    },
+    {
+      "report": "five-cases-final-live.json",
+      "source_sha256": "e8218cca2e8d8ad2bfdf162ca4f3e523270bb874e485fa168b0390ccc5944da7",
+      "structured_calculations_verified": 5,
+      "supported": 4,
+      "details": [
+        {
+          "case_id": "training-clarify-ja",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "purchase-multiply-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "leave-mock-window-zh",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": true,
+          "case_status": "answered"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 1,
+          "source_id": 4,
+          "supported": false,
+          "case_status": "unsupported_answer"
+        },
+        {
+          "case_id": "return-purchase-cross-en",
+          "claim_index": 2,
+          "source_id": 5,
+          "supported": true,
+          "case_status": "unsupported_answer"
+        }
+      ]
+    }
+  ],
+  "known_findings": [
+    {
+      "report": "full-live.json",
+      "case_id": "purchase-limit-zh",
+      "finding": "Automatic Correctness and Verifier accept a maximum-purchase claim; this conflicts with the routing interpretation explicitly confirmed by the human reviewer. Original automated score preserved; this new paraphrase was not separately blind-reviewed."
+    },
+    {
+      "report": "five-cases-final-live.json",
+      "case_id": "commuter-clarify-ja",
+      "finding": "Delivered supported criteria explanation without asking a question. Frozen required-clarification contract still marks task failure."
+    },
+    {
+      "report": "five-cases-final-live.json",
+      "case_id": "return-purchase-cross-en",
+      "finding": "Verifier falsely reinterprets an explicitly calculation-only date as a policy deadline and rejects it for missing policy evidence. Backend-only rendering markers subsequently clarify this distinction; the separate real Verifier replay accepts the preserved four claims and still rejects a constructed tool-only policy assertion. Original failed result retained; answer completeness remains a separate concern."
+    }
+  ]
+}

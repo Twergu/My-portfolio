@@ -81,6 +81,12 @@ AGENT_GENERATION_RULES = (
 )
 
 AGENT_VERIFICATION_RULES = (
+    "The rendering=server_calculation field is assigned ONLY by the backend after projecting an actual tool "
+    "result; the Generator cannot set it or its text. Verify that claim's arithmetic/date/units and its explicit "
+    "limitations against the cited tool and input evidence. Do not reinterpret a calculation-only date as a "
+    "company deadline or require it to establish business permission. Missing policy explanation is an answer "
+    "completeness issue, not a false mathematical assertion. A free-text policy inference still needs its "
+    "applicable document; no rendering label can support a policy assertion or override contradictory text. "
     "Distinguish modality: a normative application instruction or list of required materials is not a claim "
     "that the user has submitted them. In a procedural context, 申請にはXを提出します may describe what the "
     "policy requires; evaluate that reading against the cited document. A user saying 提出できます does not "

@@ -36,7 +36,7 @@ Answer Correctness 和 Grounded Answer Rate 的分母为全部可回答任务，
 
 最终仍有两题继续追问、三题因自由改写工具计算被保守证据门槛拦截。Clarification Accuracy 只检查是否需要/发生追问，不衡量追问内容质量；自动依据评分也不是人工正确性保证。失败原文、模型输出与判定均保留。
 
-最终代码 CI：[success](https://github.com/Twergu/My-portfolio/actions/runs/37249750795)，版本 `fcfb60f`。测试数量不在 README 写死，见[自动生成的完整测试报告](reports/agent-hardening/ci-final/tests.md)与[Docker 验收](reports/agent-hardening/ci-final/container-persistence.json)。
+上一轮代码 CI：[success](https://github.com/Twergu/My-portfolio/actions/runs/37249750795)，版本 `fcfb60f`。测试数量不在 README 写死，见[上一轮完整测试报告](reports/agent-hardening/ci-final/tests.md)与[Docker 验收](reports/agent-hardening/ci-final/container-persistence.json)。
 
 运行使用一个 worker；Agent 会话仅在内存，15 分钟绝对期限，每用户最多 4 个、全进程最多 100 个活跃任务，重启后需重新开始。当前只有只读工具。制度结论必须引用状态/日期适用的文档；未分类文档需先确认政策状态。完整限制与取消行为见[运行边界](docs/agent-runtime.md)，全部修改、失败与测试见[Modification Report](docs/agent-hardening-report.md)。
 <!-- AGENT_RESULTS_END -->
@@ -76,7 +76,7 @@ Selectivity 回放：59 条生成断言中 0 条可跳过，完整可省去 0 �
 
 ## 工程验收与上轮基线
 
-测试、CI、Docker 和 Vector Benchmark 表格使用注明版本的运行快照；下表 Dense RAG、Chunk 及 off/fast/strict 保留上一轮基线，最新 Agent 数据见顶部。Hybrid / Reranker 对比见 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核与人在回路继续暂缓；Agent 只有只读工具，没有真实业务写操作。
+测试、CI、Docker 和 Vector Benchmark 表格使用注明版本的运行快照；下表 Dense RAG、Chunk 及 off/fast/strict 保留上一轮基线，最新 Agent 数据见顶部。Hybrid / Reranker 对比见 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。八例 Agent 候选已实际人工审核，完整 RAG/Agent 评估集仍未经人工审核；业务操作的人在回路继续暂缓，Agent 只有只读工具。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |

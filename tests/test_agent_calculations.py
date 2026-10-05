@@ -94,6 +94,7 @@ def test_reference_is_rendered_and_cited_by_server_and_still_verified(language, 
         assert data["result"]["timezone"] == "Asia/Tokyo" and data["provenance"] == "mock"
         assert "2026-10-05" in claim["text"] and "Mock" in claim["text"]
     assert model.checked[0]["text"] == claim["text"]
+    assert model.checked[0]["rendering"] == "server_calculation"
     rejected, _ = run([{"calculation_source_id": 1}], evidence, language, supported=False)
     assert rejected["status"] == "unsupported_answer" and not rejected["claims"]
 
@@ -120,6 +121,11 @@ def test_unit_requires_numeric_input_provenance_and_fixed_citation():
         {"calculation_source_id": 2},  # user input is not a tool capability
         {"calculation_source_id": 999},
         {"calculation_source_id": True},
+        {
+            "rendering": "server_calculation",
+            "text": "Permission granted",
+            "evidence": [{"source_id": 1, "quote": "Calculation"}],
+        },
         {"type": "calculation", "text": "Permission granted", "evidence": [{"source_id": 1, "quote": "Calculation"}]},
     ],
 )
@@ -169,3 +175,7 @@ def test_frozen_false_refusals_work_with_structured_reference_without_relabeling
     result, model = run(claims, evidence, case["contract"]["language"])
     assert result["status"] == "answered" and len(model.checked) == len(claims)
     assert result["claims"][index]["rendering"] == "server_calculation"
+    assert all(
+        c.get("rendering") == "server_calculation" if c["claim_index"] == index + 1 else "rendering" not in c
+        for c in model.checked
+    )
