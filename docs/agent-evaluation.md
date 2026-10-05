@@ -1,6 +1,6 @@
 # Agent Evaluation 协议
 
-`evals/agent_dataset.json` 是冻结的 24 个虚构企业任务（中、日、英），通过 `python -m evals.make_agent` 重建。包含制度问答、缺少个人条件的多轮澄清、跨文档计算/日期、缺少写工具、无政策、缺少实际日历等情况。数据和参考答案由 AI 编写，**尚未人工审核**，不代表生产准确率。
+`evals/agent_dataset.json` 是冻结的 24 个虚构企业任务（中、日、英），通过 `python -m evals.make_agent` 重建。包含制度问答、缺少个人条件的多轮澄清、多制度计算/日期、缺少写工具、无政策、缺少实际日历等情况。八份虚构制度编成一个多页 PDF；多制度场景跨物理页检索，不宣称本轮评估覆盖多 PDF。数据和参考答案由 AI 编写，**尚未人工审核**，不代表生产准确率。
 
 运行前在 `.env` 配置现有 API 及独立 `RAG_EVAL_JUDGE_MODEL`。执行：
 

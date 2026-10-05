@@ -66,7 +66,7 @@
 
 ## 最终验收
 
-最终完整 CI 与真实 API 评估进行中。P0 的 CI 全绿记录不冒充后续代码的验收。
+最终真实 API 评估已完成 24/24；应用代码 `fcfb60f05030055b7c4a05386c4aa3af53762e5f` 的[完整 GitHub Actions](https://github.com/Twergu/My-portfolio/actions/runs/37249750795)全绿。下载并核对 JUnit 与运行产物：**314 passed、0 failed、0 errors、0 skipped**，其中 [34 个 pgvector 参数用例](../reports/agent-hardening/ci-final/postgres-tests.json)全部实际执行；前端 15/15、Ruff、Docker 构建/健康/PDF 引用/重启持久化及 1k/10k/100k Vector Benchmark 均通过。[版本与步骤](../reports/agent-hardening/ci-final/provenance.json)、[自动测试报告](../reports/agent-hardening/ci-final/tests.md)、[Docker 结果](../reports/agent-hardening/ci-final/container-persistence.json)随源码保留。最终归档仅更新文档、报告及 README 表格生成文案，应用行为与该验收提交一致。
 
 完整的 `evaluation-final-complete-live.json` 记录 24/24：Task Success 66.7%，Planning/Tool Selection/Clarification 均 100%，但六个工具场景因 quote mismatch 拦截。排查确认**新固定计算表述只在 metadata、未进入 source.text**，模型复制合法服务器计算表述时却无法通过精确引语检查。这是集成缺陷，不应放宽 quote 检查。
 
@@ -74,11 +74,42 @@
 
 该轮 `return-deadline-en` 的 Correctness Judge 返回 `answer_correct=false`，reason 却明确说答案正确；报告依然按 false 计分，不根据有利解释手工改分。这是自动 Judge 的已知局限，非确定性后端保证。
 
-P1 提交 `e41b980` 的[完整 CI](https://github.com/Twergu/My-portfolio/actions/runs/37198130074)为 269 passed、0 failed、0 errors、0 skipped；[原始报告](../reports/agent-hardening/ci-p1/tests.json)保留。P2/P3 最终代码本地全量为 274 passed、34 PostgreSQL skipped，数据库用例必须以最终 CI 的实际执行为准。
+P1 提交 `e41b980` 的[完整 CI](https://github.com/Twergu/My-portfolio/actions/runs/37198130074)为 269 passed、0 failed、0 errors、0 skipped；[原始报告](../reports/agent-hardening/ci-p1/tests.json)保留。工具引语修复后的本地全量为 280 passed、34 PostgreSQL skipped；上述最终 CI 实际执行了全部数据库用例，本地 skip 没有冒充通过。
 
 `evaluation-final-live.json` 因执行进程中断仅保存 15/24，不能当作最终全量成绩，也不与重跑结果合并美化分数。保留该文件和其中全部失败；中断点可能已发出的请求和未保存的索引用量未知，不能计为零。新的完整评估输出为 `evaluation-final-complete-live.json`。
 
 中断报告还暴露自动评估局限：`purchase-limit-zh` 把 5000 JPY 的审批路线门槛说成每单绝对上限，运行时 Verifier 与 Correctness Judge 都未指出；Grounding Judge 对“购买前收据”另有异议。虚构原文的收据时点措辞本身也不理想。保留原文、候选及全部 verdict，不修改历史评分。固定来源/有效期校验不能替代自然语言语义判断，自动 groundedness 不是人工保证。
+
+### 最终真实 API 结果与未达标项
+
+[最终逐题 JSON](../reports/agent-hardening/evaluation-final-quoted-live.json) / [Markdown](../reports/agent-hardening/evaluation-final-quoted-live.md)使用同一冻结数据集、同一模型与检索配置，24 个场景全部执行，未筛掉失败。真实 API 运行使用隔离 SQLite；PostgreSQL 的全量回归由 CI 单独验证，不能把两者拼成真实 API + PostgreSQL 端到端实测。
+
+| 指标 | 基线 | 最终版本 |
+| --- | ---: | ---: |
+| Task Success Rate | 12/24，50.0% | 19/24，79.2% |
+| Planning Success | 21/24，87.5% | 23/24，95.8% |
+| Tool Selection Accuracy | 22/24，91.7% | 23/24，95.8% |
+| Clarification Accuracy | 23/24，95.8% | 24/24，100% |
+| Answer Correctness / 全部可回答任务 | 7/18，38.9% | 13/18，72.2% |
+| Grounded Answer Rate / 全部可回答任务 | 7/18，38.9% | 13/18，72.2% |
+| 已交付回答中通过独立 Grounding Judge | 7/7 | 13/13 |
+| Planner calls/task | 2.67 | 2.54 |
+| Tool calls/task | 1.25 | 1.33 |
+| 重复工具请求（被拦截） | 1 | 0 |
+| P50 / P95 | 12.259 / 18.122 秒 | 13.232 / 20.328 秒 |
+| 平均应用成本 | USD 0.002236/task | USD 0.002206/task |
+
+六个不可执行任务均正确返回 unavailable。最终五个未成功任务：
+
+- `commuter-clarify-ja`：Generator 再次追问雇佣身份及雇主确认，未调用 Verifier。固定回复只说全职，不明确排除 contractor；这是澄清充分性与数据集语义边界，不能记作 Verifier 误拒答。该测试协议只提供一次回复，所以仍计失败。
+- `training-clarify-ja`：Planner 追问课程数量，固定回复未回答这一点，未执行 Calculator；工具/规划和最终任务均失败。
+- `purchase-multiply-en`、`leave-mock-window-zh`、`return-purchase-cross-en`：模型自由改写了仅引用工具/用户输入的计算断言，被确定性 `applicable_document_required` 门槛拦截。计算文字本身没有据此授予业务权限，反映当前保守校验对有效计算释义的误拦截代价；不能归咎于 Strict Verifier，因为该步骤尚未执行。保留原候选，不放宽门槛美化成绩。
+
+本轮没有 quote mismatch。此前六例的工具来源正文缺失缺陷已修复，但上述三例说明模型仍可能不遵守固定计算文本合同。下一步若改善，应设计可验证的结构化计算 Claim 渲染与对应安全回归，不能简单接受模型自报“非政策”标签。
+
+最终模型耗时仍是瓶颈：Planner / Generator / Verifier 平均每任务分别 5.577 / 4.853 / 1.885 秒，Knowledge Search 0.193 秒。交接优化单独实验曾降低 P50 和成本，但最终加固版本相较基线 **P50、P95 均未下降**，成本仅约低 1.3%。[最终性能对照](../reports/agent-hardening/latency-final-comparison.md)保留所有题与成功同题子集；不得以较好的中间轮代替最终性能。
+
+成本为配置单价估算，不含索引与独立 Judge，也不是账单对账。数据是 AI 制作、未人工审核的八项政策（同一个 PDF 的八页），覆盖跨政策/跨页推理，没有覆盖多 PDF 聚合。Clarification Accuracy 只检查是否按合同发生追问，不评估追问是否充分、冗余或措辞正确，因此 100% 不代表澄清质量完美。自动 Judge 曾出现漏判及自相矛盾，其高分不是人工验收；完整历史失败与中断数据均保留。
 
 ## 修改文件索引
 
