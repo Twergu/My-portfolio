@@ -6,8 +6,9 @@ from datetime import date
 
 import pytest
 
-from backend.agent import AgentContext
+from backend.agent import AgentContext, AgentState, Observation, ToolOutput, Turn
 from backend.agent_grounding import applicable_document, standalone_tool_text
+from backend.agent_service import evidence_sources
 from backend.agent_tools import (
     CalculatorArguments,
     CalendarArguments,
@@ -168,3 +169,34 @@ def test_document_provenance_and_page_identity_are_required():
     for changes in ({"kind": "user"}, {"provenance": "self_report"}, {"chunk_id": None}, {"page": True}):
         source = document() | changes
         assert not applicable_document(source, DAY)
+
+
+@pytest.mark.parametrize("lang", ["zh", "ja", "en"])
+@pytest.mark.parametrize("kind", ["calculator", "calendar"])
+def test_canonical_tool_quote_is_actual_evidence_not_an_unquotable_metadata_label(lang, kind):
+    captured = tools(kind, lang)
+    state = AgentState(
+        context=AgentContext("alice", "scope", DAY, "Asia/Tokyo", lang),
+        turns=[Turn(text="Calculate only, do not grant permission")],
+        observations=[
+            Observation(
+                id="tool_1",
+                tool=kind,
+                arguments=captured["metadata"]["arguments"],
+                status="ok",
+                output=ToolOutput(provenance=captured["provenance"], data=captured["metadata"]["result"]),
+            )
+        ],
+        selected_observation_ids=["tool_1"],
+    )
+    sources = evidence_sources(state)
+    canonical = sources[0]["metadata"]["standalone_text"]
+    assert canonical in sources[0]["text"] and captured["text"] in sources[0]["text"]
+    # Real failure: Generator quoted standalone_text, but the old source.text
+    # omitted it. Preserve that exact quoting pattern and check strict succeeds.
+    provider = PermissiveVerifier(canonical, [{"source_id": 1, "quote": canonical}])
+    result = answer_from_sources(
+        "Calculation only", Settings(mode="api"), "fixture", sources, lang, provider, agent_mode=True, policy_as_of=DAY
+    )
+    assert result["status"] == "answered" and provider.verifications == 1
+    assert result["support"]["verification_mode"] == "strict"

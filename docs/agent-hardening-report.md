@@ -67,3 +67,39 @@
 ## 最终验收
 
 最终完整 CI 与真实 API 评估进行中。P0 的 CI 全绿记录不冒充后续代码的验收。
+
+完整的 `evaluation-final-complete-live.json` 记录 24/24：Task Success 66.7%，Planning/Tool Selection/Clarification 均 100%，但六个工具场景因 quote mismatch 拦截。排查确认**新固定计算表述只在 metadata、未进入 source.text**，模型复制合法服务器计算表述时却无法通过精确引语检查。这是集成缺陷，不应放宽 quote 检查。
+
+后续最小修复将同一服务器计算表述附入工具 source.text，原始计算文本保留；新增中日英 × Calculator/Calendar 六个对应回归。相关测试 104 passed、24 PostgreSQL skipped（最终 CI 实际执行）。该失败运行原样保留，修复后完整实测输出到新的 `evaluation-final-quoted-live.json`。
+
+该轮 `return-deadline-en` 的 Correctness Judge 返回 `answer_correct=false`，reason 却明确说答案正确；报告依然按 false 计分，不根据有利解释手工改分。这是自动 Judge 的已知局限，非确定性后端保证。
+
+P1 提交 `e41b980` 的[完整 CI](https://github.com/Twergu/My-portfolio/actions/runs/37198130074)为 269 passed、0 failed、0 errors、0 skipped；[原始报告](../reports/agent-hardening/ci-p1/tests.json)保留。P2/P3 最终代码本地全量为 274 passed、34 PostgreSQL skipped，数据库用例必须以最终 CI 的实际执行为准。
+
+`evaluation-final-live.json` 因执行进程中断仅保存 15/24，不能当作最终全量成绩，也不与重跑结果合并美化分数。保留该文件和其中全部失败；中断点可能已发出的请求和未保存的索引用量未知，不能计为零。新的完整评估输出为 `evaluation-final-complete-live.json`。
+
+中断报告还暴露自动评估局限：`purchase-limit-zh` 把 5000 JPY 的审批路线门槛说成每单绝对上限，运行时 Verifier 与 Correctness Judge 都未指出；Grounding Judge 对“购买前收据”另有异议。虚构原文的收据时点措辞本身也不理想。保留原文、候选及全部 verdict，不修改历史评分。固定来源/有效期校验不能替代自然语言语义判断，自动 groundedness 不是人工保证。
+
+## 修改文件索引
+
+| 文件 | 修改内容 |
+| --- | --- |
+| `backend/verification.py` | 日文规范性要求与已执行事实区分；同 claim 完整前提；不凭空附加雇主确认 |
+| `backend/rag.py` | Agent 生成规则、严格验证前的确定性 Policy Evidence 门槛 |
+| `backend/agent.py` | 最终工具受限交接；在首轮开始时交付服务器状态引用 |
+| `backend/agent_service.py` | 固定计算表述、历史日期传递、过期取消/无效句柄修复、首轮证据变更检测 |
+| `backend/agent_grounding.py` | 文档身份/状态/日期检查，服务器生成的中日英计算文本；无需模型分类标签 |
+| `evals/agent-ja-regression.json` | 原真实失败的 Generator/Evidence/Verdict 冻结数据 |
+| `evals/make_agent.py`, `evals/agent_dataset.json` | 24 场景可重建数据集与参考合同 |
+| `evals/agent_metrics.py`, `evals/judge.py` | 规划与回答独立评分，明确分母、调用/阶段/成本，独立 Judge |
+| `scripts/agent_diagnose.py`, `scripts/agent_verifier_replay.py` | 虚构政策上的真实多轮诊断和正反例 Verifier 回放 |
+| `scripts/agent_evaluate.py`, `scripts/agent_compare.py` | 真实完整评估、逐题保存、失败保留、同集性能对照 |
+| `scripts/agent_results_summary.py` | 由完整实测 JSON 自动更新 README Agent 表格 |
+| `tests/test_agent_japanese_regression.py` | 日文原失败、条件/规范/已提交等回归 |
+| `tests/test_agent_policy_grounding.py` | 不可信自述/工具冒充政策、无效文档、固定计算表述防绕过 |
+| `tests/test_agent.py`, `tests/test_agent_integration.py` | 交接安全、双数据库 Agent/ACL、并发/过期/重启/重建索引 |
+| `tests/test_agent_evaluation.py` | 数据集和指标合同、保留失败、禁止不完整/不同数据集性能对照 |
+| `scripts/container_smoke.py` | Docker Agent API/前端门禁及既有 PDF/重启检查 |
+| `README.md`, `SOURCE_INDEX.md` | 最新成果/限制入口、相对路径完整源码索引 |
+| `docs/agent-evaluation.md`, `docs/agent-runtime.md`, 本文件 | 实验协议、运行边界与逐项 Modification Report |
+| `reports/agent-hardening/*` | 原始失败、完整真实调用、性能和 CI 报告；模型/受控测试明确分开 |

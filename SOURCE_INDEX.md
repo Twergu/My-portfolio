@@ -172,6 +172,8 @@
 - [reports/agent-hardening/evaluation-final-complete-live.md](reports/agent-hardening/evaluation-final-complete-live.md)
 - [reports/agent-hardening/evaluation-final-live.json](reports/agent-hardening/evaluation-final-live.json)
 - [reports/agent-hardening/evaluation-final-live.md](reports/agent-hardening/evaluation-final-live.md)
+- [reports/agent-hardening/evaluation-final-quoted-live.json](reports/agent-hardening/evaluation-final-quoted-live.json)
+- [reports/agent-hardening/evaluation-final-quoted-live.md](reports/agent-hardening/evaluation-final-quoted-live.md)
 - [reports/agent-hardening/evaluation-guarded-handoff-live.json](reports/agent-hardening/evaluation-guarded-handoff-live.json)
 - [reports/agent-hardening/evaluation-guarded-handoff-live.md](reports/agent-hardening/evaluation-guarded-handoff-live.md)
 - [reports/agent-hardening/evaluation-handoff-live.json](reports/agent-hardening/evaluation-handoff-live.json)

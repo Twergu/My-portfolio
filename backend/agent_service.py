@@ -110,7 +110,12 @@ def evidence_sources(state):
         )
     for source in sources:
         if source.get("kind") == "tool":
-            source["metadata"]["standalone_text"] = standalone_tool_text(source, state.context.language)
+            standalone = standalone_tool_text(source, state.context.language)
+            source["metadata"]["standalone_text"] = standalone
+            if standalone:
+                # This server-rendered calculation is evidence, not merely a UI
+                # label. Make it quotable without weakening exact-text matching.
+                source["text"] += "\n" + standalone
     return [source | {"number": index} for index, source in enumerate(sources, 1)]
 
 

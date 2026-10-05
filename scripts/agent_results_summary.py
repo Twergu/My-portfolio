@@ -7,7 +7,7 @@ from backend.config import ROOT
 
 def main():
     folder = ROOT / "reports/agent-hardening"
-    names = ("evaluation-baseline-live", "evaluation-guarded-handoff-live", "evaluation-final-complete-live")
+    names = ("evaluation-baseline-live", "evaluation-guarded-handoff-live", "evaluation-final-quoted-live")
     reports = [json.loads((folder / f"{name}.json").read_text(encoding="utf-8")) for name in names]
     if not all(r["summary"]["complete"] for r in reports):
         raise SystemExit("Only complete evaluation runs may populate the README table")
@@ -53,7 +53,7 @@ def main():
         "",
         "Answer Correctness 和 Grounded Answer Rate 的分母为全部可回答任务，包含拒答及异常；Task Success 还要求工具/澄清正确。Planner 交接优化保留 ACL 和 Strict/all；P50/成本有下降，但该优化轮 P95 没有改善。每轮独立生成，存在随机性，不能把最终差异全部归因于交接优化。",
         "",
-        "[基线](reports/agent-hardening/evaluation-baseline-live.md) · [失败的首次优化](reports/agent-hardening/latency-first-attempt.md) · [延迟对照](reports/agent-hardening/latency-comparison.md) · [最终逐题报告](reports/agent-hardening/evaluation-final-complete-live.md) · [评估协议](docs/agent-evaluation.md)。费用按配置单价估算，排除索引和离线 Judge；中断运行保留，未捕获用量不能计为零。",
+        "[基线](reports/agent-hardening/evaluation-baseline-live.md) · [失败的首次优化](reports/agent-hardening/latency-first-attempt.md) · [延迟对照](reports/agent-hardening/latency-comparison.md) · [最终逐题报告](reports/agent-hardening/evaluation-final-quoted-live.md) · [评估协议](docs/agent-evaluation.md)。费用按配置单价估算，排除索引和离线 Judge；中断运行保留，未捕获用量不能计为零。",
         "",
         f"最终代码 CI：[{ci['conclusion']}]({ci['html_url']})，版本 `{ci['head_sha'][:7]}`。测试数量不在 README 写死，见[自动生成的完整测试报告](reports/agent-hardening/ci-final/tests.md)与[Docker 验收](reports/agent-hardening/ci-final/container-persistence.json)。",
         "",
