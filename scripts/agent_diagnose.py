@@ -83,6 +83,10 @@ def run(output, repeats):
                 service.wait_for_jobs()
                 if service.store.document(doc_id)["status"] != "ready":
                     raise RuntimeError("Indexing failed")
+                client.put(
+                    f"/api/documents/{doc_id}/metadata",
+                    json={"policy_status": "current", "effective_from": "2026-01-01"},
+                ).raise_for_status()
                 for attempt in range(repeats):
                     start = len(provider.records)
                     first = client.post(

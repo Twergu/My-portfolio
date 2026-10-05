@@ -4,9 +4,9 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 查看 [全部源文件](SOURCE_INDEX.md)、[本轮 12 项检索与权限优化](docs/retrieval-optimization-report.md)、[上轮 17 项优化记录](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
-Agent 已完成[第三阶段：页面与多轮交互](docs/agent-stage3.md)。聊天页可切换“知识问答 / 业务 Agent”，支持补充信息、结束任务、分类来源和实际工具执行记录。中日文浏览器联调已运行真实 API：采购与培训正常回答；一例日文续接被严格验证拦截，失败记录保留，不能把页面接通等同于模型质量满分。工作日日历仍明确为模拟数据。[第二阶段真实工具验收](docs/agent-stage2.md)与[第一阶段编排记录](docs/agent-stage1.md)保留作历史说明。
+业务 Agent 支持任务规划、权限内知识检索、日期/计算工具、多轮澄清及严格证据校验；聊天页可切换“知识问答 / 业务 Agent”。已增加日文失败回归、24 场景真实评估、阶段耗时、确定性 Policy Claim 约束与单进程状态验证，详见 [Modification Report](docs/agent-hardening-report.md)。工作日日历仍是明确标注的 Mock；历史失败和[第三阶段浏览器联调](docs/agent-stage3.md)、[第二阶段工具验收](docs/agent-stage2.md)、[第一阶段编排](docs/agent-stage1.md)均保留。
 
-前端测试使用 Node.js 24 内置测试器，无 npm 依赖：`python -m scripts.check_frontend`。数量从实际运行输出生成，见[前端测试报告](reports/agent-stage3/frontend-tests.json)；Python 测试与覆盖率仍见[动态报告](reports/tests.md)。CI 已增加前端检查步骤，新增 Agent 尚未重新运行远程 CI。
+前端测试使用 Node.js 24 内置测试器，无 npm 依赖：`python -m scripts.check_frontend`。数量从实际运行输出生成，见[前端测试报告](reports/agent-stage3/frontend-tests.json)；Python 测试与覆盖率见[动态报告](reports/tests.md)。Agent 已在真实 PostgreSQL + pgvector、Docker 和 GitHub Actions 验收，具体版本及最终报告见下方。
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
@@ -45,7 +45,7 @@ Selectivity 回放：59 条生成断言中 0 条可跳过，完整可省去 0 �
 
 ## 工程验收与上轮基线
 
-测试、CI、Docker 和 Vector Benchmark 表格使用注明版本的运行快照；Dense RAG、Chunk 及 off/fast/strict 表格保留上一轮基线。新的 Hybrid / Reranker 对比见顶部 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核与人在回路继续暂缓；Agent 的阶段状态见顶部说明，既有 CI 记录不代表新增 Agent 代码已在远程验收。
+测试、CI、Docker 和 Vector Benchmark 表格使用注明版本的运行快照；下表 Dense RAG、Chunk 及 off/fast/strict 保留上一轮基线，最新 Agent 数据见顶部。Hybrid / Reranker 对比见 v3 结果，逐条实现见 [修改报告](docs/retrieval-optimization-report.md)。人工审核与人在回路继续暂缓；Agent 只有只读工具，没有真实业务写操作。
 
 <!-- EXPERIMENT_RESULTS_START -->
 | 项目 | 实测结果与范围 |

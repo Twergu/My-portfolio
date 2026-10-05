@@ -13,6 +13,7 @@ from fastapi import HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from .agent import AgentContext, AgentLimits, AgentRunner, AgentState, ProviderPlanner, Text, TraceEvent
+from .agent_grounding import standalone_tool_text
 from .agent_tools import CalendarConfig, build_tools
 from .governance import RetrievalFilters
 from .rag import answer_from_sources, answer_language
@@ -107,6 +108,9 @@ def evidence_sources(state):
                 },
             }
         )
+    for source in sources:
+        if source.get("kind") == "tool":
+            source["metadata"]["standalone_text"] = standalone_tool_text(source, state.context.language)
     return [source | {"number": index} for index, source in enumerate(sources, 1)]
 
 
@@ -147,6 +151,9 @@ class AgentService:
             task = self.tasks.get(task_id)
             if task is None or task.owner != principal.id:
                 raise HTTPException(404, "Task not found")
+            if not task.busy and task.expires <= self.clock():
+                del self.tasks[task_id]
+                raise HTTPException(404, "Task not found or expired")
             if task.busy:
                 raise HTTPException(409, "Wait for the current operation before cancelling")
             del self.tasks[task_id]
@@ -239,7 +246,9 @@ class AgentService:
             state = (
                 runner.resume(task.state, question.question, context, metrics)
                 if task.state
-                else runner.start(question.question, context, metrics)
+                else runner.start(
+                    question.question, context, metrics, on_state=lambda state: setattr(task, "state", state)
+                )
             )
             task.state = state
             guard()
@@ -262,7 +271,16 @@ class AgentService:
                     response.update(status="limit_reached", failure_code="evidence_context_limit")
                 else:
                     result = answer_from_sources(
-                        user_task, config, key, sources, context.language, provider, metrics, agent_mode=True
+                        user_task,
+                        config,
+                        key,
+                        sources,
+                        context.language,
+                        provider,
+                        metrics,
+                        agent_mode=True,
+                        policy_as_of=task.request.filters.as_of or context.reference_date,
+                        historical_policy=task.request.filters.as_of is not None,
                     )
                     response.update(result)
                     if result["status"] == "needs_input":
@@ -276,6 +294,22 @@ class AgentService:
                         "actions_executed": False,
                     }
             guard()
+            if response["status"] == "needs_input" and task.expires <= self.clock():
+                # A slow request must not advertise a handle that cannot resume.
+                state.status, state.questions, state.failure_code = "limit_reached", [], "task_expired"
+                state.trace.append(TraceEvent(step=state.steps, event="limit_reached", code="task_expired"))
+                response.update(
+                    status="limit_reached",
+                    failure_code="task_expired",
+                    task_id=None,
+                    questions=[],
+                    trace=[event.model_dump() for event in state.trace],
+                    answer={
+                        "zh": "任务已过期，请重新开始。",
+                        "ja": "タスクの有効期限が切れました。新しく開始してください。",
+                        "en": "This task expired. Start a new task.",
+                    }[context.language],
+                )
             outcome = response["status"]
             keep = outcome == "needs_input"
             response["metrics"] = metrics.as_dict()

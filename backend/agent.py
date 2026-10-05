@@ -234,8 +234,12 @@ class AgentRunner:
             {"decision_schema": Decision.model_json_schema(), "tools": [tool.schema() for tool in self._tools.values()]}
         )
 
-    def start(self, question: str, context: AgentContext, metrics: Metrics | None = None) -> AgentState:
+    def start(
+        self, question: str, context: AgentContext, metrics: Metrics | None = None, *, on_state=None
+    ) -> AgentState:
         state = AgentState(context=context, turns=[Turn(text=question)])
+        if on_state is not None:
+            on_state(state)
         return self._run(state, metrics if metrics is not None else Metrics())
 
     def resume(

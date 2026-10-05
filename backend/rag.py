@@ -8,6 +8,7 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
+from .agent_grounding import policy_failures
 from .lexical import reciprocal_rank_fusion
 from .providers import ModelError as ModelError
 from .providers import normalize
@@ -269,6 +270,8 @@ def answer_from_sources(
     *,
     include_candidate=False,
     agent_mode=False,
+    policy_as_of=None,
+    historical_policy=False,
 ):
     """Use already-authorized evidence without a second retrieval or embedding call."""
     metrics = metrics if metrics is not None else Metrics()
@@ -374,6 +377,20 @@ def answer_from_sources(
                 "failure_reason": "quote_mismatch",
                 "total_claims": len(generated.claims),
                 "verified_claims": 0,
+            }
+        elif agent_mode and (
+            failures := policy_failures(
+                generated.claims, sources, language, as_of=policy_as_of, historical=historical_policy
+            )
+        ):
+            status = "unsupported_answer"
+            support = {
+                "method": "deterministic_evidence_provenance",
+                "failure_reason": "applicable_document_required",
+                "total_claims": len(generated.claims),
+                "verified_claims": 0,
+                "all_supported": False,
+                "policy_failures": failures,
             }
         elif settings.verification_mode in ("off", "fast"):
             status = "answered"

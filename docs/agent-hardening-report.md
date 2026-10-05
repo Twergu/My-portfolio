@@ -40,16 +40,30 @@
 
 ## P1-4 Latency
 
-实施中。基线平均每任务 Planner 4.726 秒、Generator 3.608 秒、Verifier 2.394 秒、Knowledge Search 0.221 秒。`backend/agent.py` 新增可选 `answer_after`：最后一次只读工具成功且提供非空文本/来源后可直接交给 Generator；省去只负责 `prepare_answer` 的模型往返。空结果、失败和重复调用均不能走捷径，保留全部成功前提，并由 AgentService 再次 ACL 检查与 Strict/all 验证。
+完成实现与实测，P95 目标尚未改善。基线平均每任务 Planner 4.726 秒、Generator 3.608 秒、Verifier 2.394 秒、Knowledge Search 0.221 秒。`backend/agent.py` 新增可选 `answer_after`：最后一次只读工具成功且提供非空文本/来源后可直接交给 Generator；省去只负责 `prepare_answer` 的模型往返。空结果、失败和重复调用均不能走捷径，保留全部成功前提，并由 AgentService 再次 ACL 检查与 Strict/all 验证。
 
 新增编排与双数据库 HTTP 安全回归，本地相关测试通过（数据库用例在最终 CI 实际执行）。[第一轮对照](../reports/agent-hardening/latency-first-attempt.md)保存了未达到目标的优化：Planner 次数 2.67→2.00，P50 12.259→10.997 秒，但 P95 18.122→20.132 秒、Task Success 50.0%→45.8%。不将此报告当作最终成功。
 
-确认其中一例 business_task 检索直接交接而未进行 Calculator，故在后端增加限制：业务知识检索必须再规划；只有直接知识问答，或已经有制度前提的最终 Calculator/Calendar 调用可以提前交接。新增防过早交接测试与中途权限撤销测试。收紧后的相关测试 83 passed、18 PostgreSQL skipped；同一 24 题再次实测中，保留第一次失败运行。
+确认其中一例 business_task 检索直接交接而未进行 Calculator，故在后端增加限制：业务知识检索必须再规划；只有直接知识问答，或已经有制度前提的最终 Calculator/Calendar 调用可以提前交接。新增防过早交接测试与中途权限撤销测试。收紧后的相关测试 83 passed、18 PostgreSQL skipped（最终 CI 实际执行）。
+
+[同集真实对照](../reports/agent-hardening/latency-comparison.md)：Planner 2.67→2.29 次/任务，P50 12.259→10.682 秒（约 -12.9%），平均成本 USD 0.002236→0.002147（约 -4.0%），Task Success 50.0%→70.8%。P95 18.122→19.904 秒，仍没有改善，不能宣称整体延迟均下降。生成结果和服务延迟有随机性；不是相同答案的因果对照。报告同时给出两次都成功交付的同题子集，主表保留全部失败题。
 
 ## P2-5 Policy Claim 约束
 
-待执行。
+完成。新增 `backend/agent_grounding.py`，接入 `backend/rag.py` 与 `backend/agent_service.py`。引用的文档必须是服务器检索得到的 document/retrieved、有文档/分块/物理页身份、状态/日期适用；默认当前政策，显式 as_of 允许有效历史政策。草案、未分类、未来或过期文件不能证明当前业务许可。未引用的文档不能借用。
+
+采用保守确定性门槛而非靠模型给 Claim 自报类型：每个自由文本 claim 均要求有效文档；无文档时只有服务器按结构化数值/日期生成的固定中日英计算表述可通过，不能加上“因此可报销/获准”等文字。User Input 保留自述来源，不能单独证明制度。所有接受的候选仍执行 Strict/all，不移除 Verifier。语义相关性仍需 Verifier，不能仅凭“有文档”证明正确。
+
+同时修复评估中确认的 Generator 提示问题：不再把“雇主确认”附加到所有制度上，只在引用政策规定时保留；一般假设问题不能伪称用户实际自述。未改变 Verifier 接受标准。
+
+新增 `tests/test_agent_policy_grounding.py`：故意放行的受控 Verifier、计算/自述伪装政策、未引用文档、过期/草案、固定计算加尾句、伪造显示文本、物理页身份等反例。相关测试 92 passed、18 PostgreSQL skipped（最终 CI 实际执行）。历史日文 fixture 原文不改，新的回归补充服务器文档身份，验证原错误在模型验证之前已被拒绝。
 
 ## P3-6 State 边界
 
-待执行。
+完成。检查并保留单进程内存、每用户/全局容量、绝对 TTL、忙任务互斥、异常释放。最小修复：过期取消与续接都返回 404；慢请求不能返回过期续接句柄；首次运行创建 state 时立即绑定 PendingTask，让首次搜索后的重新索引在下一次 Planner 调用前也能被检测，而不是等 runner 返回才发现。
+
+`tests/test_agent_integration.py` 新增真正的并发线程测试（不是只改 busy 标志），同时回复/取消/他人访问只能有一次模型路径；测试不滑动续期、TTL 边界、慢澄清、异常释放、全局容量与重启丢失句柄但保留文档。相关测试 79 passed、24 PostgreSQL skipped（最终 CI 实际执行）。[运行边界](agent-runtime.md)明确一个 worker、900 秒期限、100/4 容量、无硬中断、断线仍可能计费、重启需新任务，无 Redis/队列扩展。
+
+## 最终验收
+
+最终完整 CI 与真实 API 评估进行中。P0 的 CI 全绿记录不冒充后续代码的验收。

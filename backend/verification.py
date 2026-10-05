@@ -56,10 +56,17 @@ AGENT_EVIDENCE_RULES = (
 AGENT_GENERATION_RULES = (
     "Each eligibility assessment must cite BOTH the document defining every eligibility condition AND the user "
     "report establishing those conditions in that same claim, even if other claims cite them. "
-    "State in the same assessment that it is conditional on self-reported facts and pending employer confirmation. "
+    "State that an assessment based on personal reports is conditional on those self-reported facts. "
+    "Retain employer confirmation ONLY where the cited policy requires it; do not invent an extra approval condition. "
+    "A general or hypothetical policy question is not a statement about the user's actual employment or actions. "
     "Separate policy requirements from user intentions, capability and completed actions. For required materials "
     "write an explicit normative sentence, e.g. 申請には書類の提出が必要です, not an ambiguous promise such as "
     "書類を提出します. Cite the document rule for a requirement, not the user's willingness to comply. "
+    "Backend policy grounding requires an applicable document citation for every free-form claim. Documents must be "
+    "classified current with no contrary effective dates; archived policy applies only to an explicit historical scope. "
+    "Without applicable document evidence, a calculation claim may ONLY copy its tool metadata.standalone_text "
+    "exactly and cite that tool's exact source text. Do not paraphrase it into eligibility or business permission. "
+    "User input alone never supports company rules. Do not give standalone user-only claims. "
 )
 
 AGENT_VERIFICATION_RULES = (

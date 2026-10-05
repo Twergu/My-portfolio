@@ -29,6 +29,12 @@ class Replay:
 def run(provider):
     inputs = FIXTURE["generator_input"]
     sources = [source | {"number": source["id"]} for source in inputs["sources"]]
+    # Replay's captured generator context omitted internal IDs; add controlled
+    # indexed-document identities for the new provenance gate. Raw fixture stays intact.
+    for source in sources:
+        if source.get("kind") == "document":
+            source.update(document_id="frozen-policy", chunk_id=f"frozen-{source['id']}")
+            source["metadata"] = source.get("metadata", {}) | {"policy_status": "current"}
     return answer_from_sources(
         inputs["question"],
         Settings(mode="api", verification_mode="off"),
@@ -44,11 +50,15 @@ def test_recorded_generator_citation_omission_remains_rejected_without_borrowing
     provider = Replay(FIXTURE["generator_output"], FIXTURE["verifier_output"]["verdicts"])
     response = run(provider)
     assert response["status"] == "unsupported_answer"
-    assert response["support"]["verified_claims"] == 2
+    assert response["support"]["failure_reason"] == "applicable_document_required"
+    assert {f["claim_index"] for f in response["support"]["policy_failures"]} == {2}
     assert response["claims"] == [] and response["sources"] == []
     assert "evaluation_candidate" not in response
-    claims = json.loads(provider.calls[-1][0][-1]["content"])["claims"]
-    assert {p["kind"] for p in claims[1]["cited_passages"]} == {"user"}
+    assert len(provider.calls) == 1  # Rejected even before a permissive semantic verifier could pass it.
+    source_map = {s["id"]: s for s in FIXTURE["generator_input"]["sources"]}
+    assert {source_map[e["source_id"]]["kind"] for e in FIXTURE["generator_output"]["claims"][1]["evidence"]} == {
+        "user"
+    }
     assert json.loads(FIXTURE["generator_input"]["question"])[-1]["responding_to"]
 
 
@@ -77,6 +87,6 @@ def test_japanese_modality_replay_preserves_positive_and_negative_verdicts(row):
     result = run(provider)
     assert (result["status"] == "answered") is row["expected"]
     assert result["support"]["verification_mode"] == "strict"
-    assert len(provider.calls) == 2
+    assert len(provider.calls) == (1 if row["id"] == "missing_document" else 2)
     if not row["expected"]:
         assert not result["claims"] and not result["sources"]

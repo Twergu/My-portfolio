@@ -1,13 +1,17 @@
 """Real store/tool/HTTP contracts; model outputs are controlled, with no network."""
 
 import json
+import threading
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date
 
 import pytest
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
-from backend.agent import AgentContext
+from backend.agent import AgentContext, AgentRunner
+from backend.agent_service import AgentReply, AgentService
 from backend.agent_tools import (
     CalculatorArguments,
     CalendarArguments,
@@ -85,7 +89,7 @@ class Models:
                 "status": "answered",
                 "claims": [
                     {
-                        "text": source["text"],
+                        "text": source.get("metadata", {}).get("standalone_text") or source["text"],
                         "evidence": [
                             {
                                 "source_id": source["id"],
@@ -116,6 +120,7 @@ def seed(store, config, doc_id="visible"):
         [[1.0, 0.0]],
         config.profile,
     )
+    store.set_metadata(doc_id, {"policy_status": "current", "effective_from": "2026-01-01"})
 
 
 @pytest.fixture
@@ -261,6 +266,28 @@ def test_midflight_revocation_stops_before_embedding_and_hides_all_results(api, 
     assert "sources" not in response.json()
 
 
+def test_first_turn_reindex_is_detected_before_next_planner_receives_old_evidence(api, monkeypatch):
+    client, app, models, _ = api
+    models.decisions = [search(), ready("tool_1")]
+    original = AgentRunner._messages
+
+    def reindex_between_steps(runner, state):
+        if state.observations:
+            app.state.knowledge.store.commit_chunks(
+                "visible",
+                [{"page": 2, "ordinal": 0, "text": POLICY}],
+                [[1.0, 0.0]],
+                app.state.knowledge.settings.profile,
+            )
+        return original(runner, state)
+
+    monkeypatch.setattr(AgentRunner, "_messages", reindex_between_steps)
+    response = client.post("/api/agent", json={"question": "Check policy"})
+    assert response.status_code == 409
+    assert [role for role, _ in models.calls] == ["planner", "embedding"]
+    assert not app.state.agent.tasks
+
+
 @pytest.mark.parametrize("supported", [True, False])
 def test_direct_tool_handoff_still_runs_strict_verifier_and_acl(api, supported):
     client, app, models, _ = api
@@ -308,6 +335,100 @@ def test_expiration_cancel_capacity_and_busy_task(api):
     now[0] = 901.0
     assert client.post(f"/api/agent/{task_id}/reply", json={"question": "Reply"}).status_code == 404
     assert not agent.tasks
+
+
+def test_real_concurrent_resume_and_cancel_do_not_execute_twice(api):
+    client, app, models, bob = api
+    models.decisions = [search(), clarify(), ready("tool_1")]
+    task_id = client.post("/api/agent", json={"question": "Check purchase"}).json()["task_id"]
+    started, release = threading.Event(), threading.Event()
+
+    def block_planner():
+        started.set()
+        assert release.wait(10), "Test did not release the worker"
+
+    models.hook = block_planner
+    app.state.agent.max_user_tasks = 1
+    before = len(models.calls)
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        future = pool.submit(client.post, f"/api/agent/{task_id}/reply", json={"question": "1000 JPY"})
+        try:
+            assert started.wait(10)
+            assert client.post(f"/api/agent/{task_id}/reply", json={"question": "duplicate"}).status_code == 409
+            assert client.delete(f"/api/agent/{task_id}").status_code == 409
+            assert client.post("/api/agent", json={"question": "another"}).status_code == 429
+            assert client.delete(f"/api/agent/{task_id}", headers={"Authorization": "Bearer " + bob}).status_code == 404
+            assert len(models.calls) == before + 1  # Only the worker's planner.
+        finally:
+            release.set()
+        assert future.result(timeout=10).json()["status"] == "answered"
+    assert not app.state.agent.tasks
+
+
+def test_expiry_is_absolute_not_extended_by_reply_and_cancel_matches_resume(api):
+    client, app, models, _ = api
+    now = [0.0]
+    app.state.agent.clock = lambda: now[0]
+    models.decisions = [clarify(), clarify(), clarify()]
+    task_id = client.post("/api/agent", json={"question": "Check"}).json()["task_id"]
+    now[0] = 800
+    assert (
+        client.post(f"/api/agent/{task_id}/reply", json={"question": "Still missing amount"}).json()["status"]
+        == "needs_input"
+    )
+    assert app.state.agent.tasks[task_id].expires == 900
+    now[0] = 900
+    assert client.delete(f"/api/agent/{task_id}").status_code == 404
+    assert client.post(f"/api/agent/{task_id}/reply", json={"question": "1000"}).status_code == 404
+    assert not app.state.agent.tasks
+
+
+def test_slow_clarification_cannot_return_an_already_expired_task_handle(api):
+    client, app, models, _ = api
+    now = [0.0]
+    app.state.agent.clock = lambda: now[0]
+    models.decisions = [clarify()]
+    models.hook = lambda: now.__setitem__(0, 901)
+    result = client.post("/api/agent", json={"question": "Check", "language": "ja"}).json()
+    assert result["status"] == "limit_reached" and result["failure_code"] == "task_expired"
+    assert result["task_id"] is None and not result["questions"] and not app.state.agent.tasks
+    assert app.state.knowledge.measurements[-1]["status"] == "limit_reached"
+
+
+def test_process_restart_loses_only_ephemeral_task_not_document(api):
+    client, app, models, _ = api
+    models.decisions = [clarify()]
+    task_id = client.post("/api/agent", json={"question": "Check"}).json()["task_id"]
+    old = app.state.agent
+    principal = app.state.knowledge.store.authenticate(client.headers["Authorization"].removeprefix("Bearer "))
+    restarted = AgentService(app.state.knowledge)
+    with pytest.raises(HTTPException) as error:
+        restarted.run(AgentReply(question="1000"), lambda: principal, task_id=task_id)
+    assert error.value.status_code == 404 and not restarted.tasks
+    assert old.tasks[task_id].owner == principal.id
+    assert app.state.knowledge.store.document("visible")["status"] == "ready"
+
+
+def test_exception_releases_slot_and_global_capacity_applies_to_all_users(api):
+    client, app, models, bob = api
+    app.state.agent.max_tasks = 1
+    models.decisions = [clarify(), clarify()]
+    task_id = client.post("/api/agent", json={"question": "Check"}).json()["task_id"]
+    assert (
+        client.post("/api/agent", json={"question": "Bob task"}, headers={"Authorization": "Bearer " + bob}).status_code
+        == 429
+    )
+    assert client.delete(f"/api/agent/{task_id}").status_code == 200
+
+    def broken():
+        raise RuntimeError("controlled unexpected failure")
+
+    models.hook = broken
+    with pytest.raises(RuntimeError, match="controlled unexpected"):
+        client.post("/api/agent", json={"question": "Check"})
+    assert not app.state.agent.tasks and app.state.knowledge.measurements[-1]["status"] == "error"
+    models.hook = None
+    assert client.post("/api/agent", json={"question": "After failure"}).json()["status"] == "needs_input"
 
 
 @pytest.mark.parametrize(
