@@ -50,4 +50,28 @@ Calendar 保留开始/结束日期、基准日期、时区、首尾包含规则�
 
 最后的[真实 Verifier 回放](../reports/agent-followup/calculation-verifier-replay.json)保留该失败候选的全部原文和证据，仅为后端重新验证过的计算引用加入服务器标记：四条断言全部通过；另设的“计算即公司期限且用户已合规”反例仍被拒绝。`python -m scripts.agent_calculation_replay --live --output <new-path.json>` 可复现，保存原始输入、输出和用量。两个请求分别耗时 8.800 / 2.744 秒，配置单价估算共 USD 0.001640；这只是 Verifier 回放，不能作为整条 Agent 的延迟。此回放包含最终提示修复；24 题、五题和人工校准分别对应先前开发阶段，不能拼成最新版本的一轮全量成功结果。
 
-真实 PostgreSQL/Docker CI 正在进行。工作日日历仍为 Mock；ACL、Citation、Strict 均保留。语义推论、澄清必要性和单位/类别适用性仍依赖模型；缺失引用仍会拒答，人工集也只有八例且不是盲评。既有 24 题属于冻结合成回归集，对“解释条件是否必须追问”的标注边界应另行审核新版本，不能改写旧成绩。
+工作日日历仍为 Mock；ACL、Citation、Strict 均保留。语义推论、澄清必要性和单位/类别适用性仍依赖模型；缺失引用仍会拒答，人工集也只有八例且不是盲评。既有 24 题属于冻结合成回归集，对“解释条件是否必须追问”的标注边界应另行审核新版本，不能改写旧成绩。
+
+## 最终工程验收
+
+应用提交 `467d4471d9654c3398dfb408530401631e5d0ff5` 的 [GitHub Actions](https://github.com/Twergu/My-portfolio/actions/runs/37310074658) 全部成功，下载的 JUnit 与 JSON 已交叉核对：**350 passed、0 failed、0 errors、0 skipped**，其中 **37 项真实 PostgreSQL/pgvector 测试**；前端 15/15 通过，Ruff 与格式检查通过。见[完整测试报告](../reports/agent-followup/ci-final/tests.md)、[数据库逐项清单及 JUnit 摘要](../reports/agent-followup/ci-final/postgres-tests.json)、[运行版本与步骤](../reports/agent-followup/ci-final/provenance.json)。README 引用自动生成报告，不写死测试数量。
+
+Docker Compose 实际完成 App + pgvector 启动、健康检查、PDF 索引/物理页引用和重启持久性，[验收结果](../reports/agent-followup/ci-final/container-persistence.json)已保存。Docker smoke 的 Agent 部分是 local mode API gate，完整 Agent 合同通过受控模型和真实 pgvector 测试；实际模型 API 的单独评估使用 SQLite，不将这些范围混称为一条 live API + PostgreSQL 测试。
+
+CI 同时完成 [SQLite/pgvector 对照](../reports/agent-followup/ci-final/store-benchmark.md)及 [1k/10k/100k Exact/HNSW 基准](../reports/agent-followup/ci-final/vector-scale.md)。这些是合成向量的工程运行核验，本轮未改变索引策略，Exact 继续默认。后续归档提交仅更新说明与报告，不修改上述已测试应用代码。
+
+## 修改文件与复现入口
+
+| 文件 | 修改内容 |
+| --- | --- |
+| `backend/calculations.py`、`agent_tools.py` | 共用十进制运算；工具保留结构化数值、单位、日期和来源 |
+| `backend/agent_grounding.py`、`agent_service.py` | 单位字面出处绑定、固定展示文本/引用、服务器来源校验 |
+| `backend/rag.py`、`verification.py` | 计算引用合同、后端标记、Strict 规则、审批门槛语义、一次有上限的格式修复 |
+| `backend/clarification.py`、`agent.py` | 原始目标与逐轮问答共享、实际缺项和附条件说明规则 |
+| `tests/test_agent_calculations.py`、`test_agent_clarification.py`、`test_agent_human_review.py` | 原始失败回归、伪造输入/越权边界、部分回答、格式修复和人工标签验证 |
+| `scripts/agent_evaluate.py`、`agent_calculation_replay.py` | 可追溯子集选择、原始失败的真实 Verifier 回放 |
+| `scripts/prepare_agent_review.py`、`human_review_report.py`、`agent_human_calibration.py` | 冻结审核包、实际人工意见校验、真实 Verifier 对照 |
+| `evals/agent-human-review-v1*.json`、`docs/agent-human-review-v1.md` | 八例原文、候选、参考答案与实际逐题审核 |
+| `README.md`、`SOURCE_INDEX.md`、`docs/agent-evaluation.md`、`agent-runtime.md` | 实验范围、动态测试报告链接、相对源码路径、复现方法和限制 |
+
+完整原始数据位于 `reports/agent-followup/`；复现命令及 API/单元测试范围见 [Evaluation 协议](agent-evaluation.md)。旧 `reports/agent-hardening/` 和冻结的 24 题、日文回归数据保持不变。

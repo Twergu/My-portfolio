@@ -10,7 +10,18 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 [![CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml/badge.svg?branch=codex%2Frag-quality-v2)](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2)
 
-新增：计算 Claim 使用工具编号引用，由服务器渲染结构化数值/日期及固定引用；澄清共享逐轮问答与政策日期上下文。八例候选已由本对话用户逐题审核，保留[实际标注](evals/agent-human-review-v1.annotations.json)，属于有参考答案的辅助审核。见[本轮修改与验收](docs/agent-followup-report.md)、[人工审核包](docs/agent-human-review-v1.md)。下表保留上一轮冻结基线。
+新增：计算 Claim 使用工具编号引用，由服务器渲染结构化数值/日期及固定引用；澄清共享逐轮问答与政策日期上下文。八例候选已由本对话用户逐题审核，保留[实际标注](evals/agent-human-review-v1.annotations.json)，属于有参考答案的辅助审核。见[本轮修改与验收](docs/agent-followup-report.md)、[人工审核包](docs/agent-human-review-v1.md)。
+
+| 本轮实际 API 验证范围 | 结果与限制 |
+| --- | --- |
+| [24 题完整开发轮](reports/agent-followup/full-live.md)，最后修复之前 | 自动 Task Success 19/24；Correctness 13/18、Grounded 15/18；三个原计算失败场景完成。P50/P95 10.357/20.126 秒，估算 USD 0.002460/task |
+| [格式修复后五题复测](reports/agent-followup/five-cases-final-live.md) | 交付 4/5，四个交付均通过自动正确性/依据检查；冻结 Task Success 仍为 3/5，包含正确直接回答与旧“必须澄清”标签的冲突 |
+| [最终 Strict Verifier 回放](reports/agent-followup/calculation-verifier-replay.json) | 原跨政策失败候选四条断言均通过；计算冒充制度期限/已合规的反例仍拒绝。只复测 Verifier，不是新一轮端到端任务 |
+| [八例人工标签校准](reports/agent-followup/human-verifier-live.md) | 真实 Verifier 与人工一致 7/8；Precision 1.00、Recall 0.75。H05 歧义说明仍误拒；数据参与提示开发，不是盲评或未见测试集 |
+
+这些是不同开发阶段的运行，不能合并为最新版本的全量成绩。自动评分曾接受“审批门槛是绝对上限”的错误，原评分和失败全部保留；费用按配置单价估算，排除索引和离线 Judge。[性能对照](reports/agent-followup/full-comparison.md)显示完整开发轮 P50 下降但成本上升，不能据单次随机运行宣称因果改进。以下 Agent 表格保留上一轮冻结基线。
+
+本轮最终应用版本 `467d447` 的 [CI 全绿](https://github.com/Twergu/My-portfolio/actions/runs/37310074658)：完整 Python/真实 pgvector 测试无失败、错误或跳过，前端与 Ruff 通过，Docker 构建/引用/重启持久性和规模基准完成。具体数量由[测试报告](reports/agent-followup/ci-final/tests.md)和[数据库清单](reports/agent-followup/ci-final/postgres-tests.json)自动记录；[Docker 验收](reports/agent-followup/ci-final/container-persistence.json)标明测试范围。
 
 <!-- AGENT_RESULTS_START -->
 ## Agent 真实评估与运行边界

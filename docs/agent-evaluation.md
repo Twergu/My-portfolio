@@ -26,3 +26,19 @@ python -m scripts.agent_evaluate --live --label baseline --output reports/agent-
 独立 Judge 两次调用分别评估正确性和引用：正确性可见参考答案/必要文档；引用 Judge 只能见候选及其实际引用，不能从 gold 借用缺失证据。两者均看不到运行时 Verifier verdict。自动 Judge 仍可能误判，失败需结合原文审查。
 
 离线脚本记录 Generator Output、Evidence、Verifier Verdict 和所有模型请求文本，只用于虚构数据诊断；不要用该明文诊断脚本处理私有生产数据。测试中的受控返回只验证评分及工程合同，不冒充真实 API 结果。
+
+## 本轮计算与人工校准
+
+`--case` 可重复指定冻结场景，例如 `--case commuter-clarify-ja --case training-clarify-ja`；报告记录选择的 ID 和完整数据集摘要。子集结果不替代全量结果，也不删除未完成、拒答或错误案例。旧的“必须追问”标签继续保留，因此直接给出正确条件说明仍可能被旧任务合同计为失败。
+
+人工集 [agent-human-review-v1](agent-human-review-v1.md) 是另一份八例候选校准集，含故意构造的错误以及原始失败。用户已逐题审核，具体文字保存在 annotations；它不代表上面 24 个端到端任务已获人工审核。创建时的数据集状态保留为 `awaiting_human_review` 以冻结内容摘要，当前状态由签署的 annotations 和审核报告确定。
+
+以下命令均需使用新的输出文件名；带 `--live` 的命令会实际调用 API：
+
+```powershell
+python -m scripts.human_review_report --annotations evals/agent-human-review-v1.annotations.json --output reports/review-new.json
+python -m scripts.agent_human_calibration --live --output reports/verifier-calibration-new.json
+python -m scripts.agent_calculation_replay --live --output reports/calculation-replay-new.json
+```
+
+第二条衡量 Verifier 与八例人工标签的一致性，数据参与了提示开发，不能当作未见测试集。第三条仅回放保留的计算误拒答案及另设的制度推论反例，没有重新调用 Planner/Generator，不能当作新的端到端成功率。两类结果均保存模型原文和用量；具体版本、失败、性能和限制见[本轮修改报告](agent-followup-report.md)。

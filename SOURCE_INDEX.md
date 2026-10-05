@@ -104,6 +104,7 @@
 
 ## 运行与实验脚本
 
+- [scripts/agent_calculation_replay.py](scripts/agent_calculation_replay.py)
 - [scripts/agent_compare.py](scripts/agent_compare.py)
 - [scripts/agent_diagnose.py](scripts/agent_diagnose.py)
 - [scripts/agent_evaluate.py](scripts/agent_evaluate.py)
@@ -166,6 +167,20 @@
 
 报告包含运行时间与验证范围，blocked/skipped 表示尚未实测或未执行。
 
+- [reports/agent-followup/calculation-diagnostics.json](reports/agent-followup/calculation-diagnostics.json)
+- [reports/agent-followup/calculation-verifier-replay.json](reports/agent-followup/calculation-verifier-replay.json)
+- [reports/agent-followup/ci-final/container-persistence.json](reports/agent-followup/ci-final/container-persistence.json)
+- [reports/agent-followup/ci-final/container-smoke.json](reports/agent-followup/ci-final/container-smoke.json)
+- [reports/agent-followup/ci-final/coverage.json](reports/agent-followup/ci-final/coverage.json)
+- [reports/agent-followup/ci-final/frontend-tests.json](reports/agent-followup/ci-final/frontend-tests.json)
+- [reports/agent-followup/ci-final/postgres-tests.json](reports/agent-followup/ci-final/postgres-tests.json)
+- [reports/agent-followup/ci-final/provenance.json](reports/agent-followup/ci-final/provenance.json)
+- [reports/agent-followup/ci-final/store-benchmark.json](reports/agent-followup/ci-final/store-benchmark.json)
+- [reports/agent-followup/ci-final/store-benchmark.md](reports/agent-followup/ci-final/store-benchmark.md)
+- [reports/agent-followup/ci-final/tests.json](reports/agent-followup/ci-final/tests.json)
+- [reports/agent-followup/ci-final/tests.md](reports/agent-followup/ci-final/tests.md)
+- [reports/agent-followup/ci-final/vector-scale.json](reports/agent-followup/ci-final/vector-scale.json)
+- [reports/agent-followup/ci-final/vector-scale.md](reports/agent-followup/ci-final/vector-scale.md)
 - [reports/agent-followup/five-cases-final-live.json](reports/agent-followup/five-cases-final-live.json)
 - [reports/agent-followup/five-cases-final-live.md](reports/agent-followup/five-cases-final-live.md)
 - [reports/agent-followup/five-cases-live.json](reports/agent-followup/five-cases-live.json)
