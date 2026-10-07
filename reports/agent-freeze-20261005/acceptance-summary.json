@@ -1,0 +1,446 @@
+{
+  "recorded_at": "2026-10-05T13:13:01.066265+00:00",
+  "git_head_evaluated": "9af3637b0853d638f972580786ed1decc9383e49",
+  "raw_report": "evaluation-live.json",
+  "raw_report_sha256": "d38530172cacabd3cdbd4041853824c7e27a3cc355a607db1c22b4be3442cf9c",
+  "scope": "One complete frozen 24-task acceptance run. No prompt/code/data changes, relabeling or failed-case reruns. Automatic scores retained; not a held-out or human-reviewed benchmark.",
+  "summary": {
+    "completed": 24,
+    "expected": 24,
+    "complete": true,
+    "task_success": 0.75,
+    "planning_success": 0.9166666666666666,
+    "tool_selection_accuracy": 0.9166666666666666,
+    "clarification_accuracy": 1,
+    "answer_correctness": 0.7222222222222222,
+    "grounded_answer_rate": 0.7222222222222222,
+    "grounded_rate_among_delivered": 1,
+    "answerable_tasks": 18,
+    "delivered_answers": 13,
+    "tool_calls": 29,
+    "tool_calls_per_task": 1.2083333333333333,
+    "planner_calls_per_task": 2.2083333333333335,
+    "duplicate_calls": 0,
+    "latency_ms": {
+      "count": 24,
+      "mean": 13139.78475,
+      "p50": 12189.028,
+      "p95": 24921.773050000003
+    },
+    "phase_latency_ms": {
+      "agent_planning": {
+        "count": 24,
+        "mean": 4713.009708333333,
+        "p50": 4272.778,
+        "p95": 9057.810200000004
+      },
+      "agent_tool_knowledge_search": {
+        "count": 24,
+        "mean": 196.97616666666667,
+        "p50": 166.537,
+        "p95": 417.2006500000001
+      },
+      "agent_tool_calendar": {
+        "count": 24,
+        "mean": 0.7381666666666666,
+        "p50": 0.0,
+        "p95": 5.6356
+      },
+      "agent_tool_calculator": {
+        "count": 24,
+        "mean": 1.1755,
+        "p50": 0.0,
+        "p95": 5.6834999999999996
+      },
+      "generation": {
+        "count": 24,
+        "mean": 4990.698208333333,
+        "p50": 4137.675,
+        "p95": 11080.066150000002
+      },
+      "verification": {
+        "count": 24,
+        "mean": 3217.724,
+        "p50": 3158.0195,
+        "p95": 8400.061900000002
+      }
+    },
+    "cost_per_task_usd": 0.0025793891666666667,
+    "known_cost_usd": 0.06190534,
+    "unknown_cost_tasks": 0,
+    "token_usage": {
+      "input_tokens": 184020,
+      "output_tokens": 20905,
+      "embedding_tokens": 767,
+      "total_tokens": 205692
+    },
+    "statuses": {
+      "unsupported_answer": 4,
+      "answered": 13,
+      "needs_input": 1,
+      "unavailable": 5,
+      "insufficient_evidence": 1
+    }
+  },
+  "counts": {
+    "task_success": 18,
+    "planning_success": 22,
+    "tool_selection_accuracy": 22,
+    "clarification_accuracy": 24,
+    "answer_correct": 13,
+    "grounded_answer": 13
+  },
+  "raw_chat_calls_by_role": {
+    "planner": 48,
+    "generator": 20,
+    "verifier": 16,
+    "judge": 26
+  },
+  "trace_planner_event_count": 53,
+  "planner_count_note": "Frozen scorer counts 53 planning trace events, while raw model records contain 48 planner calls; unavailable can emit two same-named trace events. Scores/evaluator unchanged. Actual calls: 2.0/task; trace metric: 2.208333/task.",
+  "ledger": {
+    "application": {
+      "cost_usd": 0.06190534,
+      "known_cost_usd": 0.06190534,
+      "tokens": {
+        "embedding_tokens": 767,
+        "input_tokens": 184020,
+        "output_tokens": 20905,
+        "total_tokens": 205692
+      },
+      "attempts": 105,
+      "http_retries": 0,
+      "usage_complete": true,
+      "validation_failures": [
+        {
+          "role": "generator",
+          "code": "invalid_schema",
+          "repair_attempted": true
+        }
+      ],
+      "provider_failed_attempts": []
+    },
+    "offline_judge": {
+      "cost_usd": 0.067876,
+      "known_cost_usd": 0.067876,
+      "tokens": {
+        "embedding_tokens": 0,
+        "input_tokens": 21414,
+        "output_tokens": 3131,
+        "total_tokens": 24545
+      },
+      "attempts": 26,
+      "http_retries": 0,
+      "usage_complete": true,
+      "validation_failures": [],
+      "provider_failed_attempts": []
+    },
+    "indexing": {
+      "cost_usd": 1.148e-05,
+      "known_cost_usd": 1.148e-05,
+      "tokens": {
+        "embedding_tokens": 574,
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "total_tokens": 574
+      },
+      "attempts": 1,
+      "http_retries": 0,
+      "usage_complete": true,
+      "validation_failures": [],
+      "provider_failed_attempts": []
+    }
+  },
+  "total_estimated_cost_usd": 0.12979282,
+  "cost_basis": "Configured uniform per-million-token prices, not reconciled billing. Application cost/task excludes indexing and independent Judge.",
+  "failed_cases": [
+    {
+      "id": "purchase-limit-zh",
+      "scores": {
+        "planning_success": true,
+        "tool_selection_accuracy": true,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": false,
+        "grounded_answer": false,
+        "delivered": false,
+        "tool_calls": 1,
+        "planner_calls": 2,
+        "duplicate_calls": 0,
+        "used_tools": [
+          "knowledge_search"
+        ],
+        "final_status": "unsupported_answer"
+      },
+      "finding": "Generator 再次把审批门槛断言为绝对单笔上限；Verifier 拒绝 Claim 1，3/4 支持。该拦截符合已确认的政策解释，但任务仍按原规则失败。",
+      "support": {
+        "method": "quote_match_and_model_entailment",
+        "total_claims": 4,
+        "verified_claims": 3,
+        "all_supported": false,
+        "semantic_supported_claims": 3,
+        "semantic_checked_claims": 4,
+        "skipped_claim_indices": [],
+        "verification_strategy": "all",
+        "verifier_model": "gpt-5.6-luna",
+        "failure_reason": "unsupported_claim",
+        "verdicts": [
+          {
+            "claim_index": 1,
+            "supported": false,
+            "reason": "来源将5000日元表述为每单金额的审批分界，并明确超过5000日元的订单在采购前可通过采购部门审批；因此不能将其断言为绝对的每单金额上限。"
+          },
+          {
+            "claim_index": 2,
+            "supported": true,
+            "reason": "现行PROC-26政策明确规定，超过5000日元的订单在采购前需要采购审批，支持5000日元作为审批分界的表述。"
+          },
+          {
+            "claim_index": 3,
+            "supported": true,
+            "reason": "政策明确要求采购前提供收据并取得经理确认。"
+          },
+          {
+            "claim_index": 4,
+            "supported": true,
+            "reason": "政策明确禁止通过拆分订单来规避该金额限制，且该限制对应5000日元分界。"
+          }
+        ],
+        "verification_mode": "strict"
+      },
+      "questions_by_turn": [
+        []
+      ],
+      "model_call_range": [
+        0,
+        4
+      ]
+    },
+    {
+      "id": "commuter-clarify-ja",
+      "scores": {
+        "planning_success": true,
+        "tool_selection_accuracy": true,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": false,
+        "grounded_answer": false,
+        "delivered": false,
+        "tool_calls": 1,
+        "planner_calls": 3,
+        "duplicate_calls": 0,
+        "used_tools": [
+          "knowledge_search"
+        ],
+        "final_status": "unsupported_answer"
+      },
+      "finding": "澄清/续接完成；Verifier 认为基于自述断言勤務日数条件已满足证据不足，拒绝 Claim 1，2/3 支持。另发生一次既有的有上限格式修复。记录原判定，不将本次新候选视为已获人工裁决。",
+      "support": {
+        "method": "quote_match_and_model_entailment",
+        "total_claims": 3,
+        "verified_claims": 2,
+        "all_supported": false,
+        "semantic_supported_claims": 2,
+        "semantic_checked_claims": 3,
+        "skipped_claim_indices": [],
+        "verification_strategy": "all",
+        "verifier_model": "gpt-5.6-luna",
+        "failure_reason": "unsupported_claim",
+        "verdicts": [
+          {
+            "claim_index": 1,
+            "supported": false,
+            "reason": "制度上の申請条件（フルタイム従業員、契約者を除外、週3日以上のオンサイト勤務）は文書により裏付けられています。また、雇用区分が未確認という指摘も妥当です。ただし、週3日出社は自己申告に基づくもので、文書は自己申告だけでは承認を確定できないとしているため、「勤務日数の条件は満たします」と断定する部分は裏付けが不十分です。"
+          },
+          {
+            "claim_index": 2,
+            "supported": true,
+            "reason": "現行ポリシーは、申請に必要な書類として雇用形態申告書と出社勤務スケジュールを明記しています。"
+          },
+          {
+            "claim_index": 3,
+            "supported": true,
+            "reason": "現行ポリシーは、資格が雇用主の確認を前提とし、雇用状況や出勤状況の自己申告だけでは承認を確定できないと明記しています。"
+          }
+        ],
+        "verification_mode": "strict"
+      },
+      "questions_by_turn": [
+        [
+          "雇用区分はフルタイム従業員ですか、それとも契約者ですか？",
+          "オンサイト勤務は週に何日ですか？"
+        ],
+        []
+      ],
+      "model_call_range": [
+        45,
+        52
+      ]
+    },
+    {
+      "id": "remote-clarify-zh",
+      "scores": {
+        "planning_success": false,
+        "tool_selection_accuracy": false,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": false,
+        "grounded_answer": false,
+        "delivered": false,
+        "tool_calls": 0,
+        "planner_calls": 2,
+        "duplicate_calls": 0,
+        "used_tools": [],
+        "final_status": "needs_input"
+      },
+      "finding": "固定回复提供了试用期和每周一天，Agent 继续询问员工类别，未检索、未完成；保留原回复和评分，不追加用户信息。",
+      "support": null,
+      "questions_by_turn": [
+        [
+          "您的员工类别是什么（例如正式员工、合同工、派遣员工等）？",
+          "您计划每周远程办公几天？"
+        ],
+        [
+          "您的员工类别是什么（例如正式员工、合同工、派遣员工等）？"
+        ]
+      ],
+      "model_call_range": [
+        59,
+        61
+      ]
+    },
+    {
+      "id": "training-clarify-ja",
+      "scores": {
+        "planning_success": true,
+        "tool_selection_accuracy": true,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": false,
+        "grounded_answer": false,
+        "delivered": false,
+        "tool_calls": 2,
+        "planner_calls": 3,
+        "duplicate_calls": 0,
+        "used_tools": [
+          "calculator",
+          "knowledge_search"
+        ],
+        "final_status": "unsupported_answer"
+      },
+      "finding": "结构化计算引用存在，但 Claim 4 仅复述用户自述并只引用 User Input；后端 applicable_document_required 门槛拦截整答，未进入语义 Verifier。不能把此失败计为计算结果或 Verifier 误判。",
+      "support": {
+        "method": "deterministic_evidence_provenance",
+        "failure_reason": "applicable_document_required",
+        "total_claims": 4,
+        "verified_claims": 0,
+        "all_supported": false,
+        "policy_failures": [
+          {
+            "claim_index": 4,
+            "code": "applicable_document_required"
+          }
+        ],
+        "verification_mode": "strict"
+      },
+      "questions_by_turn": [
+        [
+          "研修料金はいくらですか？通貨もあわせて教えてください。"
+        ],
+        []
+      ],
+      "model_call_range": [
+        61,
+        65
+      ]
+    },
+    {
+      "id": "leave-mock-window-zh",
+      "scores": {
+        "planning_success": true,
+        "tool_selection_accuracy": true,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": false,
+        "grounded_answer": false,
+        "delivered": false,
+        "tool_calls": 2,
+        "planner_calls": 2,
+        "duplicate_calls": 0,
+        "used_tools": [
+          "calendar",
+          "knowledge_search"
+        ],
+        "final_status": "unsupported_answer"
+      },
+      "finding": "服务器日历计算 Claim 已获支持；Verifier 拒绝 Claim 3 中 Mock 日历不能确定许可的说法，认为所引政策未直接说明 permission，2/3 支持。原 verdict 和得分保留。",
+      "support": {
+        "method": "quote_match_and_model_entailment",
+        "total_claims": 3,
+        "verified_claims": 2,
+        "all_supported": false,
+        "semantic_supported_claims": 2,
+        "semantic_checked_claims": 3,
+        "skipped_claim_indices": [],
+        "verification_strategy": "all",
+        "verifier_model": "gpt-5.6-luna",
+        "failure_reason": "unsupported_claim",
+        "verdicts": [
+          {
+            "claim_index": 1,
+            "supported": true,
+            "reason": "The cited tool result explicitly gives 3 calendar days and 3 working days from 2026-10-05 through 2026-10-07 inclusive under a mock Monday-Friday calendar, and explicitly states that this does not establish availability, entitlement, or approval."
+          },
+          {
+            "claim_index": 2,
+            "supported": true,
+            "reason": "The current LEAVE-26 policy explicitly requires a leave request form and manager approval before the absence for planned leave."
+          },
+          {
+            "claim_index": 3,
+            "supported": false,
+            "reason": "The cited policy supports that a mock calendar cannot establish official leave days or entitlement, but it does not state that the mock calendar cannot determine permission. The claim therefore includes an unsupported assertion."
+          }
+        ],
+        "verification_mode": "strict"
+      },
+      "questions_by_turn": [
+        []
+      ],
+      "model_call_range": [
+        89,
+        93
+      ]
+    },
+    {
+      "id": "unavailable-grant-zh",
+      "scores": {
+        "planning_success": false,
+        "tool_selection_accuracy": false,
+        "clarification_accuracy": true,
+        "task_success": false,
+        "answer_correct": null,
+        "grounded_answer": null,
+        "delivered": false,
+        "tool_calls": 1,
+        "planner_calls": 3,
+        "duplicate_calls": 0,
+        "used_tools": [
+          "knowledge_search"
+        ],
+        "final_status": "unavailable"
+      },
+      "finding": "最终正确返回缺少写工具的 unavailable，但先调用了 Knowledge Search；冻结合同 allowed_tools=[]，因此工具选择/规划/任务均失败。没有授予权限。",
+      "support": null,
+      "questions_by_turn": [
+        []
+      ],
+      "model_call_range": [
+        102,
+        104
+      ]
+    }
+  ],
+  "case_exception_count": 0,
+  "chat_exception_count": 0
+}

@@ -10,6 +10,8 @@ ROOT_FILES = [
     "README.md",
     "SOURCE_INDEX.md",
     ".env.example",
+    ".env.demo.example",
+    "SECURITY.md",
     ".gitignore",
     ".gitattributes",
     "run.py",
@@ -21,6 +23,7 @@ ROOT_FILES = [
     "pyproject.toml",
     "Dockerfile",
     "compose.yaml",
+    "compose.demo.yaml",
     ".dockerignore",
 ]
 GROUPS = [
@@ -33,6 +36,7 @@ GROUPS = [
     ("架构与修改说明", "docs"),
     ("示例 PDF", "samples"),
     ("持续集成", ".github"),
+    ("部署配置", "deploy"),
 ]
 
 

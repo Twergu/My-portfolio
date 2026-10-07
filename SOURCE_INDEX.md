@@ -9,9 +9,11 @@
 ## 说明、配置与启动
 
 - [.dockerignore](.dockerignore)
+- [.env.demo.example](.env.demo.example)
 - [.env.example](.env.example)
 - [.gitattributes](.gitattributes)
 - [.gitignore](.gitignore)
+- [compose.demo.yaml](compose.demo.yaml)
 - [compose.yaml](compose.yaml)
 - [Dockerfile](Dockerfile)
 - [pyproject.toml](pyproject.toml)
@@ -21,6 +23,7 @@
 - [requirements-lock.txt](requirements-lock.txt)
 - [requirements.txt](requirements.txt)
 - [run.py](run.py)
+- [SECURITY.md](SECURITY.md)
 - [SOURCE_INDEX.md](SOURCE_INDEX.md)
 - [start.ps1](start.ps1)
 
@@ -43,6 +46,7 @@
 - [backend/calculations.py](backend/calculations.py)
 - [backend/clarification.py](backend/clarification.py)
 - [backend/config.py](backend/config.py)
+- [backend/demo_security.py](backend/demo_security.py)
 - [backend/governance.py](backend/governance.py)
 - [backend/lexical.py](backend/lexical.py)
 - [backend/main.py](backend/main.py)
@@ -60,6 +64,7 @@
 
 - [tests/conftest.py](tests/conftest.py)
 - [tests/frontend/agent.test.cjs](tests/frontend/agent.test.cjs)
+- [tests/frontend/demo.test.cjs](tests/frontend/demo.test.cjs)
 - [tests/test_access.py](tests/test_access.py)
 - [tests/test_agent.py](tests/test_agent.py)
 - [tests/test_agent_calculations.py](tests/test_agent_calculations.py)
@@ -71,12 +76,14 @@
 - [tests/test_agent_policy_grounding.py](tests/test_agent_policy_grounding.py)
 - [tests/test_challenge.py](tests/test_challenge.py)
 - [tests/test_checkpoint.py](tests/test_checkpoint.py)
+- [tests/test_demo_security.py](tests/test_demo_security.py)
 - [tests/test_evaluation.py](tests/test_evaluation.py)
 - [tests/test_grounding.py](tests/test_grounding.py)
 - [tests/test_migration_access.py](tests/test_migration_access.py)
 - [tests/test_observability.py](tests/test_observability.py)
 - [tests/test_pipeline.py](tests/test_pipeline.py)
 - [tests/test_providers.py](tests/test_providers.py)
+- [tests/test_release_check.py](tests/test_release_check.py)
 - [tests/test_retrieval.py](tests/test_retrieval.py)
 - [tests/test_search_policy.py](tests/test_search_policy.py)
 - [tests/test_stores.py](tests/test_stores.py)
@@ -123,6 +130,7 @@
 - [scripts/checkpoint.py](scripts/checkpoint.py)
 - [scripts/chunk_experiment.py](scripts/chunk_experiment.py)
 - [scripts/container_smoke.py](scripts/container_smoke.py)
+- [scripts/demo_smoke.py](scripts/demo_smoke.py)
 - [scripts/evaluate.py](scripts/evaluate.py)
 - [scripts/human_review_report.py](scripts/human_review_report.py)
 - [scripts/init_database_password.py](scripts/init_database_password.py)
@@ -130,6 +138,8 @@
 - [scripts/manage_access.py](scripts/manage_access.py)
 - [scripts/migrate_sqlite.py](scripts/migrate_sqlite.py)
 - [scripts/prepare_agent_review.py](scripts/prepare_agent_review.py)
+- [scripts/prepare_demo.py](scripts/prepare_demo.py)
+- [scripts/release_check.py](scripts/release_check.py)
 - [scripts/results_summary.py](scripts/results_summary.py)
 - [scripts/retrieval_experiment.py](scripts/retrieval_experiment.py)
 - [scripts/source_index.py](scripts/source_index.py)
@@ -152,7 +162,10 @@
 - [docs/agent-stage3.md](docs/agent-stage3.md)
 - [docs/architecture.md](docs/architecture.md)
 - [docs/change-report.md](docs/change-report.md)
+- [docs/demo-walkthrough.md](docs/demo-walkthrough.md)
 - [docs/optimization-report.md](docs/optimization-report.md)
+- [docs/portfolio-sharing-report.md](docs/portfolio-sharing-report.md)
+- [docs/portfolio-sharing.md](docs/portfolio-sharing.md)
 - [docs/retrieval-optimization-report.md](docs/retrieval-optimization-report.md)
 
 ## 示例 PDF
@@ -162,6 +175,10 @@
 ## 持续集成
 
 - [.github/workflows/ci.yml](.github/workflows/ci.yml)
+
+## 部署配置
+
+- [deploy/Caddyfile](deploy/Caddyfile)
 
 ## 实际运行报告
 
@@ -195,6 +212,14 @@
 - [reports/agent-followup/human-review-pending.md](reports/agent-followup/human-review-pending.md)
 - [reports/agent-followup/human-verifier-live.json](reports/agent-followup/human-verifier-live.json)
 - [reports/agent-followup/human-verifier-live.md](reports/agent-followup/human-verifier-live.md)
+- [reports/agent-freeze-20261005/acceptance-summary.json](reports/agent-freeze-20261005/acceptance-summary.json)
+- [reports/agent-freeze-20261005/acceptance.md](reports/agent-freeze-20261005/acceptance.md)
+- [reports/agent-freeze-20261005/comparison.json](reports/agent-freeze-20261005/comparison.json)
+- [reports/agent-freeze-20261005/comparison.md](reports/agent-freeze-20261005/comparison.md)
+- [reports/agent-freeze-20261005/evaluation-live.json](reports/agent-freeze-20261005/evaluation-live.json)
+- [reports/agent-freeze-20261005/evaluation-live.md](reports/agent-freeze-20261005/evaluation-live.md)
+- [reports/agent-freeze-20261005/freeze-manifest.json](reports/agent-freeze-20261005/freeze-manifest.json)
+- [reports/agent-freeze-20261005/integrity-check.json](reports/agent-freeze-20261005/integrity-check.json)
 - [reports/agent-hardening/ci-final/container-persistence.json](reports/agent-hardening/ci-final/container-persistence.json)
 - [reports/agent-hardening/ci-final/container-smoke.json](reports/agent-hardening/ci-final/container-smoke.json)
 - [reports/agent-hardening/ci-final/coverage.json](reports/agent-hardening/ci-final/coverage.json)

@@ -25,6 +25,7 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from .agent_service import install_agent_routes
 from .config import DATA_DIR, ROOT, Settings, environment_settings
+from .demo_security import DemoGuard, DemoLimit, DemoProvider, allowed_hosts
 from .governance import LOCAL_ADMIN, DocumentMetadata, RetrievalFilters
 from .providers import ModelError, OpenAICompatibleProvider
 from .rag import answer, chunks_from_pages, embed
@@ -39,13 +40,14 @@ log = logging.getLogger("knowbase")
 class BodyLimitMiddleware:
     """Bound actual streamed input before the multipart parser creates temporary files."""
 
-    def __init__(self, app):
+    def __init__(self, app, demo=False):
         self.app = app
+        self.demo = demo
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http" or scope["method"] not in ("POST", "PUT", "PATCH"):
             return await self.app(scope, receive, send)
-        limit = MAX_BYTES + 1024 * 1024 if scope["path"] == "/api/documents" else 65536
+        limit = MAX_BYTES + 1024 * 1024 if scope["path"] == "/api/documents" and not self.demo else 65536
         buffered = deque()
         total = 0
         while True:
@@ -296,7 +298,24 @@ class KnowledgeService:
 
 
 def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
+    auth_mode = os.getenv("RAG_AUTH_MODE", "local")
+    demo = os.getenv("RAG_DEMO_MODE", "0") == "1"
+    if auth_mode not in ("local", "required"):
+        raise ValueError("RAG_AUTH_MODE must be local or required")
+    if demo and auth_mode != "required":
+        raise ValueError("Demo requires RAG_AUTH_MODE=required")
+    hosts = allowed_hosts()
+    guard = None
+    if demo:
+        Path(data_dir).mkdir(parents=True, exist_ok=True)
+        guard = DemoGuard(Path(data_dir))
+        if provider is not None:
+            raise ValueError("Demo must use the budgeted DemoProvider")
+        provider = DemoProvider(guard)
     service = KnowledgeService(Path(data_dir), database_url=database_url, provider=provider)
+    if demo and (service.settings.verification_mode != "strict" or service.settings.verification_strategy != "all"):
+        service.close()
+        raise ValueError("Demo requires strict verification of all claims")
 
     @asynccontextmanager
     async def lifespan(app):
@@ -312,12 +331,9 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
         lifespan=lifespan,
     )
     app.state.knowledge = service
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "[::1]", "testserver"])
-    app.add_middleware(BodyLimitMiddleware)
-
-    auth_mode = os.getenv("RAG_AUTH_MODE", "local")
-    if auth_mode not in ("local", "required"):
-        raise ValueError("RAG_AUTH_MODE must be local or required")
+    app.state.demo_guard = guard
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
+    app.add_middleware(BodyLimitMiddleware, demo=demo)
 
     def identify(request):
         if auth_mode == "local":
@@ -333,10 +349,30 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
             return await call_next(request)
         principal = await anyio.to_thread.run_sync(identify, request)
         request.state.principal = principal
+        if guard and path == "/api/auth/login" and request.method == "POST":
+            try:
+                guard.login_attempt(request.client.host if request.client else "unknown")
+            except DemoLimit as exc:
+                return JSONResponse({"detail": str(exc), "code": exc.code}, status_code=429)
         if path in ("/api/health", "/api/auth/status", "/api/auth/login", "/api/auth/logout"):
             return await call_next(request)
         if principal is None:
             return JSONResponse({"detail": "Authentication required"}, status_code=401)
+        if guard:
+            inference = request.method == "POST" and (
+                path in ("/api/chat", "/api/agent") or re.fullmatch(r"/api/agent/[^/]+/reply", path)
+            )
+            cancel = request.method == "DELETE" and re.fullmatch(r"/api/agent/[^/]+", path)
+            if (request.method not in ("GET", "HEAD", "OPTIONS") and not inference and not cancel) or (
+                path.startswith("/api/admin/") or path == "/api/metrics" or path.endswith("/permissions")
+            ):
+                return JSONResponse({"detail": "Portfolio demo is read-only"}, status_code=403)
+            if inference:
+                try:
+                    with guard.slot(principal.id, request.client.host if request.client else "unknown"):
+                        return await call_next(request)
+                except DemoLimit as exc:
+                    return JSONResponse({"detail": str(exc), "code": exc.code}, status_code=429)
         admin_only = (
             path.startswith("/api/admin/")
             or path == "/api/metrics"
@@ -367,7 +403,7 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
     @app.get("/api/auth/status")
     def auth_status(request: Request):
         principal = request.state.principal
-        return {"mode": auth_mode, "user": principal.model_dump() if principal else None}
+        return {"mode": auth_mode, "user": principal.model_dump() if principal else None, "demo": demo}
 
     @app.post("/api/auth/login")
     def login(candidate: LoginInput, request: Request):
@@ -414,6 +450,14 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
 
     @app.middleware("http")
     async def local_origin(request: Request, call_next):
+        if guard and request.url.scheme != "https" and request.url.path != "/api/health":
+            return JSONResponse({"detail": "Demo requires HTTPS"}, status_code=400)
+        if (
+            guard
+            and request.headers.get("content-length", "").isdigit()
+            and int(request.headers["content-length"]) > 65536
+        ):
+            return JSONResponse({"detail": "Demo request too large"}, status_code=413)
         origin = request.headers.get("origin")
         if request.method not in ("GET", "HEAD", "OPTIONS"):
             expected = f"{request.url.scheme}://{request.headers.get('host', '')}"
@@ -425,6 +469,8 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"
         if request.url.path.startswith("/api/"):
             response.headers["Cache-Control"] = "no-store"
         return response
@@ -438,7 +484,8 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
 
     @app.exception_handler(ModelError)
     async def model_error(request, exc):
-        return JSONResponse({"detail": str(exc)}, status_code=502)
+        status = 429 if exc.code == "demo_budget" else 502
+        return JSONResponse({"detail": str(exc)}, status_code=status)
 
     @app.get("/api/health")
     def health():
@@ -497,7 +544,9 @@ def create_app(data_dir=DATA_DIR, database_url=None, provider=None):
         allowed = set(service.store.allowed_document_ids(request.state.principal))
         writable = set(service.store.allowed_document_ids(request.state.principal, write=True))
         return {
-            "documents": [d | {"can_write": d["id"] in writable} for d in service.documents() if d["id"] in allowed]
+            "documents": [
+                d | {"can_write": not demo and d["id"] in writable} for d in service.documents() if d["id"] in allowed
+            ]
         }
 
     @app.post("/api/documents", status_code=202)

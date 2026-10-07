@@ -1,0 +1,14 @@
+{$RAG_DEMO_DOMAIN} {
+    request_body {
+        max_size 64KB
+    }
+    header {
+        Strict-Transport-Security "max-age=31536000"
+        -Server
+    }
+    reverse_proxy app:8000 {
+        # Trust only this direct proxy, not client-supplied forwarded identities.
+        header_up X-Forwarded-For {http.request.remote.host}
+        header_up X-Forwarded-Proto {http.request.scheme}
+    }
+}

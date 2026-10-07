@@ -1,0 +1,60 @@
+# Standalone: docker compose --env-file .env.demo -f compose.demo.yaml up --build -d --wait
+name: knowbase-demo
+services:
+  init-db:
+    extends: {file: compose.yaml, service: init-db}
+  db:
+    extends: {file: compose.yaml, service: db}
+  app:
+    extends: {file: compose.yaml, service: app}
+    command: ["python", "-m", "uvicorn", "backend.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--proxy-headers", "--forwarded-allow-ips=${RAG_PROXY_IP:-172.30.48.2}"]
+    environment:
+      RAG_DEMO_MODE: '1'
+      RAG_AUTH_MODE: required
+      RAG_ALLOWED_HOSTS: "${RAG_DEMO_DOMAIN:?Set RAG_DEMO_DOMAIN},127.0.0.1,localhost"
+      RAG_VERIFICATION_MODE: strict
+      RAG_VERIFICATION_STRATEGY: all
+      RAG_RETRIEVAL_MODE: hybrid
+      RAG_SEARCH_MODE: exact
+      RAG_DEMO_DAILY_USD: ${RAG_DEMO_DAILY_USD:-1}
+      RAG_DEMO_USER_DAILY: ${RAG_DEMO_USER_DAILY:-20}
+      RAG_DEMO_GLOBAL_DAILY: ${RAG_DEMO_GLOBAL_DAILY:-100}
+      RAG_DEMO_IP_MINUTE: ${RAG_DEMO_IP_MINUTE:-10}
+      RAG_DEMO_CONCURRENT: ${RAG_DEMO_CONCURRENT:-2}
+      RAG_DEMO_OUTPUT_TOKENS: ${RAG_DEMO_OUTPUT_TOKENS:-4096}
+      RAG_DEMO_INPUT_BYTES: ${RAG_DEMO_INPUT_BYTES:-60000}
+    networks: [default, proxy]
+    mem_limit: 1g
+    cpus: 1.5
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+  proxy:
+    image: caddy:2.11.7-alpine
+    ports: ["${RAG_HTTP_PORT:-80}:80", "${RAG_HTTPS_PORT:-443}:443"]
+    environment:
+      RAG_DEMO_DOMAIN: ${RAG_DEMO_DOMAIN:?Set RAG_DEMO_DOMAIN}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      proxy:
+        ipv4_address: ${RAG_PROXY_IP:-172.30.48.2}
+    depends_on:
+      app: {condition: service_healthy}
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+volumes:
+  postgres_data:
+  app_data:
+  database_secrets:
+  caddy_data:
+  caddy_config:
+networks:
+  proxy:
+    ipam:
+      config: [{subnet: "${RAG_PROXY_SUBNET:-172.30.48.0/24}"}]

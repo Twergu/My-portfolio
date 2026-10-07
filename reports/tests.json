@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-05T07:14:05.109064+00:00",
+  "generated_at": "2026-10-07T11:25:15.054079+00:00",
   "exit_code": 0,
   "status": "passed",
-  "total": 350,
-  "passed": 313,
+  "total": 371,
+  "passed": 332,
   "failed": 0,
   "errors": 0,
-  "skipped": 37,
-  "source_sha256": "ed59c9f3b8837ab0bf2eab0e6e206a0c642158710cf7a4badd08a7829f91e4e6",
+  "skipped": 39,
+  "source_sha256": "367ecf7b19a2e4a372de1e14dd5e7a92a6879a3e6b69c97308b95db2b6bc8a9b",
   "python": "3.12.14",
   "source": "test-results/junit.xml",
   "command": "python -m scripts.check"

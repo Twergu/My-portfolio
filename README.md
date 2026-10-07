@@ -2,6 +2,26 @@
 
 PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid Retrieval → 可选 Reranker → 结构化回答 → 断言依据校验 → 物理页引用。中日双语界面、共享 OpenAI 兼容 Provider、PostgreSQL + pgvector、真实评估和 Docker Compose。
 
+**快速浏览：** [两分钟演示路线与截图](docs/demo-walkthrough.md) · [安全分享 / Docker + HTTPS 部署](docs/portfolio-sharing.md) · [24 题冻结结果与六个失败](reports/agent-freeze-20261005/acceptance.md) · [本次部署修改报告](docs/portfolio-sharing-report.md)。当前提供可部署版本，尚无公开在线 Demo。默认分支未合并时请浏览 `codex/rag-quality-v2`。
+
+![Knowbase Agent — 历史真实界面截图](reports/agent-stage3/agent-home.jpg)
+
+```mermaid
+flowchart LR
+  U[登录用户] --> H[HTTPS / 配额]
+  H --> A[身份与 ACL]
+  A --> R[RAG / 只读 Agent]
+  R --> K[权限及版本过滤 → Hybrid Retrieval]
+  K --> P[(PostgreSQL + pgvector)]
+  R --> T[Calculator / Mock Calendar]
+  K --> G[结构化 Generator]
+  T --> G
+  G --> V[后端证据约束 + Strict Verifier]
+  V --> O[回答 / 澄清 / 拒答 + 引用]
+```
+
+对外 Demo 单独启用只读账号、每用户/IP/全站请求限制、单进程并发限制、持久化费用预留与 HTTPS；普通本地运行保持原行为。冻结 API 指标对应 `9af3637`，新增部署守卫的验证范围单独记录，不据此重新调 Prompt 或改写成绩。
+
 查看 [全部源文件](SOURCE_INDEX.md)、[本轮 12 项检索与权限优化](docs/retrieval-optimization-report.md)、[上轮 17 项优化记录](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
 业务 Agent 支持任务规划、权限内知识检索、日期/计算工具、多轮澄清及严格证据校验；聊天页可切换“知识问答 / 业务 Agent”。已增加日文失败回归、24 场景真实评估、阶段耗时、确定性 Policy Claim 约束与单进程状态验证，详见 [Modification Report](docs/agent-hardening-report.md)。工作日日历仍是明确标注的 Mock；历史失败和[第三阶段浏览器联调](docs/agent-stage3.md)、[第二阶段工具验收](docs/agent-stage2.md)、[第一阶段编排](docs/agent-stage1.md)均保留。
@@ -14,12 +34,13 @@ PDF 上传 → 逐页解析 → Embedding → 权限与版本范围 → Hybrid R
 
 | 本轮实际 API 验证范围 | 结果与限制 |
 | --- | --- |
+| [最终代码 24 题冻结验收](reports/agent-freeze-20261005/acceptance.md)，版本 `9af3637` | 完成 24/24；Task Success **18/24**，Correctness/Grounded **13/18**，交付 13 个回答；P50/P95 **12.189/24.922 秒**，估算 **USD 0.002579/task**。六个失败完整保留，运行后未调 Prompt 或改评分 |
 | [24 题完整开发轮](reports/agent-followup/full-live.md)，最后修复之前 | 自动 Task Success 19/24；Correctness 13/18、Grounded 15/18；三个原计算失败场景完成。P50/P95 10.357/20.126 秒，估算 USD 0.002460/task |
 | [格式修复后五题复测](reports/agent-followup/five-cases-final-live.md) | 交付 4/5，四个交付均通过自动正确性/依据检查；冻结 Task Success 仍为 3/5，包含正确直接回答与旧“必须澄清”标签的冲突 |
 | [最终 Strict Verifier 回放](reports/agent-followup/calculation-verifier-replay.json) | 原跨政策失败候选四条断言均通过；计算冒充制度期限/已合规的反例仍拒绝。只复测 Verifier，不是新一轮端到端任务 |
 | [八例人工标签校准](reports/agent-followup/human-verifier-live.md) | 真实 Verifier 与人工一致 7/8；Precision 1.00、Recall 0.75。H05 歧义说明仍误拒；数据参与提示开发，不是盲评或未见测试集 |
 
-这些是不同开发阶段的运行，不能合并为最新版本的全量成绩。自动评分曾接受“审批门槛是绝对上限”的错误，原评分和失败全部保留；费用按配置单价估算，排除索引和离线 Judge。[性能对照](reports/agent-followup/full-comparison.md)显示完整开发轮 P50 下降但成本上升，不能据单次随机运行宣称因果改进。以下 Agent 表格保留上一轮冻结基线。
+这些是不同开发阶段的运行，不能合并成绩；最终代码以首行冻结验收为准。自动评分曾接受“审批门槛是绝对上限”的错误；本次 Generator 仍生成该错误，但 Strict 已拦截，任务继续计失败。[最终对照](reports/agent-freeze-20261005/comparison.md)显示成功率、P50/P95 和成本未优于上次完整开发轮，全部原始评分和失败保留。费用按配置单价估算，排除索引和离线 Judge，单次独立模型运行不能证明因果变化。以下 Agent 表格保留上一轮冻结基线。
 
 本轮最终应用版本 `467d447` 的 [CI 全绿](https://github.com/Twergu/My-portfolio/actions/runs/37310074658)：完整 Python/真实 pgvector 测试无失败、错误或跳过，前端与 Ruff 通过，Docker 构建/引用/重启持久性和规模基准完成。具体数量由[测试报告](reports/agent-followup/ci-final/tests.md)和[数据库清单](reports/agent-followup/ci-final/postgres-tests.json)自动记录；[Docker 验收](reports/agent-followup/ci-final/container-persistence.json)标明测试范围。
 

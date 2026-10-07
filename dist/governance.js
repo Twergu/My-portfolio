@@ -14,13 +14,19 @@ function showLogin() {
 function applyAccess() {
   const user = state.auth?.user;
   if (!user) return;
-  const admin = user.roles.includes('admin');
-  const editor = admin || user.roles.includes('editor');
+  const admin = !state.auth.demo && user.roles.includes('admin');
+  const editor = !state.auth.demo && (admin || user.roles.includes('editor'));
   const ja = state.locale === 'ja';
   const displayName = state.auth.mode === 'local' ? (ja ? 'ローカルユーザー' : '本地用户') : user.username;
   if ($('.local-user div')) $('.local-user div').innerHTML = `${esc(displayName)}<small>${esc(user.roles.join(' · '))}</small>`;
   if ($('.local-user b')) $('.local-user b').textContent = 'v0.5';
   if ($('.workspace small')) $('.workspace small').textContent = state.auth.mode === 'required' ? (ja ? 'アクセス制御が有効' : '已启用访问控制') : (ja ? 'ローカル・単一ユーザー' : '本地单用户模式');
+  if (state.auth.demo) {
+    if ($('.workspace small')) $('.workspace small').textContent = ja ? '閲覧専用デモ・架空の資料' : '只读演示 · 虚构资料';
+    if ($('.storage-line span')) $('.storage-line span').textContent = ja ? 'デモ用サーバーに保存' : '保存在演示服务器';
+    if (!$('.demo-notice') && $('#main')) $('#main').insertAdjacentHTML('afterbegin', `<p class="demo-notice" role="note">${ja ? '閲覧専用デモです。個人情報・機密情報は入力しないでください。APIモードでは質問がモデルサービスに送信されます。利用回数に制限があります。' : '只读演示。请勿输入个人隐私或企业机密；API 模式下问题会发送给模型服务。每位访客有使用限额。'}</p>`);
+    document.querySelectorAll('[data-action="upload"],[data-action="sample"],[data-action="reindex"]').forEach(el => el.hidden = true);
+  }
   document.querySelectorAll('[data-action="upload"],[data-action="sample"]').forEach(button => button.disabled = !editor);
   document.querySelectorAll('[data-action="reindex"]').forEach(button => button.disabled = !admin);
   if (!admin) document.querySelectorAll('#settings-form input,#settings-form select,#settings-form button').forEach(el => el.disabled = true);

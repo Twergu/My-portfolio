@@ -2,6 +2,8 @@
 
 本轮对应三项优先级。上一轮 [Modification Report](agent-hardening-report.md)、24 题 JSON、三项计算误拒答和两项澄清失败均保留，不改标签或删样本。
 
+**最终全量验收补记：** 按用户要求，最终代码 `9af3637` 已完整重跑一次 24 题，结果 **18/24 Task Success、13/18 Correctness、13/18 Grounded**，P50/P95 **12.189/24.922 秒**，估算 USD **0.002579/task**。六个失败及全部原始输出保留；运行前后哈希确认代码、Prompt、数据集和旧报告均未变，未再据此调参、重跑失败题或改分。见[冻结验收报告](../reports/agent-freeze-20261005/acceptance.md)和[原始 JSON](../reports/agent-freeze-20261005/evaluation-live.json)。下文记录之前的实施与各阶段结果，不替代这次最终全量成绩。
+
 ## 1. 计算类 Claim 由服务器渲染
 
 Generator 可在 `claims` 中返回 `{"calculation_source_id": 4}`。这只是对当前服务器工具来源的引用；不能附带 text、evidence、结果、单位覆盖或自报 Claim 类型。后端验证来源存在、属于 Calculator/Calendar、具有 observation_id 和结构化结果，再生成固定的中日英文本和引用。文档或用户来源编号不能冒充工具。
