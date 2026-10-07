@@ -24,7 +24,8 @@ function applyAccess() {
   if (state.auth.demo) {
     if ($('.workspace small')) $('.workspace small').textContent = ja ? '閲覧専用デモ・架空の資料' : '只读演示 · 虚构资料';
     if ($('.storage-line span')) $('.storage-line span').textContent = ja ? 'デモ用サーバーに保存' : '保存在演示服务器';
-    if (!$('.demo-notice') && $('#main')) $('#main').insertAdjacentHTML('afterbegin', `<p class="demo-notice" role="note">${ja ? '閲覧専用デモです。個人情報・機密情報は入力しないでください。APIモードでは質問がモデルサービスに送信されます。利用回数に制限があります。' : '只读演示。请勿输入个人隐私或企业机密；API 模式下问题会发送给模型服务。每位访客有使用限额。'}</p>`);
+    if (!$('.demo-notice') && $('#main')) ($('.chat-workspace') || $('#main')).insertAdjacentHTML('afterbegin', `<p class="demo-notice" role="note">${ja ? '閲覧専用デモです。個人情報・機密情報は入力しないでください。APIモードでは質問がモデルサービスに送信されます。利用回数に制限があります。' : '只读演示。请勿输入个人隐私或企业机密；API 模式下问题会发送给模型服务。每位访客有使用限额。'}</p>`);
+    if ($('#dropzone')) $('#dropzone').hidden = true;
     document.querySelectorAll('[data-action="upload"],[data-action="sample"],[data-action="reindex"]').forEach(el => el.hidden = true);
   }
   document.querySelectorAll('[data-action="upload"],[data-action="sample"]').forEach(button => button.disabled = !editor);
