@@ -21,6 +21,8 @@
 
 本地安全/访问/初始化回归通过；没有本地 PostgreSQL 服务的项目明确标为 skipped，将由真实 GitHub Actions pgvector 服务执行。前端全部通过，Ruff lint / format 通过。完整 CI 的结果与测试数量以同版本机器报告为准，完成后追加到本节。
 
+首次 [CI 37614252600](https://github.com/Twergu/My-portfolio/actions/runs/37614252600) 的完整测试、原 Docker 与规模基准通过，但新 HTTPS Demo 未通过：应用在代理启动前动态取得 `172.30.48.2`，与代理固定 IP 冲突。已为应用指定不同的固定 IP，并把 Demo 验收提前到耗时的 100k 基准之前；没有删除失败运行或省略测试。
+
 发布前执行 `python -m scripts.source_index --archive` 和 `python -m scripts.release_check --git .delivery/My-portfolio`。独立 `exports/knowbase-release-check.json` 记录最终 ZIP SHA-256 和扫描范围，不纳入 ZIP 本身。
 
 ## 模型质量、性能与费用

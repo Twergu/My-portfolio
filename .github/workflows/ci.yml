@@ -55,7 +55,6 @@ jobs:
           docker compose restart app
           docker compose up -d --wait
           python -m scripts.container_smoke --url http://127.0.0.1:18000 --check-persistence
-      - run: python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3
       - name: Authenticated HTTPS portfolio demo smoke
         env:
           RAG_DEMO_DOMAIN: localhost
@@ -78,6 +77,7 @@ jobs:
           docker compose -f compose.demo.yaml restart app
           docker compose -f compose.demo.yaml up -d --wait
           python -m scripts.demo_smoke --ca .secrets/demo-ca.crt --token-file .secrets/ci-reviewer.txt --after-restart
+      - run: python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3
       - name: Container logs and shutdown
         if: always()
         run: |

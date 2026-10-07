@@ -94,7 +94,7 @@ docker compose up --build -d --wait
 
 Demo 仍保留读取获授权文档/下载 PDF 的能力，所以只装载可公开的虚构资料。问题会发给配置的模型服务；不要输入真实公司或个人信息。运营日志与 Agent 输出可能含用户输入，保留在服务器，不能混进公开发布包。删除数据卷会清空配额、账号和预算，不应作为绕过限额的方法。
 
-TLS 配置依据 [Caddy 自动 HTTPS](https://caddyserver.com/docs/automatic-https)；转发身份依据 [reverse_proxy 文档](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)。应用只信任固定代理 IP，Caddy 覆盖客户端伪造的 X-Forwarded-For；网段冲突时同步修改 `RAG_PROXY_SUBNET` 和 `RAG_PROXY_IP`。Compose 服务继承遵循 [Docker extends](https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/)。
+TLS 配置依据 [Caddy 自动 HTTPS](https://caddyserver.com/docs/automatic-https)；转发身份依据 [reverse_proxy 文档](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)。应用只信任固定代理 IP，Caddy 覆盖客户端伪造的 X-Forwarded-For；网段冲突时同步修改 `RAG_PROXY_SUBNET`、`RAG_PROXY_IP` 和 `RAG_APP_IP`，为两个容器分配不同的同网段地址。Compose 服务继承遵循 [Docker extends](https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/)。
 
 ## 打包与复核
 

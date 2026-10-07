@@ -23,7 +23,11 @@ services:
       RAG_DEMO_CONCURRENT: ${RAG_DEMO_CONCURRENT:-2}
       RAG_DEMO_OUTPUT_TOKENS: ${RAG_DEMO_OUTPUT_TOKENS:-4096}
       RAG_DEMO_INPUT_BYTES: ${RAG_DEMO_INPUT_BYTES:-60000}
-    networks: [default, proxy]
+    networks:
+      default: {}
+      proxy:
+        # Reserve an explicit second address; dynamic assignment could take the proxy's .2 first.
+        ipv4_address: ${RAG_APP_IP:-172.30.48.3}
     mem_limit: 1g
     cpus: 1.5
     logging:
