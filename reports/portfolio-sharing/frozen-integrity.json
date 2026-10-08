@@ -1,6 +1,6 @@
 {
   "status": "passed",
-  "relative_links_checked": 425,
+  "relative_links_checked": 450,
   "frozen_live_report_sha256": "d38530172cacabd3cdbd4041853824c7e27a3cc355a607db1c22b4be3442cf9c",
   "frozen_agent_rag_files_unchanged": [
     "backend/agent.py",

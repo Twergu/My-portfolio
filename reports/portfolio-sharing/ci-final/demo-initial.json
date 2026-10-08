@@ -1,0 +1,16 @@
+{
+  "at": "2026-10-07T11:42:22.802082+00:00",
+  "status": "passed",
+  "checks": [
+    "trusted HTTPS certificate",
+    "pgvector healthy",
+    "authentication and secure cookie",
+    "fictional document persists and is read-only",
+    "mutation denied",
+    "cross-origin write denied",
+    "ACL before retrieval",
+    "real local retrieval over pgvector",
+    "persistent per-user quota"
+  ],
+  "scope": "Real Docker/Caddy TLS/PostgreSQL; local retrieval; no paid model calls"
+}

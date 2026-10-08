@@ -1,0 +1,206 @@
+{
+  "source_run": "https://github.com/Twergu/My-portfolio/actions/runs/37615440769",
+  "head_sha": "e603ef2cb38a8a8d74695a2f28d6d3cebd56aff0",
+  "junit_sha256": "8a711e4e842b40b43335827946c1db35428e1b5a2033e83b356f5df5904c9091",
+  "passed": 39,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "cases": [
+    {
+      "classname": "tests.test_access",
+      "name": "test_required_auth_filters_every_surface_before_provider[pgvector]",
+      "time": "0.219"
+    },
+    {
+      "classname": "tests.test_agent_clarification",
+      "name": "test_frozen_resume_keeps_original_outcome_and_every_answer_for_planner_and_generator[pgvector-commuter-clarify-ja]",
+      "time": "0.138"
+    },
+    {
+      "classname": "tests.test_agent_clarification",
+      "name": "test_frozen_resume_keeps_original_outcome_and_every_answer_for_planner_and_generator[pgvector-training-clarify-ja]",
+      "time": "0.132"
+    },
+    {
+      "classname": "tests.test_agent_clarification",
+      "name": "test_genuinely_missing_aggregate_count_still_allows_focused_followup[pgvector]",
+      "time": "0.130"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_agent_reuses_retrieval_and_validates_document_and_calculation_sources[pgvector]",
+      "time": "0.145"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_agent_withholds_ungrounded_answers[pgvector-True-True]",
+      "time": "0.104"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_agent_withholds_ungrounded_answers[pgvector-False-False]",
+      "time": "0.112"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_generator_can_clarify_when_planner_hands_off_too_early[pgvector]",
+      "time": "0.194"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_clarification_cannot_smuggle_unverified_answer_claims[pgvector]",
+      "time": "0.156"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_no_acl_scope_or_filtered_evidence_means_no_model_call[pgvector]",
+      "time": "0.090"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_server_state_resume_and_cross_user_isolation[pgvector]",
+      "time": "0.167"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_task_invalidates_when_scope_or_evidence_changes[pgvector-permission]",
+      "time": "0.108"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_task_invalidates_when_scope_or_evidence_changes[pgvector-metadata]",
+      "time": "0.107"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_task_invalidates_when_scope_or_evidence_changes[pgvector-settings]",
+      "time": "0.107"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_task_invalidates_when_scope_or_evidence_changes[pgvector-reindex]",
+      "time": "0.153"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_midflight_revocation_stops_before_embedding_and_hides_all_results[pgvector-False]",
+      "time": "0.089"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_midflight_revocation_stops_before_embedding_and_hides_all_results[pgvector-True]",
+      "time": "0.090"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_first_turn_reindex_is_detected_before_next_planner_receives_old_evidence[pgvector]",
+      "time": "0.101"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_direct_tool_handoff_still_runs_strict_verifier_and_acl[pgvector-True]",
+      "time": "0.109"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_direct_tool_handoff_still_runs_strict_verifier_and_acl[pgvector-False]",
+      "time": "0.110"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_client_cannot_forge_state_or_expand_tool_scope[pgvector]",
+      "time": "0.092"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_expiration_cancel_capacity_and_busy_task[pgvector]",
+      "time": "0.119"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_real_concurrent_resume_and_cancel_do_not_execute_twice[pgvector]",
+      "time": "0.153"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_expiry_is_absolute_not_extended_by_reply_and_cancel_matches_resume[pgvector]",
+      "time": "0.269"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_slow_clarification_cannot_return_an_already_expired_task_handle[pgvector]",
+      "time": "0.091"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_process_restart_loses_only_ephemeral_task_not_document[pgvector]",
+      "time": "0.093"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_exception_releases_slot_and_global_capacity_applies_to_all_users[pgvector]",
+      "time": "0.128"
+    },
+    {
+      "classname": "tests.test_agent_integration",
+      "name": "test_agent_store_acl_contract[pgvector]",
+      "time": "0.112"
+    },
+    {
+      "classname": "tests.test_demo_security",
+      "name": "test_fictional_seed_is_idempotent_and_grants_only_demo_role[pgvector]",
+      "time": "0.228"
+    },
+    {
+      "classname": "tests.test_demo_security",
+      "name": "test_demo_acl_readonly_https_and_request_limits[pgvector]",
+      "time": "0.122"
+    },
+    {
+      "classname": "tests.test_migration_access",
+      "name": "test_migration_preserves_policy_grants_identity_and_fulltext[pgvector]",
+      "time": "0.091"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_storage_scopes_dimensions_cosine_and_delete[pgvector]",
+      "time": "0.079"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_atomic_chunk_replace_rolls_back_on_duplicate_id[pgvector]",
+      "time": "0.051"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_lexical_multilingual_scope_and_lifecycle[pgvector]",
+      "time": "0.064"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_metadata_filters_before_both_searches[pgvector]",
+      "time": "0.066"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_acl_roles_owner_revocation_and_token_rotation[pgvector]",
+      "time": "0.055"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_settings_dedup_and_dimension_drift[pgvector]",
+      "time": "0.079"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_hnsw_has_explicit_backend_and_dimension_contract[pgvector]",
+      "time": "0.056"
+    },
+    {
+      "classname": "tests.test_stores",
+      "name": "test_hnsw_index_lifecycle_is_outside_query_path[pgvector]",
+      "time": "0.060"
+    }
+  ]
+}

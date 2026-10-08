@@ -22,6 +22,8 @@ flowchart LR
 
 对外 Demo 单独启用只读账号、每用户/IP/全站请求限制、单进程并发限制、持久化费用预留与 HTTPS；普通本地运行保持原行为。冻结 API 指标对应 `9af3637`，新增部署守卫的验证范围单独记录，不据此重新调 Prompt 或改写成绩。
 
+部署版本 `e603ef2` 的 [CI 已全绿](https://github.com/Twergu/My-portfolio/actions/runs/37615440769)：完整 Python / 真实 pgvector 测试无失败、错误或跳过，前端、Ruff、原 Docker 回归、新 HTTPS Demo 登录/限流/重启验证及规模基准通过。测试数量见[自动生成报告](reports/portfolio-sharing/ci-final/tests.md)、[PostgreSQL 清单](reports/portfolio-sharing/ci-final/postgres-tests.json)和[前端报告](reports/portfolio-sharing/ci-final/frontend-tests.json)。HTTPS 验收使用 CI 内部 CA 与本地检索，不代表已上线或重新完成真实 API 质量评估。
+
 查看 [全部源文件](SOURCE_INDEX.md)、[本轮 12 项检索与权限优化](docs/retrieval-optimization-report.md)、[上轮 17 项优化记录](docs/optimization-report.md)、[首轮修改记录](docs/change-report.md)、[架构与设计决定](docs/architecture.md)。
 
 业务 Agent 支持任务规划、权限内知识检索、日期/计算工具、多轮澄清及严格证据校验；聊天页可切换“知识问答 / 业务 Agent”。已增加日文失败回归、24 场景真实评估、阶段耗时、确定性 Policy Claim 约束与单进程状态验证，详见 [Modification Report](docs/agent-hardening-report.md)。工作日日历仍是明确标注的 Mock；历史失败和[第三阶段浏览器联调](docs/agent-stage3.md)、[第二阶段工具验收](docs/agent-stage2.md)、[第一阶段编排](docs/agent-stage1.md)均保留。

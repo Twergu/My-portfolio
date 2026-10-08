@@ -1,6 +1,6 @@
 # 求职作品分享与可部署版本：Modification Report
 
-日期：2026-10-07。目标是准备可复现、受控的分享版本；用户尚无服务器或域名。本轮不部署公网、不新跑付费的 24 题评估、不修改 Agent/RAG 提示与原始失败记录。
+实施：2026-10-07；验收归档：2026-10-08。目标是准备可复现、受控的分享版本；用户尚无服务器或域名。本轮不部署公网、不新跑付费的 24 题评估、不修改 Agent/RAG 提示与原始失败记录。
 
 ## 修改内容
 
@@ -19,11 +19,26 @@
 
 ## 验证记录
 
-本地安全/访问/初始化回归通过；没有本地 PostgreSQL 服务的项目明确标为 skipped，将由真实 GitHub Actions pgvector 服务执行。前端全部通过，Ruff lint / format 通过。完整 CI 的结果与测试数量以同版本机器报告为准，完成后追加到本节。
+部署代码版本 `e603ef2cb38a8a8d74695a2f28d6d3cebd56aff0` 的 [完整 CI 37615440769](https://github.com/Twergu/My-portfolio/actions/runs/37615440769) 全绿。以下数量由下载的 JUnit / JSON 交叉核对，后续提交仅归档说明与报告，不改运行代码。
+
+| 验证 | 实际结果 / 证据 |
+|---|---|
+| 完整 Python 回归 | **371 passed，0 failed，0 errors，0 skipped**；[机器报告](../reports/portfolio-sharing/ci-final/tests.md) |
+| 真实 PostgreSQL + pgvector | **39 个用例实际执行通过**；[逐项清单及 JUnit 哈希](../reports/portfolio-sharing/ci-final/postgres-tests.json) |
+| 前端 / Ruff | **17/17 前端通过**；lint / format 通过；[前端报告](../reports/portfolio-sharing/ci-final/frontend-tests.json)、[完整 CI 元数据](../reports/portfolio-sharing/ci-final/provenance.json) |
+| 原 Docker 回归 | 构建、健康、PDF 引用与重启后数据保留通过；[验收记录](../reports/portfolio-sharing/ci-final/container-persistence.json) |
+| 新 HTTPS Demo | Caddy TLS 证书验证、pgvector、登录及 Secure/HttpOnly/SameSite cookie、只读操作、跨来源拒绝、ACL 前置过滤和请求配额通过；[首次运行](../reports/portfolio-sharing/ci-final/demo-initial.json) |
+| 重启 / 伪造 IP | 文档与配额保留；伪造 X-Forwarded-For 不能绕过登录 IP 限流；[重启记录](../reports/portfolio-sharing/ci-final/demo-restart.json) |
+| Exact / HNSW 规模基准 | 1k / 10k / 100k 完整执行；[原始结果](../reports/portfolio-sharing/ci-final/vector-scale.md) |
+| 冻结内容 | 原 24 题原始报告 SHA-256 不变；Agent、RAG、Provider、Grounding 与数据集无改动；[核对记录](../reports/portfolio-sharing/frozen-integrity.json) |
+
+HTTPS 验收使用 localhost 内部 CA，验证了真实 TLS 链路与证书信任；它不是公网域名证书验收。Docker 使用真实 PostgreSQL 和本地检索，不调用付费模型；Provider 配额测试使用 MockTransport。不能把这些当成新增 Demo 限额下的真实模型质量实验。本地运行因缺少 PostgreSQL 的 39 个 skipped 已在上述 CI 中全部实际执行。
 
 首次 [CI 37614252600](https://github.com/Twergu/My-portfolio/actions/runs/37614252600) 的完整测试、原 Docker 与规模基准通过，但新 HTTPS Demo 未通过：应用在代理启动前动态取得 `172.30.48.2`，与代理固定 IP 冲突。已为应用指定不同的固定 IP，并把 Demo 验收提前到耗时的 100k 基准之前；没有删除失败运行或省略测试。
 
 发布前执行 `python -m scripts.source_index --archive` 和 `python -m scripts.release_check --git .delivery/My-portfolio`。独立 `exports/knowbase-release-check.json` 记录最终 ZIP SHA-256 和扫描范围，不纳入 ZIP 本身。
+
+已扫描源码包与可达 Git 历史文件对象，没有发现本地已知密钥、所列常见密钥格式或禁止的私密路径；精确文件数、历史对象数、扫描范围及 SHA-256 以最终独立校验 JSON 为准。源码包包括源码、部署模板、测试、评估数据和历次报告，排除 `.env`、真实账号数据库、上传资料、日志和虚拟环境。
 
 ## 模型质量、性能与费用
 
