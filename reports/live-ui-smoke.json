@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-15T06:17:25.635017+00:00",
+  "status": "passed",
+  "scope": "Manual browser smoke plus captured local HTTP metrics; synthetic bundled PDF only.",
+  "configuration": {
+    "mode": "api",
+    "chat_model": "gpt-5.6-luna",
+    "verifier_model": "gpt-5.6-luna",
+    "verification_mode": "strict",
+    "embedding_model": "text-embedding-3-small",
+    "top_k": 5,
+    "min_score": 0.25,
+    "chunk_size": 900,
+    "chunk_overlap": 0,
+    "search_mode": "exact",
+    "profile": "7cfdadcc56e36d7dfdd9772c"
+  },
+  "ui_language": "ja",
+  "source_language": "zh",
+  "answer_observed_in_browser": "このデモ規則では、従業員は年休申請を3営業日前までにOAシステムで提出する必要があります。 [1]\n\n年休申請には直属の上司の承認が必要です。 [1]",
+  "question": "このデモ社員ハンドブックでは、有給休暇の申請は何営業日前までに行い、誰の承認が必要ですか？",
+  "checks": {
+    "real_embedding_1536_dimensions": true,
+    "japanese_generated_answer": true,
+    "runtime_claims_verified": "2/2",
+    "physical_page_2_citation_panel": true,
+    "original_pdf_http_200": true,
+    "japanese_settings_saved_feedback": true,
+    "japanese_close_citation_aria_label": true
+  },
+  "prior_observation": "The first Japanese question without the explicit demo scope returned insufficient_evidence. Its response and cost are retained; this does not establish that refusal was correct.",
+  "operations": [
+    {
+      "operation": "indexing",
+      "status": "ready",
+      "recorded_at": "2026-09-15T06:11:08.139459+00:00",
+      "document_id": "c3ca8081420c46228b0b867349ef6a69",
+      "metrics": {
+        "elapsed_ms": 2005.61,
+        "timings_ms": {
+          "parsing": 214.085,
+          "chunking": 0.119,
+          "provider_http": 1762.832,
+          "embedding": 1763.347,
+          "storage": 9.215
+        },
+        "token_usage": {
+          "embedding_tokens": 675,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 675,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 1.35e-05,
+        "known_cost_usd": 1.35e-05,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 1762.832,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 675,
+              "output_tokens": 0,
+              "total_tokens": 675
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "question",
+      "status": "insufficient_evidence",
+      "recorded_at": "2026-09-15T06:13:19.156158+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 3805.038,
+        "timings_ms": {
+          "provider_http": 3792.185,
+          "query_embedding": 771.567,
+          "retrieval": 3.044,
+          "generation": 3020.864
+        },
+        "token_usage": {
+          "embedding_tokens": 36,
+          "input_tokens": 907,
+          "output_tokens": 72,
+          "total_tokens": 1015,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 2,
+        "attempt_count": 2,
+        "retry_count": 0,
+        "cost_usd": 0.00026852,
+        "known_cost_usd": 0.00026852,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 771.359,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 36,
+              "output_tokens": 0,
+              "total_tokens": 36
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3020.826,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 907,
+              "output_tokens": 72,
+              "total_tokens": 979
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "question",
+      "status": "answered",
+      "recorded_at": "2026-09-15T06:14:20.877869+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 8596.43,
+        "timings_ms": {
+          "provider_http": 8584.758,
+          "query_embedding": 513.876,
+          "retrieval": 2.992,
+          "generation": 5410.623,
+          "verification": 2660.646
+        },
+        "token_usage": {
+          "embedding_tokens": 55,
+          "input_tokens": 1606,
+          "output_tokens": 597,
+          "total_tokens": 2258,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 3,
+        "attempt_count": 3,
+        "retry_count": 0,
+        "cost_usd": 0.0010387,
+        "known_cost_usd": 0.0010387,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 513.546,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 55,
+              "output_tokens": 0,
+              "total_tokens": 55
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 5410.597,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 916,
+              "output_tokens": 409,
+              "total_tokens": 1325
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2660.616,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 690,
+              "output_tokens": 188,
+              "total_tokens": 878
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    }
+  ],
+  "cost_usd": 0.00132072,
+  "frontend_sha256": "b67ed712de9ea93acb8e09c8a69932118154c0d895f76de750886add10e598c8"
+}

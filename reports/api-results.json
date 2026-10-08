@@ -1,0 +1,458 @@
+{
+  "dataset_id": "policy-challenge-v2.1",
+  "selected": {
+    "size": 900,
+    "overlap": 0
+  },
+  "holdout_summary": {
+    "retrieval": {
+      "any_retrieval_for_unanswerable": {
+        "count": 12,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_3": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_5": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "mrr_at_k": {
+        "count": 42,
+        "mean": 0.8253968253968254,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "ndcg_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "ndcg_at_3": {
+        "count": 42,
+        "mean": 0.7879535408048549,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "ndcg_at_5": {
+        "count": 42,
+        "mean": 0.8055360062360735,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "ndcg_at_k": {
+        "count": 42,
+        "mean": 0.8055360062360735,
+        "p50": 0.9197207891481876,
+        "p95": 1.0
+      },
+      "precision_at_1": {
+        "count": 42,
+        "mean": 0.7380952380952381,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "precision_at_3": {
+        "count": 42,
+        "mean": 0.38888888888888884,
+        "p50": 0.3333333333333333,
+        "p95": 0.6666666666666666
+      },
+      "precision_at_5": {
+        "count": 42,
+        "mean": 0.24761904761904763,
+        "p50": 0.2,
+        "p95": 0.4
+      },
+      "precision_at_k": {
+        "count": 42,
+        "mean": 0.24761904761904763,
+        "p50": 0.2,
+        "p95": 0.4
+      },
+      "recall_at_1": {
+        "count": 42,
+        "mean": 0.5833333333333334,
+        "p50": 0.5,
+        "p95": 1.0
+      },
+      "recall_at_3": {
+        "count": 42,
+        "mean": 0.8452380952380952,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "recall_at_5": {
+        "count": 42,
+        "mean": 0.8809523809523809,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "recall_at_k": {
+        "count": 42,
+        "mean": 0.8809523809523809,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "retrieved_unique_pages": {
+        "count": 54,
+        "mean": 5.0,
+        "p50": 5.0,
+        "p95": 5.0
+      }
+    },
+    "answer_quality": {
+      "all_claims_grounded": {
+        "count": 39,
+        "mean": 0.9230769230769231,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "answer_correctness": {
+        "count": 42,
+        "mean": 0.8333333333333334,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "citation_groundedness": {
+        "count": 36,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "claim_groundedness": {
+        "count": 39,
+        "mean": 0.9358974358974359,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "correct_refusal": {
+        "count": 12,
+        "mean": 0.9166666666666666,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "expected_facts_coverage_lexical": {
+        "count": 0,
+        "mean": null,
+        "p50": null,
+        "p95": null
+      },
+      "false_refusal": {
+        "count": 42,
+        "mean": 0.16666666666666666,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "generator_false_refusal": {
+        "count": 42,
+        "mean": 0.09523809523809523,
+        "p50": 0.0,
+        "p95": 1.0
+      },
+      "grounding_false_refusal": {
+        "count": 42,
+        "mean": 0.07142857142857142,
+        "p50": 0.0,
+        "p95": 0.9500000000000028
+      },
+      "grounding_rejected_correct_and_grounded": {
+        "count": 3,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "invalid_model_response": {
+        "count": 54,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "quote_match_failure": {
+        "count": 54,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "reference_exact_match": {
+        "count": 42,
+        "mean": 0.0,
+        "p50": 0.0,
+        "p95": 0.0
+      },
+      "reference_token_f1_lexical": {
+        "count": 42,
+        "mean": 0.36147340232314,
+        "p50": 0.39642857142857146,
+        "p95": 0.6707729468599036
+      },
+      "refusal_accuracy": {
+        "count": 54,
+        "mean": 0.8518518518518519,
+        "p50": 1.0,
+        "p95": 1.0
+      },
+      "unsupported_answer": {
+        "count": 54,
+        "mean": 0.05555555555555555,
+        "p50": 0.0,
+        "p95": 0.3500000000000014
+      },
+      "withheld_candidate_correctness": {
+        "count": 3,
+        "mean": 1.0,
+        "p50": 1.0,
+        "p95": 1.0
+      }
+    },
+    "latency_ms": {
+      "generation": {
+        "count": 54,
+        "mean": 3395.700814814815,
+        "p50": 3191.365,
+        "p95": 6278.5334
+      },
+      "provider_http": {
+        "count": 54,
+        "mean": 5537.503222222223,
+        "p50": 5405.0205000000005,
+        "p95": 9730.80815
+      },
+      "query_embedding": {
+        "count": 54,
+        "mean": 329.0717037037037,
+        "p50": 328.206,
+        "p95": 441.1453
+      },
+      "retrieval": {
+        "count": 54,
+        "mean": 13.208777777777778,
+        "p50": 13.192,
+        "p95": 13.8969
+      },
+      "verification": {
+        "count": 39,
+        "mean": 2510.3465128205125,
+        "p50": 2260.541,
+        "p95": 4266.9601
+      },
+      "question_total": {
+        "count": 54,
+        "mean": 5558.685096296594,
+        "p50": 5426.147049991414,
+        "p95": 9751.654520002194
+      }
+    },
+    "cost_usd": {
+      "total": 0.0437474,
+      "known_subtotal": 0.0437474,
+      "unknown_questions": 0,
+      "per_question": {
+        "count": 54,
+        "mean": 0.000810137037037037,
+        "p50": 0.0007945000000000001,
+        "p95": 0.001481866
+      },
+      "average_per_query": 0.000810137037037037
+    },
+    "token_usage": {
+      "embedding_tokens": 1600,
+      "input_tokens": 72417,
+      "output_tokens": 24360,
+      "total_tokens": 98377,
+      "complete": true
+    },
+    "query_count": 54,
+    "status_counts": {
+      "answered": 36,
+      "insufficient_evidence": 15,
+      "unsupported_answer": 3
+    }
+  },
+  "chunk_layout_groups": [
+    [
+      {
+        "size": 450,
+        "overlap": 0,
+        "chunks": 100
+      }
+    ],
+    [
+      {
+        "size": 450,
+        "overlap": 60,
+        "chunks": 100
+      }
+    ],
+    [
+      {
+        "size": 900,
+        "overlap": 0,
+        "chunks": 96
+      },
+      {
+        "size": 900,
+        "overlap": 120,
+        "chunks": 96
+      },
+      {
+        "size": 1200,
+        "overlap": 120,
+        "chunks": 96
+      },
+      {
+        "size": 1200,
+        "overlap": 180,
+        "chunks": 96
+      }
+    ]
+  ],
+  "holdout_failure_reasons": {
+    "unsupported_claim": 3
+  },
+  "cost_ledger": [
+    {
+      "report": "reports/chunks-api/chunk-api-1200-120-dev.json",
+      "sha256": "50b3a561fe6332ccc5f164ab71f046bf0623a9bff5f621483e30beeeebc853f3",
+      "queries": 54,
+      "cost_usd": 0.18900416,
+      "application_cost_usd": 0.04535084,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.143478,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-1200-180-dev.json",
+      "sha256": "35fff463e41d66fc41d07ac364078fa07ed3be309804d59563e5df0fda4bd01e",
+      "queries": 54,
+      "cost_usd": 0.19583936,
+      "application_cost_usd": 0.04750004,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.148164,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-450-0-dev.json",
+      "sha256": "196582ee6515af569fd0a1dd98e5f9f1ee6ca52623dca815bb631a402bd2d078",
+      "queries": 54,
+      "cost_usd": 0.20311336000000002,
+      "application_cost_usd": 0.04684004,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.15609800000000001,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-450-60-dev.json",
+      "sha256": "844b040302f77e7acfc4fbb483250c059cd3b0797da660f46dc7e07cb8f52321",
+      "queries": 54,
+      "cost_usd": 0.18791011999999999,
+      "application_cost_usd": 0.04334764,
+      "index_cost_usd": 0.00017648,
+      "judge_cost_usd": 0.144386,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-900-0-dev.json",
+      "sha256": "f8eb2151e582d170fe6ccdcad4196bb354e8e090500ad1029298f6f50e35fb1c",
+      "queries": 54,
+      "cost_usd": 0.19426016,
+      "application_cost_usd": 0.04391684,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.150168,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-900-120-dev.json",
+      "sha256": "b005d4b8e36ce6c3f3486a3efcc295ff1228fcae908e8b92c68e9d75094b6cd6",
+      "queries": 54,
+      "cost_usd": 0.19017516,
+      "application_cost_usd": 0.04453584,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.145464,
+      "status": "completed"
+    },
+    {
+      "report": "reports/chunks-api/chunk-api-selected-test.json",
+      "sha256": "36793a02aa83a8c667138297f9aedf8e61e5dd2f9c19aafb7ccc3779fa736d7b",
+      "queries": 54,
+      "cost_usd": 0.18892072,
+      "application_cost_usd": 0.0437474,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.144998,
+      "status": "completed"
+    },
+    {
+      "report": "reports/api-baseline-v1/chunk-api-900-120-dev.json",
+      "sha256": "0cfd46315e4f5eca55151cedb75e0cd1d06f3c9674479d81565294519925924b",
+      "queries": 54,
+      "cost_usd": 0.16256296,
+      "application_cost_usd": 0.03556564,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.126822,
+      "status": "completed"
+    },
+    {
+      "report": "reports/verifier-models/mini-450-0-dev.json",
+      "sha256": "e75ad5ab3819f9122f06ce19015afef39f64166afa2dc976f8e9f8458109ab87",
+      "queries": 54,
+      "cost_usd": 0.20190656,
+      "application_cost_usd": 0.04828324,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.153448,
+      "status": "completed"
+    },
+    {
+      "report": "reports/verification/off.json",
+      "sha256": "1e5cef71c28ad0d0b33023f7906a5af336525717605eabf6b525a55e969198d5",
+      "queries": 54,
+      "cost_usd": 0.18726352,
+      "application_cost_usd": 0.0308122,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.156276,
+      "status": "completed"
+    },
+    {
+      "report": "reports/verification/fast.json",
+      "sha256": "28e2cfc4fb0a0622fc30044f16e951bc25ef2b4a42021f99c7008c477ea831dd",
+      "queries": 54,
+      "cost_usd": 0.18226592000000003,
+      "application_cost_usd": 0.030742600000000002,
+      "index_cost_usd": 0.00017532,
+      "judge_cost_usd": 0.151348,
+      "status": "completed"
+    },
+    {
+      "report": "reports/live-api-smoke.json",
+      "cost_usd": 0.00026315999999999997,
+      "status": "passed"
+    },
+    {
+      "report": "reports/live-ui-smoke.json",
+      "cost_usd": 0.00132072,
+      "status": "passed"
+    }
+  ],
+  "recorded_total_cost_usd": 2.0848058800000002,
+  "known_subtotal_cost_usd": 2.0848058800000002,
+  "limitations": [
+    "Synthetic multilingual policy corpus with related templates, not human-labeled production data.",
+    "One run per configuration. Identical chunk layouts do not establish a chunk-size effect; API ranking/generation/Judge variation remains.",
+    "Verifier pilot and mode comparison regenerate answers; not paired causal experiments.",
+    "Judge judgments are automated. Citation scores apply to delivered answers only.",
+    "Uniform configured prices and reported usage are estimates, not invoices. Failed original Judge cost is included in its repaired report; recovery snapshots and reused strict runs are not added twice."
+  ]
+}

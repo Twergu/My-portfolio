@@ -1,0 +1,121 @@
+{
+  "id": 37310074658,
+  "status": "completed",
+  "conclusion": "success",
+  "html_url": "https://github.com/Twergu/My-portfolio/actions/runs/37310074658",
+  "head_sha": "467d4471d9654c3398dfb408530401631e5d0ff5",
+  "jobs": [
+    {
+      "name": "verify",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Initialize containers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.check_frontend",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m pip install -r requirements-lock.txt",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m ruff check .",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m ruff format --check .",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.check",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.chunk_experiment --mode local --output-dir reports/chunks-v2",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.benchmark_stores --count 1000 --dimensions 384 --queries 20 --repeats 3 --require-postgres",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Build and run Compose smoke",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run python -m scripts.benchmark_scale --sizes 1000 10000 100000 --dimensions 384 --queries 20 --repeats 3",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Container logs and shutdown",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-node@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/setup-python@v5",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Stop containers",
+          "status": "completed",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

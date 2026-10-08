@@ -1,0 +1,473 @@
+{
+  "generated_at": "2026-09-16T00:37:00.503214+00:00",
+  "retrieval": {
+    "dev": {
+      "dense": {
+        "n": 54,
+        "errors": 0,
+        "retrieval": {
+          "recall_at_1": 0.5992063492063492,
+          "recall_at_3": 0.8134920634920635,
+          "recall_at_5": 0.8809523809523809,
+          "mrr_at_k": 0.8353174603174603,
+          "ndcg_at_k": 0.8127627391198815
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 444.3701481481482,
+          "p50": 420.94,
+          "p95": 592.45665
+        },
+        "cost_usd": 3.164e-05,
+        "mean_cost_usd": 5.85925925925926e-07,
+        "tokens": 1582
+      },
+      "hybrid": {
+        "n": 54,
+        "errors": 0,
+        "retrieval": {
+          "recall_at_1": 0.5833333333333334,
+          "recall_at_3": 0.8214285714285714,
+          "recall_at_5": 0.8809523809523809,
+          "mrr_at_k": 0.8412698412698413,
+          "ndcg_at_k": 0.8065151579700424
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 445.3780555555556,
+          "p50": 432.35299999999995,
+          "p95": 652.6218
+        },
+        "cost_usd": 3.164e-05,
+        "mean_cost_usd": 5.85925925925926e-07,
+        "tokens": 1582
+      },
+      "hybrid_reranked": {
+        "n": 54,
+        "errors": 1,
+        "retrieval": {
+          "recall_at_1": 0.7560975609756098,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "mrr_at_k": 0.975609756097561,
+          "ndcg_at_k": 0.9800385438119781
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 6661.0763333333325,
+          "p50": 6392.112,
+          "p95": 9838.8644
+        },
+        "cost_usd": 0.06238604,
+        "mean_cost_usd": 0.001155297037037037,
+        "tokens": 155519
+      }
+    },
+    "test": {
+      "dense": {
+        "n": 54,
+        "errors": 0,
+        "retrieval": {
+          "recall_at_1": 0.5833333333333334,
+          "recall_at_3": 0.8452380952380952,
+          "recall_at_5": 0.8809523809523809,
+          "mrr_at_k": 0.8253968253968254,
+          "ndcg_at_k": 0.8055360062360735
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 472.5174074074074,
+          "p50": 458.1495,
+          "p95": 552.7239
+        },
+        "cost_usd": 3.2e-05,
+        "mean_cost_usd": 5.925925925925926e-07,
+        "tokens": 1600
+      },
+      "hybrid": {
+        "n": 54,
+        "errors": 0,
+        "retrieval": {
+          "recall_at_1": 0.6309523809523809,
+          "recall_at_3": 0.8095238095238095,
+          "recall_at_5": 0.8809523809523809,
+          "mrr_at_k": 0.861111111111111,
+          "ndcg_at_k": 0.8180491116515585
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 435.89798148148145,
+          "p50": 420.0475,
+          "p95": 590.93605
+        },
+        "cost_usd": 3.2e-05,
+        "mean_cost_usd": 5.925925925925926e-07,
+        "tokens": 1600
+      },
+      "hybrid_reranked": {
+        "n": 54,
+        "errors": 0,
+        "retrieval": {
+          "recall_at_1": 0.7380952380952381,
+          "recall_at_3": 1.0,
+          "recall_at_5": 1.0,
+          "mrr_at_k": 0.9642857142857143,
+          "ndcg_at_k": 0.9736378395408184
+        },
+        "latency_ms": {
+          "count": 54,
+          "mean": 6373.155166666667,
+          "p50": 6163.967500000001,
+          "p95": 9052.14405
+        },
+        "cost_usd": 0.06081,
+        "mean_cost_usd": 0.0011261111111111111,
+        "tokens": 154505
+      }
+    }
+  },
+  "retrieval_errors": 1,
+  "calibration": {
+    "calibration-baseline-dev-live": {
+      "positive_class": "supported",
+      "tp": 6,
+      "fp": 0,
+      "fn": 1,
+      "tn": 11,
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.14285714285714285,
+      "errors": 0,
+      "n": 18
+    },
+    "calibration-calibrated-dev": {
+      "positive_class": "supported",
+      "tp": 6,
+      "fp": 0,
+      "fn": 1,
+      "tn": 11,
+      "precision": 1.0,
+      "recall": 0.8571428571428571,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.14285714285714285,
+      "errors": 0,
+      "n": 18
+    },
+    "calibration-calibrated-test": {
+      "positive_class": "supported",
+      "tp": 8,
+      "fp": 0,
+      "fn": 0,
+      "tn": 10,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 18
+    }
+  },
+  "quality": {
+    "strict": {
+      "status": "completed",
+      "judge_status": "completed",
+      "n": 54,
+      "retrieval": {
+        "recall_at_1": 0.7857142857142857,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr_at_k": 0.9880952380952381,
+        "ndcg_at_k": 0.9873897936159007
+      },
+      "quality": {
+        "answer_correctness": {
+          "count": 42,
+          "mean": 0.9047619047619048,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "citation_groundedness": {
+          "count": 38,
+          "mean": 1.0,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "refusal_accuracy": {
+          "count": 54,
+          "mean": 0.9259259259259259,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "false_refusal": {
+          "count": 42,
+          "mean": 0.09523809523809523,
+          "p50": 0.0,
+          "p95": 1.0
+        },
+        "quote_match_failure": {
+          "count": 54,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "unsupported_answer": {
+          "count": 54,
+          "mean": 0.07407407407407407,
+          "p50": 0.0,
+          "p95": 1.0
+        }
+      },
+      "latency_ms": {
+        "count": 54,
+        "mean": 14071.588718522064,
+        "p50": 13904.620649991557,
+        "p95": 19922.954139971993
+      },
+      "phase_latency_ms": {
+        "generation": {
+          "count": 54,
+          "mean": 4421.388277777778,
+          "p50": 4135.846,
+          "p95": 7058.1643
+        },
+        "provider_http": {
+          "count": 54,
+          "mean": 14041.834222222222,
+          "p50": 13869.5435,
+          "p95": 19889.772500000003
+        },
+        "query_embedding": {
+          "count": 54,
+          "mean": 340.44853703703706,
+          "p50": 335.225,
+          "p95": 504.48155
+        },
+        "reranking": {
+          "count": 54,
+          "mean": 7077.2588703703705,
+          "p50": 6776.2435000000005,
+          "p95": 11459.0501
+        },
+        "retrieval": {
+          "count": 54,
+          "mean": 16.079907407407408,
+          "p50": 15.7385,
+          "p95": 18.07495
+        },
+        "verification": {
+          "count": 42,
+          "mean": 2832.5285714285715,
+          "p50": 2501.0875,
+          "p95": 5175.113250000002
+        },
+        "question_total": {
+          "count": 54,
+          "mean": 14071.588718522064,
+          "p50": 13904.620649991557,
+          "p95": 19922.954139971993
+        }
+      },
+      "mean_cost_usd": 0.002028166666666667,
+      "token_usage": {
+        "embedding_tokens": 1600,
+        "input_tokens": 199565,
+        "output_tokens": 57980,
+        "total_tokens": 259145,
+        "complete": true
+      },
+      "role_usage": {
+        "embedding": {
+          "attempts": 54,
+          "tokens": 1600,
+          "http_ms": 18371.094999999998
+        },
+        "reranker": {
+          "attempts": 55,
+          "tokens": 155640,
+          "http_ms": 382170.40099999995
+        },
+        "generator": {
+          "attempts": 54,
+          "tokens": 69309,
+          "http_ms": 238753.50900000002
+        },
+        "verifier": {
+          "attempts": 42,
+          "tokens": 32596,
+          "http_ms": 118964.045
+        }
+      },
+      "validation_failures": {
+        "reranking": 1
+      },
+      "run_cost_usd": 0.27899432
+    },
+    "fast": {
+      "status": "completed",
+      "judge_status": "completed",
+      "n": 54,
+      "retrieval": {
+        "recall_at_1": 0.7619047619047619,
+        "recall_at_3": 1.0,
+        "recall_at_5": 1.0,
+        "mrr_at_k": 0.9761904761904762,
+        "ndcg_at_k": 0.9805138165783596
+      },
+      "quality": {
+        "answer_correctness": {
+          "count": 42,
+          "mean": 0.9285714285714286,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "citation_groundedness": {
+          "count": 40,
+          "mean": 1.0,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "refusal_accuracy": {
+          "count": 54,
+          "mean": 0.9629629629629629,
+          "p50": 1.0,
+          "p95": 1.0
+        },
+        "false_refusal": {
+          "count": 42,
+          "mean": 0.047619047619047616,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "quote_match_failure": {
+          "count": 54,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        },
+        "unsupported_answer": {
+          "count": 54,
+          "mean": 0.0,
+          "p50": 0.0,
+          "p95": 0.0
+        }
+      },
+      "latency_ms": {
+        "count": 54,
+        "mean": 10654.191283333434,
+        "p50": 10497.512399975676,
+        "p95": 15314.551299973393
+      },
+      "phase_latency_ms": {
+        "generation": {
+          "count": 54,
+          "mean": 3705.1610555555553,
+          "p50": 3784.6144999999997,
+          "p95": 7452.1551500000005
+        },
+        "provider_http": {
+          "count": 54,
+          "mean": 10623.053944444444,
+          "p50": 10470.682,
+          "p95": 15261.4588
+        },
+        "query_embedding": {
+          "count": 54,
+          "mean": 371.25572222222223,
+          "p50": 341.3315,
+          "p95": 630.1934500000001
+        },
+        "reranking": {
+          "count": 54,
+          "mean": 6546.944074074074,
+          "p50": 6494.582,
+          "p95": 9922.382000000001
+        },
+        "retrieval": {
+          "count": 54,
+          "mean": 16.59022222222222,
+          "p50": 15.161000000000001,
+          "p95": 23.13965
+        },
+        "question_total": {
+          "count": 54,
+          "mean": 10654.191283333434,
+          "p50": 10497.512399975676,
+          "p95": 15314.551299973393
+        }
+      },
+      "mean_cost_usd": 0.0016935111111111112,
+      "token_usage": {
+        "embedding_tokens": 1600,
+        "input_tokens": 174332,
+        "output_tokens": 47126,
+        "total_tokens": 223058,
+        "complete": true
+      },
+      "role_usage": {
+        "embedding": {
+          "attempts": 54,
+          "tokens": 1600,
+          "http_ms": 20034.276
+        },
+        "reranker": {
+          "attempts": 54,
+          "tokens": 152574,
+          "http_ms": 353533.37600000005
+        },
+        "generator": {
+          "attempts": 54,
+          "tokens": 68884,
+          "http_ms": 200077.265
+        }
+      },
+      "validation_failures": {},
+      "run_cost_usd": 0.25102292000000004
+    }
+  },
+  "selective_audit": {
+    "protocol": "Offline deterministic policy replay on fixed generated candidates; no new LLM calls",
+    "candidate_answers": 42,
+    "claims": 59,
+    "skip_eligible_claims": 0,
+    "fully_avoidable_verifier_calls": 0,
+    "observed_potential_call_reduction": 0.0,
+    "measured_selective_api_latency": null,
+    "limitation": "Skipping some claims in a batch does not remove the verifier call. Latency/cost savings are not assumed."
+  },
+  "cost_ledger": [
+    {
+      "experiment": "paired_retrieval",
+      "cost_usd": 0.12349863999999999
+    },
+    {
+      "experiment": "calibration-baseline-dev-live",
+      "cost_usd": 0.002966
+    },
+    {
+      "experiment": "calibration-calibrated-dev",
+      "cost_usd": 0.0029588
+    },
+    {
+      "experiment": "calibration-calibrated-test",
+      "cost_usd": 0.0030226
+    },
+    {
+      "experiment": "quality_strict",
+      "cost_usd": 0.27899432
+    },
+    {
+      "experiment": "quality_fast",
+      "cost_usd": 0.25102292000000004
+    }
+  ],
+  "known_recorded_cost_usd": 0.6624632800000001,
+  "complete_total_cost_available": false,
+  "cost_caveat": "The interrupted earlier quality run has unknown usage/cost; this subtotal is not the total invoice. Checkpoints and prior-release reports are not counted twice.",
+  "limitations": [
+    "Synthetic regression set, not human-reviewed business acceptance.",
+    "Existing test split has been evaluated previously; it is not newly unseen.",
+    "Reranking/generation are stochastic; differences are single-run observations.",
+    "Independent LLM Judge can make errors; citation scores are not a formal guarantee."
+  ]
+}

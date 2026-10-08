@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "storage": "pgvector",
+  "pdf_citations": true,
+  "restart_persistence": false,
+  "agent_api_and_frontend": true,
+  "model_scope": "Local mode API gate only; full Agent contracts run separately with controlled models and real pgvector"
+}

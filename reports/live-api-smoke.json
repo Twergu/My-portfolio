@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-15T01:03:40.970472+00:00",
+  "status": "passed",
+  "chat_model": "gpt-5.6-luna",
+  "embedding_model": "text-embedding-3-small",
+  "verifier_model": "gpt-5.6-luna",
+  "real_api_calls_attempted": true,
+  "checks": {
+    "indexed": true,
+    "physical_pages": true,
+    "generated_answer": true,
+    "expected_amount": true,
+    "page_2_citation": true,
+    "grounded_claims": true,
+    "original_pdf_available": true
+  },
+  "operations": [
+    {
+      "operation": "indexing",
+      "status": "ready",
+      "recorded_at": "2026-09-15T01:03:43.845733+00:00",
+      "document_id": "7e19aeaad32e45f586d50f86f1bee128",
+      "metrics": {
+        "elapsed_ms": 2088.562,
+        "timings_ms": {
+          "parsing": 331.821,
+          "chunking": 0.116,
+          "provider_http": 1726.333,
+          "embedding": 1726.8,
+          "storage": 9.983
+        },
+        "token_usage": {
+          "embedding_tokens": 59,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 59,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 1.18e-06,
+        "known_cost_usd": 1.18e-06,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 1726.333,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 59,
+              "output_tokens": 0,
+              "total_tokens": 59
+            }
+          }
+        ]
+      }
+    },
+    {
+      "operation": "question",
+      "status": "answered",
+      "recorded_at": "2026-09-15T01:03:48.609850+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 4757.646,
+        "timings_ms": {
+          "provider_http": 4740.312,
+          "query_embedding": 1241.439,
+          "retrieval": 4.262,
+          "generation": 1979.801,
+          "verification": 1519.412
+        },
+        "token_usage": {
+          "embedding_tokens": 9,
+          "input_tokens": 541,
+          "output_tokens": 128,
+          "total_tokens": 678,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 3,
+        "attempt_count": 3,
+        "retry_count": 0,
+        "cost_usd": 0.00026198,
+        "known_cost_usd": 0.00026198,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 1241.165,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 9,
+              "output_tokens": 0,
+              "total_tokens": 9
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1979.767,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 292,
+              "output_tokens": 56,
+              "total_tokens": 348
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1519.38,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 249,
+              "output_tokens": 72,
+              "total_tokens": 321
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "cost_usd": 0.00026315999999999997,
+  "answer": "The hotel reimbursement cap is JPY 14500 per night. [1]",
+  "claims": [
+    {
+      "text": "The hotel reimbursement cap is JPY 14500 per night.",
+      "evidence": [
+        {
+          "source_id": 1,
+          "quote": "The hotel reimbursement cap is JPY 14500 per night."
+        }
+      ],
+      "supported": true
+    }
+  ],
+  "support": {
+    "method": "quote_match_and_model_entailment",
+    "total_claims": 1,
+    "verified_claims": 1,
+    "all_supported": true,
+    "verifier_model": "gpt-5.6-luna",
+    "failure_reason": null,
+    "verdicts": [
+      {
+        "claim_index": 1,
+        "supported": true,
+        "reason": "The cited passage explicitly states that the hotel reimbursement cap is JPY 14500 per night, directly answering the question."
+      }
+    ],
+    "verification_mode": "strict"
+  },
+  "reason": "Real embedding, generation, and entailment-verification requests completed and all smoke assertions passed.",
+  "elapsed_ms": 7169.233899971005
+}

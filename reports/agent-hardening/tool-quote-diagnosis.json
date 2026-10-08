@@ -1,0 +1,45 @@
+{
+  "source": "evaluation-final-complete-live.json",
+  "status": "confirmed_backend_integration_defect",
+  "cases": [
+    {
+      "id": "training-clarify-ja",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 66,
+      "call_end": 70
+    },
+    {
+      "id": "purchase-multiply-en",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 70,
+      "call_end": 73
+    },
+    {
+      "id": "hotel-two-nights-zh",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 73,
+      "call_end": 76
+    },
+    {
+      "id": "training-cap-ja",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 76,
+      "call_end": 79
+    },
+    {
+      "id": "leave-mock-window-zh",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 85,
+      "call_end": 88
+    },
+    {
+      "id": "return-purchase-cross-en",
+      "failure": "server_canonical_tool_text_missing_from_quotable_body",
+      "call_start": 88,
+      "call_end": 92
+    }
+  ],
+  "fix": "Append the same server-generated canonical calculation to tool source.text. Preserve exact quote matching and Strict/all. Original raw report is unchanged.",
+  "tests": "test_canonical_tool_quote_is_actual_evidence_not_an_unquotable_metadata_label: zh/ja/en x calculator/calendar",
+  "judge_disagreement": "return-deadline-en correctness boolean false contradicts reason; original score preserved"
+}

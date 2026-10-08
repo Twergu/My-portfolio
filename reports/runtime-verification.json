@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-09-14T03:08:15.145520+00:00",
+  "markdown_links": "passed",
+  "source_index_relative_links": "passed",
+  "yaml_syntax": "passed",
+  "javascript_syntax": "passed",
+  "browser_smoke": {
+    "settings_zh_ja": "passed",
+    "local_pdf_citations": "passed",
+    "latency_cost_details": "passed"
+  },
+  "docker_build_run": {
+    "status": "blocked",
+    "reason": "Docker Engine/CLI unavailable on this machine; WSL not installed."
+  }
+}

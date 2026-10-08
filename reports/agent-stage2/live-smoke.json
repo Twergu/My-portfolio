@@ -1,0 +1,3339 @@
+{
+  "dataset": "agent-tools-stage2-v1",
+  "dataset_provenance": "AI-authored fictional policies and scenarios; not human reviewed",
+  "generated_at": "2026-10-04T04:48:59.098918+00:00",
+  "settings": {
+    "mode": "api",
+    "base_url": "https://api.openai.com/v1",
+    "chat_model": "gpt-5.6-luna",
+    "verifier_model": "gpt-5.6-luna",
+    "verification_mode": "strict",
+    "verification_strategy": "all",
+    "verifier_prompt": "baseline",
+    "embedding_model": "text-embedding-3-small",
+    "top_k": 3,
+    "min_score": 0.25,
+    "chunk_size": 900,
+    "chunk_overlap": 0,
+    "search_mode": "exact",
+    "retrieval_mode": "hybrid",
+    "candidate_k": 20,
+    "rrf_k": 60,
+    "reranker_mode": "off",
+    "reranker_model": ""
+  },
+  "scope": "Real Embedding, Planner, Generator, Verifier; real isolated SQLite retrieval, deterministic math/dates, explicitly mock workweek calendar. No customer documents or external writes.",
+  "status": "passed",
+  "cases": [
+    {
+      "id": "purchasing-zh",
+      "checks": {
+        "answered": true,
+        "grounded": true,
+        "expected_tools": true,
+        "no_external_action": true,
+        "expected_tool_value": true
+      },
+      "passed": true,
+      "first": {
+        "status": "answered",
+        "intent": "business_task",
+        "goal": "根据采购规定计算购买3本办公笔记本（每本1200日元）的总额，并确定审批要求及需提交的材料。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "tool_completed",
+            "tool": "calculator",
+            "observation_id": "tool_2",
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calculator",
+            "page": null,
+            "url": null,
+            "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "operation": "multiply"
+              },
+              "result": {
+                "operation": "multiply",
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "result": "3600",
+                "rounded": false,
+                "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence."
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "我想购买3本办公笔记本，每本1200日元。请根据采购规定计算总额，并告诉我需要提交什么。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "购买3本、每本1200日元的办公笔记本，总额为3600日元。 [2] [3]\n\n该采购规定自2026年1月1日起生效，适用于办公用品采购。 [1]\n\n总额不超过5000日元的采购需要直属经理确认。 [1]\n\n需要提交物品清单、总预算和直属经理确认。 [1]",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calculator",
+            "page": null,
+            "url": null,
+            "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "operation": "multiply"
+              },
+              "result": {
+                "operation": "multiply",
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "result": "3600",
+                "rounded": false,
+                "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence."
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "我想购买3本办公笔记本，每本1200日元。请根据采购规定计算总额，并告诉我需要提交什么。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "购买3本、每本1200日元的办公笔记本，总额为3600日元。",
+            "evidence": [
+              {
+                "source_id": 3,
+                "quote": "我想购买3本办公笔记本，每本1200日元。"
+              },
+              {
+                "source_id": 2,
+                "quote": "Calculation multiply on operands 3, 1200 gives 3600"
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "该采购规定自2026年1月1日起生效，适用于办公用品采购。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Aster Labs fictional office-supplies purchasing policy, current from 2026-01-01."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "总额不超过5000日元的采购需要直属经理确认。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Purchases totaling at most 5000 JPY require line-manager confirmation."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "需要提交物品清单、总预算和直属经理确认。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Submit an item list, the total budget and the required manager confirmation."
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 4,
+          "verified_claims": 4,
+          "all_supported": true,
+          "semantic_supported_claims": 4,
+          "semantic_checked_claims": 4,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "用户提供了数量3和单价1200日元，且明确为办公笔记本；计算结果3×1200=3600，因此总额为3600日元。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "现行采购规定的元数据注明生效日期为2026年1月1日，正文明确其为办公用品采购规定。"
+            },
+            {
+              "claim_index": 3,
+              "supported": true,
+              "reason": "规定明确写明，总额不超过5000日元的采购需要直属经理确认。"
+            },
+            {
+              "claim_index": 4,
+              "supported": true,
+              "reason": "规定要求提交物品清单、总预算和所需的经理确认；由于本次总额为3600日元，适用直属经理确认要求。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 16818.115,
+        "metrics": {
+          "elapsed_ms": 16818.115,
+          "timings_ms": {
+            "provider_http": 16744.808,
+            "agent_planning": 7229.77,
+            "query_embedding": 787.935,
+            "retrieval": 4.212,
+            "agent_tool_knowledge_search": 809.131,
+            "agent_tool_calculator": 4.425,
+            "generation": 4602.678,
+            "verification": 4152.219
+          },
+          "token_usage": {
+            "embedding_tokens": 48,
+            "input_tokens": 7269,
+            "output_tokens": 1161,
+            "total_tokens": 8478,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 6,
+          "attempt_count": 6,
+          "retry_count": 0,
+          "cost_usd": 0.00284796,
+          "known_cost_usd": 0.00284796,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2729.843,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1372,
+                "output_tokens": 118,
+                "total_tokens": 1490
+              }
+            },
+            {
+              "kind": "embedding",
+              "model": "text-embedding-3-small",
+              "elapsed_ms": 783.845,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "embedding",
+              "token_usage": {
+                "input_tokens": 48,
+                "output_tokens": 0,
+                "total_tokens": 48
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2279.475,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1689,
+                "output_tokens": 104,
+                "total_tokens": 1793
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2208.156,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1804,
+                "output_tokens": 126,
+                "total_tokens": 1930
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 4596.88,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1048,
+                "output_tokens": 394,
+                "total_tokens": 1442
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 4146.609,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1356,
+                "output_tokens": 419,
+                "total_tokens": 1775
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": true,
+          "actions_executed": false
+        }
+      },
+      "final": {
+        "status": "answered",
+        "intent": "business_task",
+        "goal": "根据采购规定计算购买3本办公笔记本（每本1200日元）的总额，并确定审批要求及需提交的材料。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "tool_completed",
+            "tool": "calculator",
+            "observation_id": "tool_2",
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calculator",
+            "page": null,
+            "url": null,
+            "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "operation": "multiply"
+              },
+              "result": {
+                "operation": "multiply",
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "result": "3600",
+                "rounded": false,
+                "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence."
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "我想购买3本办公笔记本，每本1200日元。请根据采购规定计算总额，并告诉我需要提交什么。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "购买3本、每本1200日元的办公笔记本，总额为3600日元。 [2] [3]\n\n该采购规定自2026年1月1日起生效，适用于办公用品采购。 [1]\n\n总额不超过5000日元的采购需要直属经理确认。 [1]\n\n需要提交物品清单、总预算和直属经理确认。 [1]",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calculator",
+            "page": null,
+            "url": null,
+            "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "operation": "multiply"
+              },
+              "result": {
+                "operation": "multiply",
+                "operands": [
+                  "3",
+                  "1200"
+                ],
+                "result": "3600",
+                "rounded": false,
+                "text": "Calculation multiply on operands 3, 1200 gives 3600 (at most 6 decimal places, half-up rounding). The operands were supplied by the planner; their applicability and units require user or document evidence."
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "我想购买3本办公笔记本，每本1200日元。请根据采购规定计算总额，并告诉我需要提交什么。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "购买3本、每本1200日元的办公笔记本，总额为3600日元。",
+            "evidence": [
+              {
+                "source_id": 3,
+                "quote": "我想购买3本办公笔记本，每本1200日元。"
+              },
+              {
+                "source_id": 2,
+                "quote": "Calculation multiply on operands 3, 1200 gives 3600"
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "该采购规定自2026年1月1日起生效，适用于办公用品采购。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Aster Labs fictional office-supplies purchasing policy, current from 2026-01-01."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "总额不超过5000日元的采购需要直属经理确认。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Purchases totaling at most 5000 JPY require line-manager confirmation."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "需要提交物品清单、总预算和直属经理确认。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Submit an item list, the total budget and the required manager confirmation."
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 4,
+          "verified_claims": 4,
+          "all_supported": true,
+          "semantic_supported_claims": 4,
+          "semantic_checked_claims": 4,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "用户提供了数量3和单价1200日元，且明确为办公笔记本；计算结果3×1200=3600，因此总额为3600日元。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "现行采购规定的元数据注明生效日期为2026年1月1日，正文明确其为办公用品采购规定。"
+            },
+            {
+              "claim_index": 3,
+              "supported": true,
+              "reason": "规定明确写明，总额不超过5000日元的采购需要直属经理确认。"
+            },
+            {
+              "claim_index": 4,
+              "supported": true,
+              "reason": "规定要求提交物品清单、总预算和所需的经理确认；由于本次总额为3600日元，适用直属经理确认要求。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 16818.115,
+        "metrics": {
+          "elapsed_ms": 16818.115,
+          "timings_ms": {
+            "provider_http": 16744.808,
+            "agent_planning": 7229.77,
+            "query_embedding": 787.935,
+            "retrieval": 4.212,
+            "agent_tool_knowledge_search": 809.131,
+            "agent_tool_calculator": 4.425,
+            "generation": 4602.678,
+            "verification": 4152.219
+          },
+          "token_usage": {
+            "embedding_tokens": 48,
+            "input_tokens": 7269,
+            "output_tokens": 1161,
+            "total_tokens": 8478,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 6,
+          "attempt_count": 6,
+          "retry_count": 0,
+          "cost_usd": 0.00284796,
+          "known_cost_usd": 0.00284796,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2729.843,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1372,
+                "output_tokens": 118,
+                "total_tokens": 1490
+              }
+            },
+            {
+              "kind": "embedding",
+              "model": "text-embedding-3-small",
+              "elapsed_ms": 783.845,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "embedding",
+              "token_usage": {
+                "input_tokens": 48,
+                "output_tokens": 0,
+                "total_tokens": 48
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2279.475,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1689,
+                "output_tokens": 104,
+                "total_tokens": 1793
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2208.156,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1804,
+                "output_tokens": 126,
+                "total_tokens": 1930
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 4596.88,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1048,
+                "output_tokens": 394,
+                "total_tokens": 1442
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 4146.609,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1356,
+                "output_tokens": 419,
+                "total_tokens": 1775
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": true,
+          "actions_executed": false
+        }
+      }
+    },
+    {
+      "id": "training-ja",
+      "checks": {
+        "answered": true,
+        "grounded": true,
+        "expected_tools": true,
+        "no_external_action": true,
+        "expected_tool_value": true
+      },
+      "passed": true,
+      "first": {
+        "status": "answered",
+        "intent": "business_task",
+        "goal": "研修規程に基づき、2026年10月12日開始の研修について申請期限と必要書類を確認する。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "tool_completed",
+            "tool": "calendar",
+            "observation_id": "tool_2",
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "end_date": null,
+                "offset_days": -3,
+                "operation": "date_offset",
+                "start_date": "2026-10-12",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+                "date": "2026-10-09"
+              }
+            },
+            "number": 2
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "申請期限は2026年10月9日です。 [1] [2]\n\n必要書類は、研修スケジュールと直属上司の承認です。 [1]\n\nこの研修規程は2026年1月1日から現行です。 [1]",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "end_date": null,
+                "offset_days": -3,
+                "operation": "date_offset",
+                "start_date": "2026-10-12",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+                "date": "2026-10-09"
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "研修の開始日は2026年10月12日です。研修規程に基づく申請期限の日付を計算して、必要書類も教えてください。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "申請期限は2026年10月9日です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Submit a training request at least 3 calendar days before the course start date."
+              },
+              {
+                "source_id": 2,
+                "quote": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "必要書類は、研修スケジュールと直属上司の承認です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Required documents are the course schedule and line-manager approval."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "この研修規程は2026年1月1日から現行です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Aster Labs fictional training policy, current from 2026-01-01."
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 3,
+          "verified_claims": 3,
+          "all_supported": true,
+          "semantic_supported_claims": 3,
+          "semantic_checked_claims": 3,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "現行の研修規程は開始日の少なくとも3暦日前の申請を求めており、2026年10月12日の3暦日前は2026年10月9日です。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "規程は必要書類として、研修スケジュールと直属上司の承認を明示しています。"
+            },
+            {
+              "claim_index": 3,
+              "supported": true,
+              "reason": "引用された規程は2026年1月1日から現行であると明記されています。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 14008.638,
+        "metrics": {
+          "elapsed_ms": 14008.638,
+          "timings_ms": {
+            "provider_http": 13940.803,
+            "agent_planning": 6737.614,
+            "query_embedding": 249.778,
+            "retrieval": 4.227,
+            "agent_tool_knowledge_search": 269.709,
+            "agent_tool_calendar": 4.43,
+            "generation": 3910.192,
+            "verification": 3069.619
+          },
+          "token_usage": {
+            "embedding_tokens": 35,
+            "input_tokens": 7036,
+            "output_tokens": 986,
+            "total_tokens": 8057,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 6,
+          "attempt_count": 6,
+          "retry_count": 0,
+          "cost_usd": 0.0025911,
+          "known_cost_usd": 0.0025911,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1976.12,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1382,
+                "output_tokens": 115,
+                "total_tokens": 1497
+              }
+            },
+            {
+              "kind": "embedding",
+              "model": "text-embedding-3-small",
+              "elapsed_ms": 245.625,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "embedding",
+              "token_usage": {
+                "input_tokens": 35,
+                "output_tokens": 0,
+                "total_tokens": 35
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2913.515,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1669,
+                "output_tokens": 136,
+                "total_tokens": 1805
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1836.038,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1789,
+                "output_tokens": 112,
+                "total_tokens": 1901
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3905.317,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1043,
+                "output_tokens": 326,
+                "total_tokens": 1369
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3064.189,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1153,
+                "output_tokens": 297,
+                "total_tokens": 1450
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": false,
+          "actions_executed": false
+        }
+      },
+      "final": {
+        "status": "answered",
+        "intent": "business_task",
+        "goal": "研修規程に基づき、2026年10月12日開始の研修について申請期限と必要書類を確認する。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "tool_completed",
+            "tool": "calendar",
+            "observation_id": "tool_2",
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "end_date": null,
+                "offset_days": -3,
+                "operation": "date_offset",
+                "start_date": "2026-10-12",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+                "date": "2026-10-09"
+              }
+            },
+            "number": 2
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "申請期限は2026年10月9日です。 [1] [2]\n\n必要書類は、研修スケジュールと直属上司の承認です。 [1]\n\nこの研修規程は2026年1月1日から現行です。 [1]",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0164,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "tool",
+            "provenance": "calculated",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+            "metadata": {
+              "observation_id": "tool_2",
+              "arguments": {
+                "end_date": null,
+                "offset_days": -3,
+                "operation": "date_offset",
+                "start_date": "2026-10-12",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09.",
+                "date": "2026-10-09"
+              }
+            },
+            "number": 2
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "研修の開始日は2026年10月12日です。研修規程に基づく申請期限の日付を計算して、必要書類も教えてください。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 3
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "申請期限は2026年10月9日です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Submit a training request at least 3 calendar days before the course start date."
+              },
+              {
+                "source_id": 2,
+                "quote": "Date calculation: 2026-10-12 plus -3 calendar days = 2026-10-09."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "必要書類は、研修スケジュールと直属上司の承認です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Required documents are the course schedule and line-manager approval."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "この研修規程は2026年1月1日から現行です。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Aster Labs fictional training policy, current from 2026-01-01."
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 3,
+          "verified_claims": 3,
+          "all_supported": true,
+          "semantic_supported_claims": 3,
+          "semantic_checked_claims": 3,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "現行の研修規程は開始日の少なくとも3暦日前の申請を求めており、2026年10月12日の3暦日前は2026年10月9日です。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "規程は必要書類として、研修スケジュールと直属上司の承認を明示しています。"
+            },
+            {
+              "claim_index": 3,
+              "supported": true,
+              "reason": "引用された規程は2026年1月1日から現行であると明記されています。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 14008.638,
+        "metrics": {
+          "elapsed_ms": 14008.638,
+          "timings_ms": {
+            "provider_http": 13940.803,
+            "agent_planning": 6737.614,
+            "query_embedding": 249.778,
+            "retrieval": 4.227,
+            "agent_tool_knowledge_search": 269.709,
+            "agent_tool_calendar": 4.43,
+            "generation": 3910.192,
+            "verification": 3069.619
+          },
+          "token_usage": {
+            "embedding_tokens": 35,
+            "input_tokens": 7036,
+            "output_tokens": 986,
+            "total_tokens": 8057,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 6,
+          "attempt_count": 6,
+          "retry_count": 0,
+          "cost_usd": 0.0025911,
+          "known_cost_usd": 0.0025911,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1976.12,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1382,
+                "output_tokens": 115,
+                "total_tokens": 1497
+              }
+            },
+            {
+              "kind": "embedding",
+              "model": "text-embedding-3-small",
+              "elapsed_ms": 245.625,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "embedding",
+              "token_usage": {
+                "input_tokens": 35,
+                "output_tokens": 0,
+                "total_tokens": 35
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2913.515,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1669,
+                "output_tokens": 136,
+                "total_tokens": 1805
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1836.038,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1789,
+                "output_tokens": 112,
+                "total_tokens": 1901
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3905.317,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1043,
+                "output_tokens": 326,
+                "total_tokens": 1369
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3064.189,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1153,
+                "output_tokens": 297,
+                "total_tokens": 1450
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": false,
+          "actions_executed": false
+        }
+      }
+    },
+    {
+      "id": "commuting-en",
+      "checks": {
+        "answered": true,
+        "grounded": true,
+        "expected_tools": true,
+        "no_external_action": true,
+        "clarified": true
+      },
+      "passed": true,
+      "first": {
+        "status": "needs_input",
+        "intent": "business_task",
+        "goal": "Assess conditional commuting allowance eligibility and identify the required submission documents and process.",
+        "questions": [
+          "Are you employed full-time?",
+          "How many on-site workdays do you have per week?"
+        ],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "answer_clarification",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "Are you employed full-time?\nHow many on-site workdays do you have per week?",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "099b172315f7485c89861b38aca17f09",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 3,
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "score": 0.0328,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=3",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "number": 2,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0323,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "number": 3,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0317,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "Can I apply for the commuting allowance, and what do I need to submit?",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 4
+          }
+        ],
+        "mode": "api",
+        "refused": true,
+        "claims": [],
+        "support": {
+          "method": "not_checked",
+          "total_claims": 0,
+          "verified_claims": 0,
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 5539.701,
+        "metrics": {
+          "elapsed_ms": 5539.701,
+          "timings_ms": {
+            "provider_http": 5484.295,
+            "agent_planning": 3696.559,
+            "query_embedding": 173.724,
+            "retrieval": 4.421,
+            "agent_tool_knowledge_search": 195.848,
+            "generation": 1630.638
+          },
+          "token_usage": {
+            "embedding_tokens": 10,
+            "input_tokens": 4598,
+            "output_tokens": 272,
+            "total_tokens": 4880,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 4,
+          "attempt_count": 4,
+          "retry_count": 0,
+          "cost_usd": 0.0012462,
+          "known_cost_usd": 0.0012462,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1734.172,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1358,
+                "output_tokens": 79,
+                "total_tokens": 1437
+              }
+            },
+            {
+              "kind": "embedding",
+              "model": "text-embedding-3-small",
+              "elapsed_ms": 169.757,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "embedding",
+              "token_usage": {
+                "input_tokens": 10,
+                "output_tokens": 0,
+                "total_tokens": 10
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1954.538,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 2108,
+                "output_tokens": 106,
+                "total_tokens": 2214
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1625.827,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1132,
+                "output_tokens": 87,
+                "total_tokens": 1219
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": false,
+          "actions_executed": false
+        }
+      },
+      "final": {
+        "status": "answered",
+        "intent": "business_task",
+        "goal": "Assess conditional eligibility for the commuting allowance and identify the documents required for submission.",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "knowledge_search",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "answer_clarification",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 3,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "number": 1,
+            "chunk_id": "099b172315f7485c89861b38aca17f09",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 3,
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "score": 0.0328,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=3",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 2",
+            "page": null,
+            "url": null,
+            "text": "I am a full-time employee and work on site 3 days per week.",
+            "metadata": {
+              "responding_to": [
+                "Are you employed full-time?",
+                "How many on-site workdays do you have per week?"
+              ],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 5
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "Based on your self-reported information, you conditionally meet the commuting allowance eligibility criteria because you are full-time and work on site at least three days per week; employer confirmation is still required. [1] [5]\n\nYou need to submit an employment-type declaration and an on-site work schedule. [1]",
+        "retrieved_sources": [
+          {
+            "number": 1,
+            "chunk_id": "099b172315f7485c89861b38aca17f09",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 3,
+            "text": "Fictional Agent test policy - page 3\nAster Labs fictional commuting allowance policy, current from 2026-01-01. Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation.",
+            "score": 0.0328,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=3",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "number": 2,
+            "chunk_id": "aefde9bd0e6946a29fc39d5ba973623d",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 2,
+            "text": "Fictional Agent test policy - page 2\nAster Labs fictional training policy, current from 2026-01-01. Submit a training request\nat least 3 calendar days before the course start date. Required documents are the course\nschedule and line-manager approval. The advance-notice requirement uses calendar days, not\nworking days.",
+            "score": 0.0323,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=2",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "number": 3,
+            "chunk_id": "4ce0f5e656cc411fa5f33ca555d8e1d4",
+            "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+            "name": "fictional-agent-policies.pdf",
+            "page": 1,
+            "text": "Fictional Agent test policy - page 1\nAster Labs fictional office-supplies purchasing policy, current from 2026-01-01. Purchases\ntotaling at most 5000 JPY require line-manager confirmation. Higher totals require\ndepartment-head confirmation. Submit an item list, the total budget and the required\nmanager confirmation. This policy describes the process and does not grant approval\nautomatically.",
+            "score": 0.0317,
+            "url": "/api/documents/ff4531a2f6d34e11a1f3c78e5bcbb8e7/file#page=1",
+            "kind": "document",
+            "provenance": "retrieved",
+            "metadata": {
+              "policy_status": "current",
+              "effective_from": "2026-01-01",
+              "effective_to": null,
+              "department": "",
+              "document_version": ""
+            }
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "Can I apply for the commuting allowance, and what do I need to submit?",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 4
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 2",
+            "page": null,
+            "url": null,
+            "text": "I am a full-time employee and work on site 3 days per week.",
+            "metadata": {
+              "responding_to": [
+                "Are you employed full-time?",
+                "How many on-site workdays do you have per week?"
+              ],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 5
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "Based on your self-reported information, you conditionally meet the commuting allowance eligibility criteria because you are full-time and work on site at least three days per week; employer confirmation is still required.",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Eligibility\nrequires full-time employment and at least 3 on-site workdays per week. Submit an\nemployment-type declaration and an on-site work schedule. Self-reported facts can support\nonly a conditional eligibility assessment, subject to employer confirmation."
+              },
+              {
+                "source_id": 5,
+                "quote": "I am a full-time employee and work on site 3 days per week."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "You need to submit an employment-type declaration and an on-site work schedule.",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Submit an\nemployment-type declaration and an on-site work schedule."
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 2,
+          "verified_claims": 2,
+          "all_supported": true,
+          "semantic_supported_claims": 2,
+          "semantic_checked_claims": 2,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "The current policy requires full-time employment and at least 3 on-site workdays per week. The user self-reports both conditions, and the policy explicitly limits this to a conditional assessment subject to employer confirmation."
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "The current policy explicitly requires submission of an employment-type declaration and an on-site work schedule."
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 7938.011,
+        "metrics": {
+          "elapsed_ms": 7938.011,
+          "timings_ms": {
+            "provider_http": 7905.96,
+            "agent_planning": 2098.986,
+            "generation": 3261.63,
+            "verification": 2560.727
+          },
+          "token_usage": {
+            "embedding_tokens": 0,
+            "input_tokens": 4404,
+            "output_tokens": 662,
+            "total_tokens": 5066,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 3,
+          "attempt_count": 3,
+          "retry_count": 0,
+          "cost_usd": 0.0016752,
+          "known_cost_usd": 0.0016752,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2094.088,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 2151,
+                "output_tokens": 151,
+                "total_tokens": 2302
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3256.751,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1289,
+                "output_tokens": 354,
+                "total_tokens": 1643
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2555.121,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 964,
+                "output_tokens": 157,
+                "total_tokens": 1121
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": false,
+          "uses_self_report": true,
+          "actions_executed": false
+        }
+      }
+    },
+    {
+      "id": "mock-calendar-zh",
+      "checks": {
+        "answered": true,
+        "grounded": true,
+        "expected_tools": true,
+        "no_external_action": true,
+        "mock_disclosed": true
+      },
+      "passed": true,
+      "first": {
+        "status": "answered",
+        "intent": "knowledge_question",
+        "goal": "根据当前模拟日历计算2026年10月2日至10月6日（含首尾）的工作日数量，并说明是否已确认公司节假日。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "calendar",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "kind": "tool",
+            "provenance": "mock",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+            "metadata": {
+              "observation_id": "tool_1",
+              "arguments": {
+                "end_date": "2026-10-06",
+                "offset_days": 0,
+                "operation": "date_range",
+                "start_date": "2026-10-02",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+                "calendar": "Mock Monday-Friday calendar; statutory/company holidays are not configured",
+                "calendar_days": 5,
+                "working_days": 3,
+                "working_dates": [
+                  "2026-10-02",
+                  "2026-10-05",
+                  "2026-10-06"
+                ]
+              }
+            },
+            "number": 1
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "按当前模拟的周一至周五日历，2026年10月2日至10月6日（含首尾）有3个工作日。 [1]\n\n这不代表已经确认公司节假日，因为该日历未配置法定或公司节假日，且其来源为模拟日历。 [1]",
+        "retrieved_sources": [
+          {
+            "kind": "tool",
+            "provenance": "mock",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+            "metadata": {
+              "observation_id": "tool_1",
+              "arguments": {
+                "end_date": "2026-10-06",
+                "offset_days": 0,
+                "operation": "date_range",
+                "start_date": "2026-10-02",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+                "calendar": "Mock Monday-Friday calendar; statutory/company holidays are not configured",
+                "calendar_days": 5,
+                "working_days": 3,
+                "working_dates": [
+                  "2026-10-02",
+                  "2026-10-05",
+                  "2026-10-06"
+                ]
+              }
+            },
+            "number": 1
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "请用当前模拟日历计算2026年10月2日至10月6日（包含首尾）有几个工作日，并说明这是否已经确认了公司节假日。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 2
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "按当前模拟的周一至周五日历，2026年10月2日至10月6日（含首尾）有3个工作日。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "这不代表已经确认公司节假日，因为该日历未配置法定或公司节假日，且其来源为模拟日历。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Calendar provenance: mock. This does not establish employee availability, entitlement or approval."
+              },
+              {
+                "source_id": 1,
+                "quote": "statutory/company holidays are not configured"
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 2,
+          "verified_claims": 2,
+          "all_supported": true,
+          "semantic_supported_claims": 2,
+          "semantic_checked_claims": 2,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "来源明确说明，在模拟的周一至周五日历下，2026年10月2日至10月6日（含首尾）共有3个工作日。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "来源明确标注日历来源为模拟日历，且未配置法定或公司节假日，因此该计算不能确认公司的实际节假日安排。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 11090.598,
+        "metrics": {
+          "elapsed_ms": 11090.598,
+          "timings_ms": {
+            "provider_http": 11054.466,
+            "agent_planning": 4198.14,
+            "agent_tool_calendar": 4.618,
+            "generation": 3372.352,
+            "verification": 3500.517
+          },
+          "token_usage": {
+            "embedding_tokens": 0,
+            "input_tokens": 5417,
+            "output_tokens": 795,
+            "total_tokens": 6212,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 4,
+          "attempt_count": 4,
+          "retry_count": 0,
+          "cost_usd": 0.0020374,
+          "known_cost_usd": 0.0020374,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2432.229,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1381,
+                "output_tokens": 164,
+                "total_tokens": 1545
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1757.939,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1578,
+                "output_tokens": 102,
+                "total_tokens": 1680
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3368.321,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1007,
+                "output_tokens": 239,
+                "total_tokens": 1246
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3495.978,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1451,
+                "output_tokens": 290,
+                "total_tokens": 1741
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": true,
+          "uses_self_report": false,
+          "actions_executed": false
+        }
+      },
+      "final": {
+        "status": "answered",
+        "intent": "knowledge_question",
+        "goal": "根据当前模拟日历计算2026年10月2日至10月6日（含首尾）的工作日数量，并说明是否已确认公司节假日。",
+        "questions": [],
+        "failure_code": null,
+        "trace": [
+          {
+            "step": 1,
+            "event": "call_tool",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 1,
+            "event": "tool_completed",
+            "tool": "calendar",
+            "observation_id": "tool_1",
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "prepare_answer",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          },
+          {
+            "step": 2,
+            "event": "ready",
+            "tool": null,
+            "observation_id": null,
+            "code": null
+          }
+        ],
+        "sources": [
+          {
+            "kind": "tool",
+            "provenance": "mock",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+            "metadata": {
+              "observation_id": "tool_1",
+              "arguments": {
+                "end_date": "2026-10-06",
+                "offset_days": 0,
+                "operation": "date_range",
+                "start_date": "2026-10-02",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+                "calendar": "Mock Monday-Friday calendar; statutory/company holidays are not configured",
+                "calendar_days": 5,
+                "working_days": 3,
+                "working_dates": [
+                  "2026-10-02",
+                  "2026-10-05",
+                  "2026-10-06"
+                ]
+              }
+            },
+            "number": 1
+          }
+        ],
+        "reference_date": "2026-10-04",
+        "timezone": "Asia/Tokyo",
+        "answer": "按当前模拟的周一至周五日历，2026年10月2日至10月6日（含首尾）有3个工作日。 [1]\n\n这不代表已经确认公司节假日，因为该日历未配置法定或公司节假日，且其来源为模拟日历。 [1]",
+        "retrieved_sources": [
+          {
+            "kind": "tool",
+            "provenance": "mock",
+            "name": "calendar",
+            "page": null,
+            "url": null,
+            "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+            "metadata": {
+              "observation_id": "tool_1",
+              "arguments": {
+                "end_date": "2026-10-06",
+                "offset_days": 0,
+                "operation": "date_range",
+                "start_date": "2026-10-02",
+                "week_offset": 1,
+                "weekday": 0
+              },
+              "result": {
+                "reference_date": "2026-10-04",
+                "timezone": "Asia/Tokyo",
+                "text": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'. Calendar provenance: mock. This does not establish employee availability, entitlement or approval.",
+                "calendar": "Mock Monday-Friday calendar; statutory/company holidays are not configured",
+                "calendar_days": 5,
+                "working_days": 3,
+                "working_dates": [
+                  "2026-10-02",
+                  "2026-10-05",
+                  "2026-10-06"
+                ]
+              }
+            },
+            "number": 1
+          },
+          {
+            "kind": "user",
+            "provenance": "self_report",
+            "name": "User input 1",
+            "page": null,
+            "url": null,
+            "text": "请用当前模拟日历计算2026年10月2日至10月6日（包含首尾）有几个工作日，并说明这是否已经确认了公司节假日。",
+            "metadata": {
+              "responding_to": [],
+              "reference_date": "2026-10-04",
+              "timezone": "Asia/Tokyo"
+            },
+            "number": 2
+          }
+        ],
+        "mode": "api",
+        "refused": false,
+        "claims": [
+          {
+            "text": "按当前模拟的周一至周五日历，2026年10月2日至10月6日（含首尾）有3个工作日。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "From 2026-10-02 to 2026-10-06 inclusive: 5 calendar days and 3 working days under calendar 'Mock Monday-Friday calendar; statutory/company holidays are not configured'."
+              }
+            ],
+            "supported": true
+          },
+          {
+            "text": "这不代表已经确认公司节假日，因为该日历未配置法定或公司节假日，且其来源为模拟日历。",
+            "evidence": [
+              {
+                "source_id": 1,
+                "quote": "Calendar provenance: mock. This does not establish employee availability, entitlement or approval."
+              },
+              {
+                "source_id": 1,
+                "quote": "statutory/company holidays are not configured"
+              }
+            ],
+            "supported": true
+          }
+        ],
+        "support": {
+          "method": "quote_match_and_model_entailment",
+          "total_claims": 2,
+          "verified_claims": 2,
+          "all_supported": true,
+          "semantic_supported_claims": 2,
+          "semantic_checked_claims": 2,
+          "skipped_claim_indices": [],
+          "verification_strategy": "all",
+          "verifier_model": "gpt-5.6-luna",
+          "failure_reason": null,
+          "verdicts": [
+            {
+              "claim_index": 1,
+              "supported": true,
+              "reason": "来源明确说明，在模拟的周一至周五日历下，2026年10月2日至10月6日（含首尾）共有3个工作日。"
+            },
+            {
+              "claim_index": 2,
+              "supported": true,
+              "reason": "来源明确标注日历来源为模拟日历，且未配置法定或公司节假日，因此该计算不能确认公司的实际节假日安排。"
+            }
+          ],
+          "verification_mode": "strict"
+        },
+        "elapsed_ms": 11090.598,
+        "metrics": {
+          "elapsed_ms": 11090.598,
+          "timings_ms": {
+            "provider_http": 11054.466,
+            "agent_planning": 4198.14,
+            "agent_tool_calendar": 4.618,
+            "generation": 3372.352,
+            "verification": 3500.517
+          },
+          "token_usage": {
+            "embedding_tokens": 0,
+            "input_tokens": 5417,
+            "output_tokens": 795,
+            "total_tokens": 6212,
+            "complete": true,
+            "attempts_without_usage": 0
+          },
+          "request_count": 4,
+          "attempt_count": 4,
+          "retry_count": 0,
+          "cost_usd": 0.0020374,
+          "known_cost_usd": 0.0020374,
+          "cost_status": "estimated",
+          "cost_basis": "configured_uniform_usd_per_million_tokens",
+          "prices": {
+            "embedding": 0.02,
+            "chat_input": 0.2,
+            "chat_output": 1.2,
+            "verifier_input": 0.2,
+            "verifier_output": 1.2,
+            "judge_input": 2.0,
+            "judge_output": 8.0,
+            "reranker_input": null,
+            "reranker_output": null
+          },
+          "unknown_cost_reasons": [],
+          "requests": [
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 2432.229,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1381,
+                "output_tokens": 164,
+                "total_tokens": 1545
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 1757.939,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "planner",
+              "token_usage": {
+                "input_tokens": 1578,
+                "output_tokens": 102,
+                "total_tokens": 1680
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3368.321,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "generator",
+              "token_usage": {
+                "input_tokens": 1007,
+                "output_tokens": 239,
+                "total_tokens": 1246
+              }
+            },
+            {
+              "kind": "chat",
+              "model": "gpt-5.6-luna",
+              "elapsed_ms": 3495.978,
+              "attempt": 1,
+              "status_code": 200,
+              "error": null,
+              "role": "verifier",
+              "token_usage": {
+                "input_tokens": 1451,
+                "output_tokens": 290,
+                "total_tokens": 1741
+              }
+            }
+          ],
+          "validation_failures": []
+        },
+        "evidence_notices": {
+          "uses_mock_data": true,
+          "uses_self_report": false,
+          "actions_executed": false
+        }
+      }
+    }
+  ],
+  "operations": [
+    {
+      "operation": "indexing",
+      "status": "ready",
+      "recorded_at": "2026-10-04T04:49:02.090952+00:00",
+      "document_id": "ff4531a2f6d34e11a1f3c78e5bcbb8e7",
+      "metrics": {
+        "elapsed_ms": 2843.928,
+        "timings_ms": {
+          "parsing": 192.482,
+          "chunking": 0.128,
+          "provider_http": 2623.988,
+          "embedding": 2624.494,
+          "storage": 10.237
+        },
+        "token_usage": {
+          "embedding_tokens": 234,
+          "input_tokens": 0,
+          "output_tokens": 0,
+          "total_tokens": 234,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 4.68e-06,
+        "known_cost_usd": 4.68e-06,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 2623.988,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 234,
+              "output_tokens": 0,
+              "total_tokens": 234
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "agent",
+      "status": "answered",
+      "recorded_at": "2026-10-04T04:49:18.923194+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 16818.132,
+        "timings_ms": {
+          "provider_http": 16744.808,
+          "agent_planning": 7229.77,
+          "query_embedding": 787.935,
+          "retrieval": 4.212,
+          "agent_tool_knowledge_search": 809.131,
+          "agent_tool_calculator": 4.425,
+          "generation": 4602.678,
+          "verification": 4152.219
+        },
+        "token_usage": {
+          "embedding_tokens": 48,
+          "input_tokens": 7269,
+          "output_tokens": 1161,
+          "total_tokens": 8478,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 6,
+        "attempt_count": 6,
+        "retry_count": 0,
+        "cost_usd": 0.00284796,
+        "known_cost_usd": 0.00284796,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2729.843,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1372,
+              "output_tokens": 118,
+              "total_tokens": 1490
+            }
+          },
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 783.845,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 48,
+              "output_tokens": 0,
+              "total_tokens": 48
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2279.475,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1689,
+              "output_tokens": 104,
+              "total_tokens": 1793
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2208.156,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1804,
+              "output_tokens": 126,
+              "total_tokens": 1930
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 4596.88,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 1048,
+              "output_tokens": 394,
+              "total_tokens": 1442
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 4146.609,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 1356,
+              "output_tokens": 419,
+              "total_tokens": 1775
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "agent",
+      "status": "answered",
+      "recorded_at": "2026-10-04T04:49:32.936925+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 14008.656,
+        "timings_ms": {
+          "provider_http": 13940.803,
+          "agent_planning": 6737.614,
+          "query_embedding": 249.778,
+          "retrieval": 4.227,
+          "agent_tool_knowledge_search": 269.709,
+          "agent_tool_calendar": 4.43,
+          "generation": 3910.192,
+          "verification": 3069.619
+        },
+        "token_usage": {
+          "embedding_tokens": 35,
+          "input_tokens": 7036,
+          "output_tokens": 986,
+          "total_tokens": 8057,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 6,
+        "attempt_count": 6,
+        "retry_count": 0,
+        "cost_usd": 0.0025911,
+        "known_cost_usd": 0.0025911,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1976.12,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1382,
+              "output_tokens": 115,
+              "total_tokens": 1497
+            }
+          },
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 245.625,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 35,
+              "output_tokens": 0,
+              "total_tokens": 35
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2913.515,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1669,
+              "output_tokens": 136,
+              "total_tokens": 1805
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1836.038,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1789,
+              "output_tokens": 112,
+              "total_tokens": 1901
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3905.317,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 1043,
+              "output_tokens": 326,
+              "total_tokens": 1369
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3064.189,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 1153,
+              "output_tokens": 297,
+              "total_tokens": 1450
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "agent",
+      "status": "needs_input",
+      "recorded_at": "2026-10-04T04:49:38.481208+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 5539.716,
+        "timings_ms": {
+          "provider_http": 5484.295,
+          "agent_planning": 3696.559,
+          "query_embedding": 173.724,
+          "retrieval": 4.421,
+          "agent_tool_knowledge_search": 195.848,
+          "generation": 1630.638
+        },
+        "token_usage": {
+          "embedding_tokens": 10,
+          "input_tokens": 4598,
+          "output_tokens": 272,
+          "total_tokens": 4880,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 4,
+        "attempt_count": 4,
+        "retry_count": 0,
+        "cost_usd": 0.0012462,
+        "known_cost_usd": 0.0012462,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1734.172,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1358,
+              "output_tokens": 79,
+              "total_tokens": 1437
+            }
+          },
+          {
+            "kind": "embedding",
+            "model": "text-embedding-3-small",
+            "elapsed_ms": 169.757,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "embedding",
+            "token_usage": {
+              "input_tokens": 10,
+              "output_tokens": 0,
+              "total_tokens": 10
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1954.538,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 2108,
+              "output_tokens": 106,
+              "total_tokens": 2214
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1625.827,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 1132,
+              "output_tokens": 87,
+              "total_tokens": 1219
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "agent",
+      "status": "answered",
+      "recorded_at": "2026-10-04T04:49:46.423684+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 7938.025,
+        "timings_ms": {
+          "provider_http": 7905.96,
+          "agent_planning": 2098.986,
+          "generation": 3261.63,
+          "verification": 2560.727
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 4404,
+          "output_tokens": 662,
+          "total_tokens": 5066,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 3,
+        "attempt_count": 3,
+        "retry_count": 0,
+        "cost_usd": 0.0016752,
+        "known_cost_usd": 0.0016752,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2094.088,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 2151,
+              "output_tokens": 151,
+              "total_tokens": 2302
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3256.751,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 1289,
+              "output_tokens": 354,
+              "total_tokens": 1643
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2555.121,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 964,
+              "output_tokens": 157,
+              "total_tokens": 1121
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "operation": "agent",
+      "status": "answered",
+      "recorded_at": "2026-10-04T04:49:57.519116+00:00",
+      "document_id": null,
+      "metrics": {
+        "elapsed_ms": 11090.612,
+        "timings_ms": {
+          "provider_http": 11054.466,
+          "agent_planning": 4198.14,
+          "agent_tool_calendar": 4.618,
+          "generation": 3372.352,
+          "verification": 3500.517
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 5417,
+          "output_tokens": 795,
+          "total_tokens": 6212,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 4,
+        "attempt_count": 4,
+        "retry_count": 0,
+        "cost_usd": 0.0020374,
+        "known_cost_usd": 0.0020374,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 2432.229,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1381,
+              "output_tokens": 164,
+              "total_tokens": 1545
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1757.939,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "planner",
+            "token_usage": {
+              "input_tokens": 1578,
+              "output_tokens": 102,
+              "total_tokens": 1680
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3368.321,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "generator",
+            "token_usage": {
+              "input_tokens": 1007,
+              "output_tokens": 239,
+              "total_tokens": 1246
+            }
+          },
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 3495.978,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 1451,
+              "output_tokens": 290,
+              "total_tokens": 1741
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    }
+  ],
+  "estimated_cost_usd": 0.01040254
+}

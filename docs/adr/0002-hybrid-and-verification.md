@@ -1,0 +1,13 @@
+# ADR 0002: Hybrid retrieval, optional reranking and explicit verification coverage
+
+Decision: keep pooled model transport and physical-page chunks. Add a shared multilingual lexical analyzer, SQLite FTS5 BM25 and PostgreSQL `tsvector`/GIN full-text ranking. ASCII hash lexemes provide the same NFKC-normalized numeric, identifier and Japanese/Chinese bigram semantics on both engines. PostgreSQL `ts_rank_cd` is not BM25. Lexical indexes are transactionally replaced/deleted with chunks; existing corpora are backfilled at initialization.
+
+Dense and lexical Top 20 lists merge by Reciprocal Rank Fusion, `sum(1/(60+rank))`, deduplicating chunk IDs. Raw cosine, BM25 and full-text scores are not comparable. Hybrid source scores are fusion scores, not confidence probabilities. The dense similarity threshold only affects the dense branch.
+
+Optional listwise LLM reranking uses the same long-lived provider with its own model/role/price group. It sees only authorized candidates, returns a complete ID permutation, and supplies no new evidence. One bounded format-only repair is allowed; all attempts/costs remain recorded and a second invalid response fails closed. Final Top 5 passages go to the Generator. Reranker can materially increase latency and cost; it is not silently enabled for every deployment.
+
+`off` checks structure/IDs; `fast` also checks verbatim quotes; `strict` adds semantic verification. `verification_strategy=all` remains default. Experimental `selective` only skips a simple whole-passage exact quotation with no detected high-risk terms in question/claim. Every numeric, negation, version/date, scope or paraphrased claim still receives semantic verification. Skips have `supported=null`, coverage counters and `all_supported=null`, never a false verified badge. Selective verification is an explicit quality/latency tradeoff, not a safety guarantee.
+
+The verifier prompt is versioned (`baseline`/`calibrated`) and shared between runtime and a blind Claim/Evidence calibration runner. Dev labels do not enter requests. The new prompt permits an already-established context/date without demanding literal restatement, while rejecting invented tax qualifiers and unsupported inherited exceptions. Equal development-set results do not justify claiming reduced false refusal; baseline stays default. Automated tests and synthetic labels do not substitute for human business acceptance.
+
+References: [SQLite FTS5](https://sqlite.org/fts5.html), [PostgreSQL text-search controls](https://www.postgresql.org/docs/current/textsearch-controls.html), [OpenAI structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs). JSON mode does not guarantee our schema: strict validation is always applied.

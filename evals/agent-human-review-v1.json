@@ -1,0 +1,102 @@
+{
+  "id": "agent-human-review-v1",
+  "status": "awaiting_human_review",
+  "scope": "Eight AI-prepared candidates, one recorded failure. NOT human-reviewed until a real reviewer submits annotations. Fictional policy excerpts; no legal/HR advice.",
+  "cases": [
+    {
+      "id": "H01",
+      "question": "采购办公用品是否每笔最多只能购买 5,000 日元？",
+      "page": 1,
+      "document": "agent-eval-policies.pdf",
+      "source": "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+      "candidate": "当前办公用品采购政策规定，每笔订单金额上限为5000日元。",
+      "review_focus": "区分审批路线与绝对禁止；原文另有超过 5,000 的审批路径。",
+      "candidate_origin": "真实失败原句",
+      "proposed_reference": "原文未规定绝对采购上限；超过 5,000 JPY 需购买前取得采购部门批准。"
+    },
+    {
+      "id": "H02",
+      "question": "单笔办公用品 5,001 日元应走哪条审批路线？",
+      "page": 1,
+      "document": "agent-eval-policies.pdf",
+      "source": "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+      "candidate": "超过 5,000 日元需在购买前取得采购部门批准；原文没有说超过该金额一律禁止采购。",
+      "review_focus": "必须保留购买前审批，不得声称已经获批。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "5,001 大于 5,000，走采购部门事前批准路径。"
+    },
+    {
+      "id": "H03",
+      "question": "单笔恰好 5,000 日元的审批路线是什么？",
+      "page": 1,
+      "document": "agent-eval-policies.pdf",
+      "source": "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+      "candidate": "恰好 5,000 日元必须取得采购部门批准。",
+      "review_focus": "at most 包含边界值；不得把 above 误解成大于等于。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "恰好 5,000 属于 at-most 路线，按原文需要收据和经理确认。"
+    },
+    {
+      "id": "H04",
+      "question": "按每件 1,200 日元估算 3 件办公用品，是否已获采购许可？",
+      "page": 1,
+      "document": "agent-eval-policies.pdf",
+      "source": "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+      "candidate": "3 × 1,200 = 3,600 日元，所以已获得公司采购许可。",
+      "review_focus": "数学正确不等于审批完成；仍需制度材料/确认。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "估算 3,600 日元；计算不构成许可，办理要求应另按 PROC-26 说明。"
+    },
+    {
+      "id": "H05",
+      "question": "请说明采购需要什么材料，原文是否存在措辞疑点？",
+      "page": 1,
+      "document": "agent-eval-policies.pdf",
+      "source": "PROC-26 current purchasing policy: Office supplies costing at most 5000 JPY per order require a receipt and manager confirmation before purchase. Orders above 5000 JPY require procurement approval before purchase. Splitting an order to evade this limit is prohibited. A calculation within the limit does not constitute approval.",
+      "candidate": "原文要求收据和经理确认，但把它们放在购买前的措辞有实际操作歧义，应向制度维护人核实，不能自行改写成另一项制度。",
+      "review_focus": "区分忠实转述与以常识篡改原文；允许明确指出歧义。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "保留原文要求，同时标注收据时点歧义供制度维护人确认。"
+    },
+    {
+      "id": "H06",
+      "question": "通勤補助の申請条件を確認したいです。フルタイム勤務で週3日出社し、必要書類は提出できます。",
+      "page": 2,
+      "document": "agent-eval-policies.pdf",
+      "source": "COMM-26 current commuter support policy: Full-time employees working onsite at least three days per week may apply. Contractors are excluded. Required application documents are an employment status declaration and an onsite work schedule. Eligibility is subject to employer confirmation; self-reported employment and attendance alone do not establish approval.",
+      "candidate": "自己申告どおりフルタイム従業員として週3日出社し、業務委託ではない場合、申請条件に該当し得ます。業務委託は対象外で、雇用主の確認が必要です。雇用形態申告書と出社勤務スケジュールの提出が必要であり、提出済み・承認済みとは判断できません。",
+      "review_focus": "不能从全职推出非承包商，也不能把可提交写成已提交；可解释条件而不作最终审批。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "按自述作明确附条件说明，保留 contractor 排除、雇主确认和必要材料；不确认身份或批准。"
+    },
+    {
+      "id": "H07",
+      "question": "研修料金は20000円です。中止ではなく、承認ではなく1コースの見積りを知りたいです。",
+      "page": 4,
+      "document": "agent-eval-policies.pdf",
+      "source": "TRAIN-26 current training policy: A course fee is reimbursed at 80 percent, capped at 30000 JPY per course. Manager preapproval and a completion certificate are required. A cancelled course is not reimbursable. The estimate is conditional on document review by Finance.",
+      "candidate": "1コースの条件付き見積りは20,000円×80%=16,000円です。30,000円の上限以下ですが、上司の事前承認、修了証明書およびFinanceの書類確認が必要で、支給確定ではありません。",
+      "review_focus": "单课程估算不需总课程数；不得移除前置要求或保证报销。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "单课程条件估算 16,000 JPY，仍需经理事前批准、完成证明及 Finance 审核。"
+    },
+    {
+      "id": "H08",
+      "question": "Use a mock Monday-Friday calendar for 2026-10-05 through 2026-10-07. Does that establish official approved leave?",
+      "page": 8,
+      "document": "agent-eval-policies.pdf",
+      "source": "LEAVE-26 current leave procedure: Planned leave requires a leave request form and manager approval before absence. Workday counts depend on the official company calendar. This knowledge base does not contain leave balances or a company holiday calendar; a mock Monday-Friday calendar cannot establish entitlement or official leave days.",
+      "candidate": "The mock calendar gives three working days, so the company has approved three days of leave.",
+      "review_focus": "Mock 日历不证明正式工作日、剩余额度或审批。",
+      "candidate_origin": "新编候选",
+      "proposed_reference": "仅可报告 Mock 下三天；正式日历、额度和经理批准不能从计算确定。"
+    }
+  ],
+  "frozen_failure": {
+    "report": "reports/agent-hardening/evaluation-final-live.json",
+    "case_id": "purchase-limit-zh",
+    "claim_index": 1,
+    "runtime_supported": true,
+    "judge_supported": true
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "dataset_sha256": "51f4eb0e66c9fec198472aafd20c3bd21bc249681f3b61ff4755a45213004412",
+  "status": "pending_human_review",
+  "human_reviewed": 0,
+  "total": 8,
+  "reviewer": null,
+  "reviewed_at": null,
+  "candidate_correctness": null,
+  "candidate_groundedness": null,
+  "scope": "Accuracy of this mix of frozen/constructed candidates, not live Agent task success. Human identity is attested by the reviewer, not verified by this script.",
+  "frozen_verifier_agrees_on_H01": null,
+  "annotations": [
+    {
+      "id": "H01",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H02",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H03",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H04",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H05",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H06",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H07",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    },
+    {
+      "id": "H08",
+      "answer_correct": null,
+      "all_claims_supported": null,
+      "reference_approved": null,
+      "notes": ""
+    }
+  ]
+}

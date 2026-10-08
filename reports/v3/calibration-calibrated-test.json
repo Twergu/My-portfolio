@@ -1,0 +1,1245 @@
+{
+  "identity": {
+    "dataset_sha256": "9251adaeb9e381a812539b68fc476cb46405e13aea2d5237a220f185b0d86de9",
+    "model": "gpt-5.6-luna",
+    "prompt": "calibrated",
+    "split": "test",
+    "endpoint_sha256": "d9617135d6fdd0a2cde722d637a1dfcc3da37515708b3ea5d66ae607c8ac785e"
+  },
+  "review_status": "AI-authored; human review deferred",
+  "status": "completed",
+  "summary": {
+    "positive_class": "supported",
+    "tp": 8,
+    "fp": 0,
+    "fn": 0,
+    "tn": 10,
+    "precision": 1.0,
+    "recall": 1.0,
+    "false_accept_rate": 0.0,
+    "false_reject_rate": 0.0,
+    "errors": 0,
+    "n": 18
+  },
+  "latency_ms": {
+    "count": 18,
+    "mean": 1619.3608333333332,
+    "p50": 1623.5059999999999,
+    "p95": 1848.1260499999999
+  },
+  "cost_usd": 0.0030226,
+  "by_category": {
+    "exception": {
+      "positive_class": "supported",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 3
+    },
+    "interval": {
+      "positive_class": "supported",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": null,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 1
+    },
+    "negation": {
+      "positive_class": "supported",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 2
+    },
+    "number": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 2,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": null,
+      "errors": 0,
+      "n": 2
+    },
+    "partial": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": null,
+      "errors": 0,
+      "n": 1
+    },
+    "supported": {
+      "positive_class": "supported",
+      "tp": 3,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": null,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 3
+    },
+    "tax": {
+      "positive_class": "supported",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 2
+    },
+    "unit": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": null,
+      "errors": 0,
+      "n": 1
+    },
+    "unsupported": {
+      "positive_class": "supported",
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": null,
+      "recall": null,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": null,
+      "errors": 0,
+      "n": 1
+    },
+    "version": {
+      "positive_class": "supported",
+      "tp": 1,
+      "fp": 0,
+      "fn": 0,
+      "tn": 1,
+      "precision": 1.0,
+      "recall": 1.0,
+      "false_accept_rate": 0.0,
+      "false_reject_rate": 0.0,
+      "errors": 0,
+      "n": 2
+    }
+  },
+  "cases": [
+    {
+      "id": "claim-19",
+      "category": "supported",
+      "language": "en",
+      "expected": true,
+      "predicted": true,
+      "reason": "The cited passage directly states that receipts should be kept in the expense portal.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1600.068,
+        "timings_ms": {
+          "provider_http": 1599.922,
+          "verification": 1599.971
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 344,
+          "output_tokens": 40,
+          "total_tokens": 384,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001168,
+        "known_cost_usd": 0.0001168,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1599.922,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 344,
+              "output_tokens": 40,
+              "total_tokens": 384
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-20",
+      "category": "number",
+      "language": "en",
+      "expected": false,
+      "predicted": false,
+      "reason": "The cited passage permits up to 12 hours per month, not 21 hours per month.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1783.778,
+        "timings_ms": {
+          "provider_http": 1783.665,
+          "verification": 1783.707
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 351,
+          "output_tokens": 65,
+          "total_tokens": 416,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001482,
+        "known_cost_usd": 0.0001482,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1783.665,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 351,
+              "output_tokens": 65,
+              "total_tokens": 416
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-21",
+      "category": "negation",
+      "language": "en",
+      "expected": true,
+      "predicted": true,
+      "reason": "The source states that written approval is mandatory, which entails that it is not optional.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1489.52,
+        "timings_ms": {
+          "provider_http": 1489.422,
+          "verification": 1489.463
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 335,
+          "output_tokens": 64,
+          "total_tokens": 399,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001438,
+        "known_cost_usd": 0.0001438,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1489.422,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 335,
+              "output_tokens": 64,
+              "total_tokens": 399
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-22",
+      "category": "partial",
+      "language": "en",
+      "expected": false,
+      "predicted": false,
+      "reason": "The cited passage supports that the identity system issues badges, but it does not support the added claim that this occurs within two days.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1558.192,
+        "timings_ms": {
+          "provider_http": 1558.093,
+          "verification": 1558.135
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 341,
+          "output_tokens": 78,
+          "total_tokens": 419,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001618,
+        "known_cost_usd": 0.0001618,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1558.093,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 341,
+              "output_tokens": 78,
+              "total_tokens": 419
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-23",
+      "category": "version",
+      "language": "en",
+      "expected": true,
+      "predicted": true,
+      "reason": "The source states that the revision is an unapproved draft as of September 2027 and that the current rule is unchanged, which entails that the revised rule is not active then.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1926.009,
+        "timings_ms": {
+          "provider_http": 1925.913,
+          "verification": 1925.953
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 373,
+          "output_tokens": 113,
+          "total_tokens": 486,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0002102,
+        "known_cost_usd": 0.0002102,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1925.913,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 373,
+              "output_tokens": 113,
+              "total_tokens": 486
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-24",
+      "category": "exception",
+      "language": "en",
+      "expected": false,
+      "predicted": false,
+      "reason": "The cited passage states that employees may work remotely but explicitly excludes interns, contradicting the claim that interns may work remotely.",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1557.654,
+        "timings_ms": {
+          "provider_http": 1557.558,
+          "verification": 1557.598
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 346,
+          "output_tokens": 65,
+          "total_tokens": 411,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001472,
+        "known_cost_usd": 0.0001472,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1557.558,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 346,
+              "output_tokens": 65,
+              "total_tokens": 411
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-25",
+      "category": "supported",
+      "language": "zh",
+      "expected": true,
+      "predicted": true,
+      "reason": "引用明确要求将报销材料提交给财务部，支持财务部负责接收报销材料。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1316.219,
+        "timings_ms": {
+          "provider_http": 1316.113,
+          "verification": 1316.158
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 357,
+          "output_tokens": 49,
+          "total_tokens": 406,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001302,
+        "known_cost_usd": 0.0001302,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1316.113,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 357,
+              "output_tokens": 49,
+              "total_tokens": 406
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-26",
+      "category": "interval",
+      "language": "zh",
+      "expected": true,
+      "predicted": true,
+      "reason": "来源明确规定政策有效期为2027年4月1日至2028年3月31日，涵盖2027年8月，并明确每人额度为1200元。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1648.903,
+        "timings_ms": {
+          "provider_http": 1648.789,
+          "verification": 1648.837
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 391,
+          "output_tokens": 90,
+          "total_tokens": 481,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001862,
+        "known_cost_usd": 0.0001862,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1648.789,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 391,
+              "output_tokens": 90,
+              "total_tokens": 481
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-27",
+      "category": "tax",
+      "language": "zh",
+      "expected": false,
+      "predicted": false,
+      "reason": "引文仅说明补贴上限为700元，未说明该金额为不含税，因此“不含税”的断言缺乏支持。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1670.527,
+        "timings_ms": {
+          "provider_http": 1670.407,
+          "verification": 1670.459
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 355,
+          "output_tokens": 82,
+          "total_tokens": 437,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001694,
+        "known_cost_usd": 0.0001694,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1670.407,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 355,
+              "output_tokens": 82,
+              "total_tokens": 437
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-28",
+      "category": "number",
+      "language": "zh",
+      "expected": false,
+      "predicted": false,
+      "reason": "引文规定需提前7个工作日申请，而主张称为7个自然日，时间单位不一致，未被引文支持。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1646.337,
+        "timings_ms": {
+          "provider_http": 1646.224,
+          "verification": 1646.271
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 350,
+          "output_tokens": 81,
+          "total_tokens": 431,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001672,
+        "known_cost_usd": 0.0001672,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1646.224,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 350,
+              "output_tokens": 81,
+              "total_tokens": 431
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-29",
+      "category": "exception",
+      "language": "zh",
+      "expected": false,
+      "predicted": false,
+      "reason": "来源支持海外轮岗津贴为6000元，但明确说明税额另行规定，不能支持“含税”。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1834.382,
+        "timings_ms": {
+          "provider_http": 1834.248,
+          "verification": 1834.307
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 404,
+          "output_tokens": 93,
+          "total_tokens": 497,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001924,
+        "known_cost_usd": 0.0001924,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1834.248,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 404,
+              "output_tokens": 93,
+              "total_tokens": 497
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-30",
+      "category": "unsupported",
+      "language": "zh",
+      "expected": false,
+      "predicted": false,
+      "reason": "引文仅说明该设施面向正式员工开放，未说明员工家属也可使用，因此不能支持家属可以使用该设施的断言。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1500.444,
+        "timings_ms": {
+          "provider_http": 1500.328,
+          "verification": 1500.377
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 350,
+          "output_tokens": 88,
+          "total_tokens": 438,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001756,
+        "known_cost_usd": 0.0001756,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1500.328,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 350,
+              "output_tokens": 88,
+              "total_tokens": 438
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-31",
+      "category": "supported",
+      "language": "ja",
+      "expected": true,
+      "predicted": true,
+      "reason": "引用元は、問い合わせを総務部が受け付けると明示しており、総務部に問い合わせできることを支持しています。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1580.511,
+        "timings_ms": {
+          "provider_http": 1580.391,
+          "verification": 1580.442
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 360,
+          "output_tokens": 88,
+          "total_tokens": 448,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001776,
+        "known_cost_usd": 0.0001776,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1580.391,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 360,
+              "output_tokens": 88,
+              "total_tokens": 448
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-32",
+      "category": "negation",
+      "language": "ja",
+      "expected": false,
+      "predicted": false,
+      "reason": "引用元は「領収書がない申請は受理しません」と明示しており、「領収書がなくても申請できます」という主張を否定しています。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1610.693,
+        "timings_ms": {
+          "provider_http": 1610.579,
+          "verification": 1610.626
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 364,
+          "output_tokens": 83,
+          "total_tokens": 447,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001724,
+        "known_cost_usd": 0.0001724,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1610.579,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 364,
+              "output_tokens": 83,
+              "total_tokens": 447
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-33",
+      "category": "version",
+      "language": "ja",
+      "expected": false,
+      "predicted": false,
+      "reason": "引用元は現行規程が14日、旧規程が10日だと明示しており、現在の休暇日数が10日という主張を否定しています。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1654.627,
+        "timings_ms": {
+          "provider_http": 1654.514,
+          "verification": 1654.563
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 376,
+          "output_tokens": 99,
+          "total_tokens": 475,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.000194,
+        "known_cost_usd": 0.000194,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1654.514,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 376,
+              "output_tokens": 99,
+              "total_tokens": 475
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-34",
+      "category": "tax",
+      "language": "ja",
+      "expected": true,
+      "predicted": true,
+      "reason": "引用元は「交通費の精算額には消費税を含みます」と明示しており、交通費を税込みで精算するという主張を支持しています。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1636.319,
+        "timings_ms": {
+          "provider_http": 1636.175,
+          "verification": 1636.237
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 369,
+          "output_tokens": 99,
+          "total_tokens": 468,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001926,
+        "known_cost_usd": 0.0001926,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1636.175,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 369,
+              "output_tokens": 99,
+              "total_tokens": 468
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-35",
+      "category": "unit",
+      "language": "ja",
+      "expected": false,
+      "predicted": false,
+      "reason": "引用元は研修が合計9時間だと述べており、9日間という期間・単位を支持していません。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1772.152,
+        "timings_ms": {
+          "provider_http": 1772.041,
+          "verification": 1772.087
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 357,
+          "output_tokens": 84,
+          "total_tokens": 441,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001722,
+        "known_cost_usd": 0.0001722,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1772.041,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 357,
+              "output_tokens": 84,
+              "total_tokens": 441
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    },
+    {
+      "id": "claim-36",
+      "category": "exception",
+      "language": "ja",
+      "expected": true,
+      "predicted": true,
+      "reason": "引用は、通常は事前申請が必要だが、緊急時には翌営業日の申請を認めると明示しており、主張を全面的に裏付けています。",
+      "error": null,
+      "metrics": {
+        "elapsed_ms": 1362.16,
+        "timings_ms": {
+          "provider_http": 1362.007,
+          "verification": 1362.074
+        },
+        "token_usage": {
+          "embedding_tokens": 0,
+          "input_tokens": 398,
+          "output_tokens": 71,
+          "total_tokens": 469,
+          "complete": true,
+          "attempts_without_usage": 0
+        },
+        "request_count": 1,
+        "attempt_count": 1,
+        "retry_count": 0,
+        "cost_usd": 0.0001648,
+        "known_cost_usd": 0.0001648,
+        "cost_status": "estimated",
+        "cost_basis": "configured_uniform_usd_per_million_tokens",
+        "prices": {
+          "embedding": 0.02,
+          "chat_input": 0.2,
+          "chat_output": 1.2,
+          "verifier_input": 0.2,
+          "verifier_output": 1.2,
+          "judge_input": 2.0,
+          "judge_output": 8.0,
+          "reranker_input": null,
+          "reranker_output": null
+        },
+        "unknown_cost_reasons": [],
+        "requests": [
+          {
+            "kind": "chat",
+            "model": "gpt-5.6-luna",
+            "elapsed_ms": 1362.007,
+            "attempt": 1,
+            "status_code": 200,
+            "error": null,
+            "role": "verifier",
+            "token_usage": {
+              "input_tokens": 398,
+              "output_tokens": 71,
+              "total_tokens": 469
+            }
+          }
+        ],
+        "validation_failures": []
+      }
+    }
+  ]
+}

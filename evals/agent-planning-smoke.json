@@ -1,0 +1,36 @@
+{
+  "version": "agent-planning-stage1-v1",
+  "provenance": "AI-authored fictional fixtures, not human reviewed",
+  "reference_date": "2026-10-04",
+  "timezone": "Asia/Tokyo",
+  "cases": [
+    {
+      "id": "procurement-zh",
+      "language": "zh",
+      "question": "请查一下采购办公耗材要提交哪些材料。",
+      "mock_policy": "模拟企业采购规定：办公耗材采购需要提交物品清单、预算和直属主管确认。此处只列材料要求，不构成采购批准。",
+      "expected_status": "ready"
+    },
+    {
+      "id": "travel-ja",
+      "language": "ja",
+      "question": "出張精算の手続きを進めたいです。規程を確認し、必要書類を整理する準備をしてください。",
+      "mock_policy": "架空の出張精算規程：提出書類は旅程、領収書、費用明細です。書類の一覧は全社員共通です。精算の可否は別途審査します。",
+      "expected_status": "ready"
+    },
+    {
+      "id": "onboarding-en",
+      "language": "en",
+      "question": "What documents does the company require for onboarding a new employee?",
+      "mock_policy": "Fictional onboarding checklist: submit a signed employment agreement and emergency contact form. These are the complete document requirements in this fixture.",
+      "expected_status": "ready"
+    },
+    {
+      "id": "eligibility-zh",
+      "language": "zh",
+      "question": "帮我确认我是否符合公司通勤补助申请条件。",
+      "mock_policy": "模拟企业通勤补助规定：仅限全职员工，且每周现场办公至少三天。只有用户补充了雇佣类型和现场办公天数后，才能核对这两个条件。没有员工系统或个人记录可查。",
+      "expected_status": "needs_input"
+    }
+  ]
+}

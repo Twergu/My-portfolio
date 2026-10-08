@@ -1,0 +1,80 @@
+name: knowbase
+
+services:
+  init-db:
+    build: .
+    user: "0:0"
+    command: ["python", "-m", "scripts.init_database_password"]
+    volumes:
+      - database_secrets:/run/knowbase-secrets
+    restart: "no"
+
+  db:
+    image: pgvector/pgvector:0.8.6-pg17
+    environment:
+      POSTGRES_DB: knowbase
+      POSTGRES_USER: knowbase
+      POSTGRES_PASSWORD_FILE: /run/knowbase-secrets/postgres_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - database_secrets:/run/knowbase-secrets:ro
+    depends_on:
+      init-db:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knowbase -d knowbase"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    build: .
+    init: true
+    ports:
+      - "127.0.0.1:${RAG_PORT:-8000}:8000"
+    environment:
+      RAG_DATA_DIR: /app/data
+      RAG_DATABASE_PASSWORD_FILE: /run/knowbase-secrets/postgres_password
+      RAG_DATABASE_HOST: db
+      RAG_API_KEY: ${RAG_API_KEY:-}
+      RAG_BASE_URL: ${RAG_BASE_URL:-https://api.openai.com/v1}
+      RAG_CHAT_MODEL: ${RAG_CHAT_MODEL:-gpt-5.6-luna}
+      RAG_VERIFIER_MODEL: ${RAG_VERIFIER_MODEL:-gpt-5.6-luna}
+      RAG_VERIFICATION_MODE: ${RAG_VERIFICATION_MODE:-strict}
+      RAG_VERIFICATION_STRATEGY: ${RAG_VERIFICATION_STRATEGY:-all}
+      RAG_VERIFIER_PROMPT: ${RAG_VERIFIER_PROMPT:-baseline}
+      RAG_AUTH_MODE: ${RAG_AUTH_MODE:-local}
+      RAG_RETRIEVAL_MODE: ${RAG_RETRIEVAL_MODE:-dense}
+      RAG_CANDIDATE_K: ${RAG_CANDIDATE_K:-20}
+      RAG_RERANKER_MODE: ${RAG_RERANKER_MODE:-off}
+      RAG_RERANKER_MODEL: ${RAG_RERANKER_MODEL:-}
+      RAG_EVAL_JUDGE_MODEL: ${RAG_EVAL_JUDGE_MODEL:-}
+      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-text-embedding-3-small}
+      RAG_MODE: ${RAG_MODE:-local}
+      RAG_CHUNK_SIZE: ${RAG_CHUNK_SIZE:-900}
+      RAG_CHUNK_OVERLAP: ${RAG_CHUNK_OVERLAP:-120}
+      RAG_SEARCH_MODE: ${RAG_SEARCH_MODE:-exact}
+      RAG_EMBEDDING_USD_PER_MILLION_TOKENS: ${RAG_EMBEDDING_USD_PER_MILLION_TOKENS:-}
+      RAG_CHAT_INPUT_USD_PER_MILLION_TOKENS: ${RAG_CHAT_INPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_CHAT_OUTPUT_USD_PER_MILLION_TOKENS: ${RAG_CHAT_OUTPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_VERIFIER_INPUT_USD_PER_MILLION_TOKENS: ${RAG_VERIFIER_INPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_VERIFIER_OUTPUT_USD_PER_MILLION_TOKENS: ${RAG_VERIFIER_OUTPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_JUDGE_INPUT_USD_PER_MILLION_TOKENS: ${RAG_JUDGE_INPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_JUDGE_OUTPUT_USD_PER_MILLION_TOKENS: ${RAG_JUDGE_OUTPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_RERANKER_INPUT_USD_PER_MILLION_TOKENS: ${RAG_RERANKER_INPUT_USD_PER_MILLION_TOKENS:-}
+      RAG_RERANKER_OUTPUT_USD_PER_MILLION_TOKENS: ${RAG_RERANKER_OUTPUT_USD_PER_MILLION_TOKENS:-}
+    volumes:
+      - app_data:/app/data
+      - database_secrets:/run/knowbase-secrets:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  postgres_data:
+  app_data:
+  database_secrets:

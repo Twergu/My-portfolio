@@ -1,0 +1,404 @@
+{
+  "scope": "Two independent real API passes on the same fictional regression set. No causal/significance claim; model generation and service latency vary. All failed cases retained. Runtime Strict/all and ACL unchanged.",
+  "dataset_sha256": "7e2f341eac8a60c72d1a200d5c623662713a1546d5e320022e8cb88f05700d20",
+  "source_sha256": [
+    "4bfcb9160cc5f8713fc7fd2d893e71a76ffbc029f76b06a79323b0e9102d3948",
+    "3b44b75acac6bfdaf62b929cedc5d50b56ea9d67e9f5dfc5a36ec2b9b57d25c1"
+  ],
+  "all_tasks": {
+    "before": {
+      "completed": 24,
+      "expected": 24,
+      "complete": true,
+      "task_success": 0.5,
+      "planning_success": 0.875,
+      "tool_selection_accuracy": 0.9166666666666666,
+      "clarification_accuracy": 0.9583333333333334,
+      "answer_correctness": 0.3888888888888889,
+      "grounded_answer_rate": 0.3888888888888889,
+      "grounded_rate_among_delivered": 1,
+      "answerable_tasks": 18,
+      "delivered_answers": 7,
+      "tool_calls": 30,
+      "tool_calls_per_task": 1.25,
+      "planner_calls_per_task": 2.6666666666666665,
+      "duplicate_calls": 1,
+      "latency_ms": {
+        "count": 24,
+        "mean": 10968.710375,
+        "p50": 12258.825499999999,
+        "p95": 18122.117350000004
+      },
+      "phase_latency_ms": {
+        "agent_planning": {
+          "count": 24,
+          "mean": 4726.169333333333,
+          "p50": 5011.5735,
+          "p95": 8711.540100000004
+        },
+        "agent_tool_knowledge_search": {
+          "count": 24,
+          "mean": 220.65908333333334,
+          "p50": 185.26850000000002,
+          "p95": 394.8718
+        },
+        "agent_tool_calendar": {
+          "count": 24,
+          "mean": 0.578,
+          "p50": 0.0,
+          "p95": 4.6252
+        },
+        "agent_tool_calculator": {
+          "count": 24,
+          "mean": 0.7619166666666667,
+          "p50": 0.0,
+          "p95": 4.6103000000000005
+        },
+        "generation": {
+          "count": 24,
+          "mean": 3607.8420833333334,
+          "p50": 4214.4439999999995,
+          "p95": 7436.75155
+        },
+        "verification": {
+          "count": 24,
+          "mean": 2393.5750416666665,
+          "p50": 2626.064,
+          "p95": 6164.762250000001
+        }
+      },
+      "cost_per_task_usd": 0.0022355158333333333,
+      "known_cost_usd": 0.05365238,
+      "unknown_cost_tasks": 0,
+      "token_usage": {
+        "input_tokens": 145652,
+        "output_tokens": 20425,
+        "embedding_tokens": 599,
+        "total_tokens": 166676
+      },
+      "statuses": {
+        "answered": 7,
+        "unsupported_answer": 8,
+        "needs_input": 3,
+        "unavailable": 6
+      }
+    },
+    "after": {
+      "completed": 24,
+      "expected": 24,
+      "complete": true,
+      "task_success": 0.4583333333333333,
+      "planning_success": 0.875,
+      "tool_selection_accuracy": 0.875,
+      "clarification_accuracy": 1,
+      "answer_correctness": 0.2777777777777778,
+      "grounded_answer_rate": 0.2777777777777778,
+      "grounded_rate_among_delivered": 1,
+      "answerable_tasks": 18,
+      "delivered_answers": 5,
+      "tool_calls": 27,
+      "tool_calls_per_task": 1.125,
+      "planner_calls_per_task": 2,
+      "duplicate_calls": 0,
+      "latency_ms": {
+        "count": 24,
+        "mean": 11248.561708333333,
+        "p50": 10996.5625,
+        "p95": 20131.89965
+      },
+      "phase_latency_ms": {
+        "agent_planning": {
+          "count": 24,
+          "mean": 3421.054583333333,
+          "p50": 3356.631,
+          "p95": 6359.83885
+        },
+        "agent_tool_knowledge_search": {
+          "count": 24,
+          "mean": 135.24970833333333,
+          "p50": 149.838,
+          "p95": 291.74440000000016
+        },
+        "agent_tool_calendar": {
+          "count": 24,
+          "mean": 0.5987916666666667,
+          "p50": 0.0,
+          "p95": 4.5847
+        },
+        "agent_tool_calculator": {
+          "count": 24,
+          "mean": 0.578875,
+          "p50": 0.0,
+          "p95": 4.6081
+        },
+        "generation": {
+          "count": 24,
+          "mean": 4347.554375,
+          "p50": 4986.022999999999,
+          "p95": 8206.99445
+        },
+        "verification": {
+          "count": 24,
+          "mean": 3323.182625,
+          "p50": 3042.7709999999997,
+          "p95": 9304.053600000001
+        }
+      },
+      "cost_per_task_usd": 0.0022178808333333335,
+      "known_cost_usd": 0.05322914,
+      "unknown_cost_tasks": 0,
+      "token_usage": {
+        "input_tokens": 123994,
+        "output_tokens": 23682,
+        "embedding_tokens": 597,
+        "total_tokens": 148273
+      },
+      "statuses": {
+        "answered": 5,
+        "unsupported_answer": 12,
+        "needs_input": 1,
+        "unavailable": 4,
+        "insufficient_evidence": 2
+      }
+    }
+  },
+  "paired": [
+    {
+      "id": "purchase-limit-zh",
+      "before_status": "answered",
+      "after_status": "answered",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -815.7380000000012,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "commuter-contractor-ja",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": -3661.0380000000005,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "hotel-exclusion-en",
+      "before_status": "answered",
+      "after_status": "answered",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -449.85099999999875,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "training-cancelled-zh",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 1563.0730000000003,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "access-requirements-ja",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 2594.053,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "return-materials-en",
+      "before_status": "answered",
+      "after_status": "answered",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -1840.1630000000005,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "remote-probation-zh",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 69.66799999999967,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "leave-materials-ja",
+      "before_status": "answered",
+      "after_status": "answered",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -1439.4310000000005,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "commuter-clarify-ja",
+      "before_status": "needs_input",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 7653.414000000001,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "purchase-clarify-en",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": -2433.738000000001,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "remote-clarify-zh",
+      "before_status": "answered",
+      "after_status": "unsupported_answer",
+      "before_success": true,
+      "after_success": false,
+      "latency_delta_ms": -5887.380000000001,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "training-clarify-ja",
+      "before_status": "needs_input",
+      "after_status": "needs_input",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 70.08100000000013,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "purchase-multiply-en",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 2561.2620000000006,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "hotel-two-nights-zh",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": -117.0109999999986,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "training-cap-ja",
+      "before_status": "unsupported_answer",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": -2482.5030000000006,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "return-deadline-en",
+      "before_status": "answered",
+      "after_status": "unsupported_answer",
+      "before_success": true,
+      "after_success": false,
+      "latency_delta_ms": -125.94200000000092,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "leave-mock-window-zh",
+      "before_status": "answered",
+      "after_status": "answered",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": 1904.5370000000003,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "return-purchase-cross-en",
+      "before_status": "needs_input",
+      "after_status": "unsupported_answer",
+      "before_success": false,
+      "after_success": false,
+      "latency_delta_ms": 15914.253,
+      "planner_call_delta": -1
+    },
+    {
+      "id": "unavailable-send-ja",
+      "before_status": "unavailable",
+      "after_status": "unavailable",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -285.807,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "unavailable-ticket-en",
+      "before_status": "unavailable",
+      "after_status": "unavailable",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -479.72,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "unavailable-grant-zh",
+      "before_status": "unavailable",
+      "after_status": "unavailable",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -575.1519999999998,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "unavailable-balance-ja",
+      "before_status": "unavailable",
+      "after_status": "unavailable",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -33.787000000000035,
+      "planner_call_delta": 0
+    },
+    {
+      "id": "unavailable-policy-en",
+      "before_status": "unavailable",
+      "after_status": "insufficient_evidence",
+      "before_success": false,
+      "after_success": true,
+      "latency_delta_ms": -4428.108,
+      "planner_call_delta": -4
+    },
+    {
+      "id": "unavailable-official-calendar-zh",
+      "before_status": "unavailable",
+      "after_status": "insufficient_evidence",
+      "before_success": true,
+      "after_success": true,
+      "latency_delta_ms": -558.54,
+      "planner_call_delta": -2
+    }
+  ],
+  "both_successful_answered_cohort": {
+    "ids": [
+      "purchase-limit-zh",
+      "hotel-exclusion-en",
+      "return-materials-en",
+      "leave-materials-ja",
+      "leave-mock-window-zh"
+    ],
+    "before_ms": {
+      "count": 5,
+      "mean": 11338.3004,
+      "p50": 9614.97,
+      "p95": 15098.938
+    },
+    "after_ms": {
+      "count": 5,
+      "mean": 10810.1712,
+      "p50": 9165.119,
+      "p95": 16459.42
+    }
+  }
+}

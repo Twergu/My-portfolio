@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "relative_links_checked": 450,
+  "frozen_live_report_sha256": "d38530172cacabd3cdbd4041853824c7e27a3cc355a607db1c22b4be3442cf9c",
+  "frozen_agent_rag_files_unchanged": [
+    "backend/agent.py",
+    "backend/agent_grounding.py",
+    "backend/agent_service.py",
+    "backend/agent_tools.py",
+    "backend/calculations.py",
+    "backend/providers.py",
+    "backend/rag.py",
+    "backend/verification.py",
+    "evals/agent_dataset.json"
+  ],
+  "scope": "Deployment wrapper/UI/CI added; no prompt, Agent runtime, grounding, RAG or frozen dataset changes"
+}

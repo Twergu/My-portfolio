@@ -1,0 +1,6 @@
+{
+  "status": "passed",
+  "storage": "pgvector",
+  "pdf_citations": true,
+  "restart_persistence": true
+}
