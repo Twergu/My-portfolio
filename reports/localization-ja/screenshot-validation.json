@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-10T04:35:49.055632+00:00",
+  "status": "passed",
+  "scope": "Japanese README UI screenshot and four missing empty-state translations; no model evaluation",
+  "previous_commit": "8140cf4b894c481cff5c046d8c1bec08bc4f3ab2",
+  "screenshot": "docs/images/agent-home-ja.jpg",
+  "screenshot_sha256": "36a51a4d727f8116a16eb7204dae61e4c760924b4d226f290e7095102055fa5d",
+  "screenshot_dimensions": [
+    1280,
+    720
+  ],
+  "capture": "Unedited browser screenshot of the real local application with an isolated empty store and no API key; Japanese locale and Agent tab selected through UI.",
+  "browser_observation": "Japanese Agent heading and four Japanese empty-state messages confirmed after reload; no questions submitted or documents uploaded.",
+  "relative_links_checked": 598,
+  "existing_report_files_unchanged": 218,
+  "backend_and_evaluation_files_unchanged": true,
+  "frontend_tests_observed": {
+    "command": "node --test --test-reporter=tap tests/frontend/agent.test.cjs tests/frontend/demo.test.cjs",
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0
+  },
+  "javascript_syntax_check": "node --check dist/app.js: passed",
+  "paid_api_calls": 0,
+  "limitations": [
+    "Initial UI only; not a new end-to-end API evaluation or CI result.",
+    "Historical screenshots and evaluation results are preserved."
+  ]
+}

@@ -4,7 +4,9 @@ PDF アップロード → ページ単位の解析 → Embedding → 権限・�
 
 **クイックガイド：** [2 分間のデモ手順とスクリーンショット](docs/demo-walkthrough.md) · [安全な共有 / Docker + HTTPS デプロイ](docs/portfolio-sharing.md) · [凍結した 24 問の評価結果と 6 件の失敗](reports/agent-freeze-20261005/acceptance.md) · [デプロイ対応の変更報告](docs/portfolio-sharing-report.md)。現在はデプロイ可能なコードを提供しており、一般公開のオンラインデモはありません。デフォルトブランチに未マージの場合は `codex/rag-quality-v2` を参照してください。
 
-![Knowbase Agent — 過去の実ブラウザー検証時の画面](reports/agent-stage3/agent-home.jpg)
+![Knowbase Agent — 日本語の初期画面](docs/images/agent-home-ja.jpg)
+
+日本語 UI の実ブラウザー画面（2026-10-10 撮影）。空の資料庫で撮影しており、API 回答や評価結果の画面ではありません。
 
 ```mermaid
 flowchart LR
