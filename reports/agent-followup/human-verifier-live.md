@@ -1,6 +1,6 @@
-# Human-reviewed Verifier calibration
+# 人手ラベルによる Verifier 校正
 
-Real Verifier API on eight human-reviewed candidate/evidence pairs. Offline calibration, not end-to-end Agent quality; constructed candidates include four intentional errors. Reviewer saw proposed references; not blind or independent adjudication. New threshold rule used these cases for development, so this is not a held-out test.
+人手レビュー済みの候補・根拠ペア 8 件を実 Verifier API で評価しました。オフライン校正で、Agent 全体の品質評価ではありません。候補には意図的な誤りが 4 件あります。担当者は参照回答案を見ており、盲検や独立裁定ではありません。閾値ルールの開発に使ったため未見テストではありません。
 
 ```json
 {

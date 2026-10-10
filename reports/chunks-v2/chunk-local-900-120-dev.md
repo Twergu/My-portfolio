@@ -1,12 +1,12 @@
-# RAG evaluation — policy-challenge-v2.1
+# RAG 評価：policy-challenge-v2.1
 
-Mode: **local**; split: **dev**; queries: 54.
+モード：**local**; 分割：**dev**; クエリ数：54.
 
-Run status: completed; requested questions: 54; indexing error: none.
+実行状態：completed; 要求問題数：54; 索引エラー：none.
 
-Synthetic seed only. Test results are not evidence of production accuracy.
+合成した種データのみを使用します。この結果は本番の正確性を保証しません。
 
-| Retrieval metric (macro, answerable only) | Mean | n |
+| 検索指標（回答可能な問題のマクロ平均） | 平均 | n |
 |---|---:|---:|
 | recall_at_1 | 0.5794 | 42 |
 | recall_at_3 | 0.7024 | 42 |
@@ -15,9 +15,9 @@ Synthetic seed only. Test results are not evidence of production accuracy.
 | ndcg_at_k | 0.7511 | 42 |
 | precision_at_k | 0.2286 | 42 |
 
-Page ranks are de-duplicated from the returned chunk budget; precision divides by k, including unfilled slots.
+返された Chunk の上限内でページの重複を除去します。precision の分母は未充足枠も含む k です。
 
-| Answer metric | Mean | n |
+| 回答指標 | 平均 | n |
 |---|---:|---:|
 | all_claims_grounded | N/A | 0 |
 | answer_correctness | N/A | 0 |
@@ -35,24 +35,24 @@ Page ranks are de-duplicated from the returned chunk budget; precision divides b
 | refusal_accuracy | N/A | 0 |
 | unsupported_answer | N/A | 0 |
 
-Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Runtime claim_groundedness is a verifier diagnostic; answer_correctness and citation_groundedness come from the separately configured evaluation Judge, not human labels.
+local は回答を生成しないため回答品質は N/A。語彙カバレッジ / token F1 は意味的正確性を証明しません。実行時 claim_groundedness は Verifier 診断値、answer_correctness と citation_groundedness は別設定の評価 Judge の自動判定で、人手ラベルではありません。
 
-| Latency (ms) | p50 | p95 | n |
+| 所要時間 (ms) | p50 | p95 | n |
 |---|---:|---:|---:|
 | query_embedding | 0.3690 | 0.6351 | 54 |
 | retrieval | 13.2490 | 17.2492 | 54 |
 | question_total | 21.9775 | 26.9728 | 54 |
 
-Indexing: 96 chunks, 1214.84 ms.
-Total run API cost (USD): 0.0000. Unknown usage or missing configured prices stay null/N/A.
+索引作成：96 chunks, 1214.84 ms.
+実行全体の API 費用 (USD)：0.0000。使用量不明や単価未設定は null/N/A を保持します。
 
-Application mean USD/query: 0.0000; reported tokens: {'embedding_tokens': 0, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0, 'complete': True}.
-Independent evaluation: {'judge_model': 'gpt-4.1', 'independent_model': True, 'status': 'not_applicable', 'judge_cost_usd': 0.0, 'judge_errors': 0}. Judge latency and cost are excluded from application query metrics.
-One sequential pass; no warmup or concurrency. Timings are measured, not estimates.
+アプリ平均 USD/query：0.0000; 報告された tokens：{'embedding_tokens': 0, 'input_tokens': 0, 'output_tokens': 0, 'total_tokens': 0, 'complete': True}.
+独立評価：{'judge_model': 'gpt-4.1', 'independent_model': True, 'status': 'not_applicable', 'judge_cost_usd': 0.0, 'judge_errors': 0}。Judge の時間・費用はアプリ query の指標から除外します。
+逐次で 1 回実行し、事前実行や同時実行はありません。時間は推定ではなく実測です。
 
-## Per question
+## 問題ごとの結果
 
-| ID | Type | Status | Recall@k | Lexical fact coverage | Total ms |
+| ID | 分類 | 状態 | Recall@k | 参照事実の語彙カバレッジ | 合計 ms |
 |---|---|---|---:|---:|---:|
 | aster-en-01 | current_version | retrieval_only | 0.0000 | N/A | 23.42 |
 | aster-en-02 | old_version | retrieval_only | 1.0000 | N/A | 20.66 |
@@ -109,10 +109,10 @@ One sequential pass; no warmup or concurrency. Timings are measured, not estimat
 | aster-ja-17 | negation | retrieval_only | 1.0000 | N/A | 22.71 |
 | aster-ja-18 | cross_document | retrieval_only | 1.0000 | N/A | 22.79 |
 
-## Limits
+## 制約
 
-- Templated multilingual cases are correlated, not independent statistical samples.
-- Dev/test use different organizations and numbers but share rule templates.
-- Reference evidence is page-level; retrieval recall does not establish fact coverage.
-- Human review on representative private documents remains necessary.
-- Page text starts after PDF parsing; end-to-end PDF coverage is tested by live_smoke.
+- テンプレートを共有する多言語ケースには関連性があり、統計的に独立した標本ではありません。
+- dev/test は組織名と数値を分けていますが、ルールのテンプレートは共有します。
+- 参照根拠はページ単位で、検索の再現率は全事実の網羅性を保証しません。
+- 代表的な実文書による人手レビューが引き続き必要です。
+- ページテキストは PDF 解析後から扱います。PDF の一連の処理は live_smoke で検証します。

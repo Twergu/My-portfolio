@@ -1,23 +1,23 @@
-# 本轮 12 项修改与验证
+# 検索・権限に関する 12 項目の変更と検証
 
-本轮实现与上轮记录分开；原始实验报告保留。人工审核、Agent、人在回路按最新指示暂缓。
+この段階の実装を前回の記録と分け、元の実験レポートを維持しました。この時点の依頼に従い、人手レビュー、Agent、Human-in-the-loop は保留しました。
 
-| 项目 | 实现方向与效果 | 验证入口 |
+| 項目 | 方針と効果 | 検証 |
 |---|---|---|
-| 1 Hybrid Retrieval | Dense + SQLite BM25 / PostgreSQL Full-text，Top 20 后 RRF；数字/日期/政策编号和中日文共同分析器 | `tests/test_stores.py`、[真实三路实验](../reports/v3/retrieval.json) |
-| 2 Reranker | 独立可配置 LLM 模型，对候选完整重排，Top 5 交给 Generator；格式失败最多修复一次，失败与全部成本可见 | `tests/test_retrieval.py`；真实 test Recall@5 88.1%→100%，但检索 P50 0.46→6.16 秒 |
-| 3 Verifier 校准 | 36 条中日英 Claim/Evidence，supported/unsupported/partial/数字/否定/税额/版本/例外；开发和测试各半 | [校准数据](../evals/claim_calibration.json)、[开发对照](../reports/v3/calibration-calibrated-dev.json)、[测试](../reports/v3/calibration-calibrated-test.json)；dev 两个提示词均 Precision=1、Recall=6/7；校准 test 18/18；不宣称普遍改善 |
-| 4 Verification 策略 | off/fast/strict 保留；新增 all/selective；严格限制可跳过的简单原文摘录，未检查项保持 unknown | `tests/test_verifier_calibration.py`；59 条生成断言的离线回放中 0 条可跳过，未测得节省；默认 all |
-| 5 Human-reviewed set | 用户明确暂缓；不伪造人工审核标签 | 所有数据集明确来源，后续由业务审核人确认 |
-| 6 Metadata / Version | 独立 policy_status、生效日期、失效日期、部门、版本；SQL 解析范围后才搜索；中日文筛选与编辑界面 | `tests/test_stores.py` 日期边界、草案/旧版/未分类、过滤为空；[使用说明](access-control.md) |
-| 7 ACL | User、Role、Document Permission、所有者；required 模式验证真实服务器身份；覆盖两路检索、文件、列表、修改、设置；迁移 SQLite 到 PG 时保留身份、权限与版本信息 | SQLite/PG 共用权限测试 + HTTP 越权与模型调用隔离测试；[浏览器只读账号验收](../reports/v3/browser-access.json)；默认 local 明确为单用户开发模式 |
-| 8 HNSW | Exact 默认；真实索引计划、Recall≥95%、P95 更快才进入人工评估候选，不自动切换 | `backend/search_policy.py` 与 scale benchmark `ann_acceptance`；合成实验不代表生产权限过滤场景 |
-| 9 Latency / Cost | 分离 query embedding/retrieval/reranking/generation/verification；角色 tokens、已知/未知成本，真实完整 RAG 对比；增加逐题断点保存，重启记录额外索引成本 | [strict / fast 实测](../reports/v3/summary.md)：P50 13.90 / 10.50 秒，平均 USD 0.002028 / 0.001694；失败尝试不隐藏、独立 Judge 费用不混入 app/query |
-| 10 质量/可维护性 | Ruff E/F/I/B、格式检查、pytest-cov 分支覆盖率进入 CI；Provider/Verifier/Reranker/治理逻辑集中 | [最新 CI](../reports/ci-status.json)、[全部测试动态报告](../reports/ci/tests.md)、[含 PostgreSQL 覆盖率](../reports/ci/coverage.json)；mypy 后续按类型接口逐步引入 |
-| 11 Agent | 按依赖顺序暂缓 LangGraph，不提前增加多 Agent | [上线前条件](adr/0003-agent-gates.md) |
-| 12 Human-in-the-loop | 本轮不暴露真实操作工具；未来审批必须绑定可审核的准确参数与有效权限 | 同上；当前没有已实现的操作审批或用户审计功能 |
+| 1 Hybrid Retrieval | Dense + SQLite BM25 / PostgreSQL Full-text、Top 20 を RRF 融合。数値・日付・制度番号と中国語・日本語に共通の解析器 | `tests/test_stores.py`、[実 3 方式比較](../reports/v3/retrieval.json) |
+| 2 Reranker | 独立設定可能な LLM で全候補を並べ替え、Top 5 を Generator へ。形式修正は最大 1 回、失敗と全費用を記録 | `tests/test_retrieval.py`。test Recall@5 は 88.1%→100%、検索 P50 は 0.46→6.16 秒 |
+| 3 Verifier 校正 | 36 件の中国語・日本語・英語 Claim/Evidence。supported/unsupported/partial、数値、否定、税、版、例外。dev/test は半分ずつ | [データ](../evals/claim_calibration.json)、[dev 比較](../reports/v3/calibration-calibrated-dev.json)、[test](../reports/v3/calibration-calibrated-test.json)。dev は両プロンプトとも Precision=1、Recall=6/7、校正 test は 18/18。普遍的改善とは主張しない |
+| 4 Verification 方針 | off/fast/strict を保持し all/selective を追加。省略可能な単純原文引用を厳しく制限し、未検証は unknown | `tests/test_verifier_calibration.py`。生成した 59 主張の再評価で省略可能は 0、節約は未確認。既定 all |
+| 5 人手レビューセット | 依頼者の明示的な指示で保留。人手ラベルを捏造しない | 全データの出所を明示し、後続で業務担当者が確認 |
+| 6 Metadata / Version | 独立 policy_status、有効開始・終了日、部門、版。SQL で範囲を解決後に検索。中国語・日本語の編集・絞り込み UI | `tests/test_stores.py` で日付境界、草案・旧版・未分類、空範囲を検証。[手順](access-control.md) |
+| 7 ACL | User、Role、Document Permission、所有者。required でサーバー認証。両検索、ファイル、一覧、変更、設定を保護。SQLite→PG 移行で ID・権限・版を維持 | SQLite/PG 共通権限テストと HTTP 越権・モデル通信分離。[読み取り専用ブラウザー検収](../reports/v3/browser-access.json)。local は単一ユーザー開発と明示 |
+| 8 HNSW | Exact が既定。実索引計画、Recall≥95%、より短い P95 を満たした場合のみ人手評価の候補にし、自動切替しない | `backend/search_policy.py` と scale benchmark の `ann_acceptance`。合成実験は本番 ACL フィルター下の保証ではない |
+| 9 Latency / Cost | query embedding/retrieval/reranking/generation/verification を分離。役割別 tokens、既知・未知費用、実 RAG 比較。問題ごとの中間保存と再起動時の索引費用 | [strict / fast 実測](../reports/v3/summary.md)：P50 13.90 / 10.50 秒、平均 USD 0.002028 / 0.001694。失敗を隠さず、Judge 費用を app/query に混ぜない |
+| 10 品質・保守性 | Ruff E/F/I/B、format、pytest-cov 分岐カバレッジを CI に追加。Provider/Verifier/Reranker/統制を集約 | [CI](../reports/ci-status.json)、[動的テスト結果](../reports/ci/tests.md)、[PostgreSQL 込みカバレッジ](../reports/ci/coverage.json)。mypy は型インターフェースから段階的に導入予定 |
+| 11 Agent | 依存する基盤の順序に従い LangGraph と複数 Agent を保留 | [導入条件](adr/0003-agent-gates.md) |
+| 12 Human-in-the-loop | 実操作ツールは公開せず、将来の承認は確認可能な正確な引数と有効な権限に結び付ける | 同上。操作承認とユーザー監査は当時未実装 |
 
-配置与复现：
+設定と再現：
 
 ```bash
 python -m scripts.retrieval_experiment
@@ -32,18 +32,18 @@ python -m ruff format --check .
 python -m scripts.check
 ```
 
-这些 API 命令会使用配置的付费模型。三路检索使用同一索引，每个方案真实调用查询 Embedding；初次开发集有 1 次重排 schema 失败，报告保留且整体状态未伪装为全通过。测试集三组各 54 题均无失败。已有 test 集用于回归，不能再次宣称全新未见测试集。
+API コマンドは設定した有料モデルを呼び出します。3 方式は同じ索引を使い、各方式で実 query Embedding を呼び出しました。初回 dev の Reranker schema エラー 1 件を保持し、全件成功と偽っていません。test は 3 方式それぞれ 54 問で失敗なし。既存 test を回帰に使っており、新しい未見セットとは呼べません。
 
-## 实际收益与保留的限制
+## 実際の効果と制約
 
-Hybrid 单独使用时，Recall@1 从 58.33% 升至 63.10%，但 Recall@5 仍是 88.10%。加入 LLM Reranker 后 Recall@1 为 73.81%、Recall@3/5 为 100%、MRR 为 0.9643、nDCG 为 0.9736。这证明本数据集上的主要排序收益来自重排；不能把组合收益全部归给 Hybrid。
+Hybrid 単独で Recall@1 は 58.33%→63.10% に改善しましたが、Recall@5 は 88.10% のままです。LLM Reranker を加えると Recall@1 は 73.81%、Recall@3/5 は 100%、MRR は 0.9643、nDCG は 0.9736。このセットの主要な順位改善は再ランキングによるもので、全効果を Hybrid に帰属させません。
 
-完整 RAG 的 strict / fast 分别完成 54 题，没有 API 或 Judge 格式错误残留。Answer Correctness 为 90.48% / 92.86%，Refusal Accuracy 为 92.59% / 96.30%，可回答问题的未交付率为 9.52% / 4.76%。引用有据的自动评分均为 100%，分母分别为 38 / 40 个已交付答案。该分数不是可靠性保证：已发现 Judge 既有漏判，也有误判，详见 [逐例诊断](../reports/v3/grounding-diagnostics.md)。
+RAG の strict / fast は各 54 問を完了し、API/Judge の形式エラーは残りませんでした。Answer Correctness は 90.48% / 92.86%、Refusal Accuracy は 92.59% / 96.30%、回答可能な問題の未回答率は 9.52% / 4.76%。引用支持の自動スコアは両方 100% で、分母は回答済みの 38 / 40 件です。信頼性の保証ではなく、Judge の見逃しと誤判定も判明しました。[事例診断](../reports/v3/grounding-diagnostics.md)を参照してください。
 
-这次独立运行中，fast 的 P50 比 strict 低 24.5%，平均应用成本低 16.5%，代价是没有运行时语义 Verifier。两轮生成和重排存在随机性，不能解释为纯粹关闭 Verifier 的因果收益。strict 的 Reranker P50 约 6.78 秒，Generator 约 4.14 秒，Verifier 约 2.50 秒，而实际数据库检索仅约 0.016 秒；阶段分位数不能直接相加。后续延迟优化应首先针对重排与生成。
+独立した 2 実行で fast は strict より P50 が 24.5%、平均アプリ費用が 16.5% 低下しましたが、実行時の意味的 Verifier はありません。生成と再ランキングの確率的変動があるため、Verifier を外した純粋な因果効果とは断定できません。strict の Reranker P50 は約 6.78 秒、Generator 約 4.14 秒、Verifier 約 2.50 秒、実 DB 検索は約 0.016 秒。段階の分位数は加算できません。次の時間短縮は再ランキングと生成を優先すべきです。
 
-默认继续使用 Exact、Dense、关闭付费 Reranker、strict/all 和 baseline Verifier 提示词。高召回配置需要在模型设置中选择 hybrid + llm；Verifier/Reranker 可分别指定模型，但本轮没有实测更轻量的独立 Verifier，也不声称该项已降低成本。
+既定は Exact、Dense、有料 Reranker 無効、strict/all、baseline Verifier プロンプトを維持します。高再現率設定は hybrid + llm を選びます。Verifier/Reranker は別モデルを指定できますが、この段階で軽量独立 Verifier の実測や費用削減はしていません。
 
-两次真实 CI 都执行了全部数据库测试及 1k/10k/100k 实验。HNSW 在 10k、ef=400 的 Recall 为 95% / 91%，100k、ef=1000 为 57% / 67%；索引构建与共享 runner 存在波动。保留 [第一次原始结果](../reports/v3/ci-first/README.md) 和 [最终复验](../reports/vector-scale.md)，不把某一次达标当成稳定保证。
+実 CI 2 回で全 DB テストと 1k/10k/100k 比較を実施。HNSW の Recall は 10k、ef=400 で 95% / 91%、100k、ef=1000 で 57% / 67%。索引構築と共有 runner には変動があります。[初回結果](../reports/v3/ci-first/README.md)と[最終再検証](../reports/vector-scale.md)を保持し、一度の達成を安定性の保証としません。
 
-本轮完整、可追溯实验估算费用小计 USD 0.662463，包含索引、检索、校准和两轮额外 Judge。此前中断运行的实际用量未知，单独记录在 [中断说明](../reports/v3/interrupted-quality-run.json)，没有计作零，也没有推算质量。原始输出不因后续诊断而改分。
+追跡可能な実験費用小計は USD 0.662463 で、索引、検索、校正、2 回分の追加 Judge を含みます。それ以前の中断実行の使用量は不明で、[中断記録](../reports/v3/interrupted-quality-run.json)に分離しています。ゼロ扱いや品質の推測はせず、事後診断で元スコアを変更しません。

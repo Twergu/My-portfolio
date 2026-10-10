@@ -1,8 +1,8 @@
-# Agent latency / cost comparison
+# Agent のレイテンシ・費用比較
 
-Two independent real API passes on the same fictional regression set. No causal/significance claim; model generation and service latency vary. All failed cases retained. Runtime Strict/all and ACL unchanged.
+同じ架空回帰セットで独立に実 API を実行した比較です。生成とサービス時間は変動するため、因果関係や統計的有意差は主張しません。全失敗を保持し、実行時 Strict/all と ACL は不変です。
 
-| Metric | Before | After |
+| 指標 | 変更前 | 変更後 |
 | --- | --- | --- |
 | task_success | 0.5 | 0.7916666666666666 |
 | planning_success | 0.875 | 0.9583333333333334 |
@@ -16,7 +16,7 @@ Two independent real API passes on the same fictional regression set. No causal/
 | latency_ms.p50 | 12258.825499999999 | 13231.716 |
 | latency_ms.p95 | 18122.117350000004 | 20327.500000000004 |
 
-| Phase | Before P50/P95 ms | After P50/P95 ms |
+| 処理段階 | 変更前 P50/P95 ms | 変更後 P50/P95 ms |
 | --- | --- | --- |
 | agent_planning | 5011.6 / 8711.5 | 4909.4 / 11101.7 |
 | agent_tool_knowledge_search | 185.3 / 394.9 | 152.9 / 386.5 |
@@ -25,7 +25,7 @@ Two independent real API passes on the same fictional regression set. No causal/
 | generation | 4214.4 / 7436.8 | 5035.0 / 10090.9 |
 | verification | 2626.1 / 6164.8 | 1834.6 / 4544.3 |
 
-Different refusal/delivery mixes affect whole-set latency. Supplementary same-successful-answer cohort (selected after runs, not a replacement score):
+拒否・回答の割合の違いも全体時間に影響します。以下は両実行で回答に成功した共通集合です。実行後に選んだ補足であり、全体スコアの代わりにはなりません。
 
 ```json
 {

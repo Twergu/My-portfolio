@@ -1,13 +1,13 @@
-# Real API smoke test
+# 実 API のスモークテスト
 
-Status: **passed**
+状態：**passed**
 
-Real embedding, generation, and entailment-verification requests completed and all smoke assertions passed.
+実 Embedding、生成、含意検証が完了し、全 smoke 検証条件を通過しました。
 
-Only a generated fictional two-page PDF is submitted. Customer documents and the application data directory are not used.
+生成した架空の 2 ページ PDF のみを送信し、顧客文書とアプリのデータディレクトリは使いません。
 
-A passed run requires document indexing, a generated answer, exact source quotation checks, model entailment verification, a page-2 citation, and the expected hotel amount.
+通過条件は索引作成、回答生成、原文引用の一致、モデルの含意検証、2 ページ目への引用、期待する宿泊金額です。
 
-This is connectivity and pipeline evidence for one fictional question, not a model-quality benchmark.
+架空の 1 問による接続と処理経路の検証で、モデル品質ベンチマークではありません。
 
-Cost is an estimate from reported token usage and configured prices. Missing usage/prices remain unknown.
+費用は報告 token usage と設定単価による推定です。使用量・単価の欠測は不明のまま保持します。

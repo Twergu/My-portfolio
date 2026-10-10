@@ -24,7 +24,7 @@ flowchart LR
 
 デプロイ版 `e603ef2` は [CI の全チェックを通過](https://github.com/Twergu/My-portfolio/actions/runs/37615440769)しています。Python / 実 pgvector の全テストで失敗・エラー・スキップはなく、フロントエンド、Ruff、既存 Docker 回帰、新しい HTTPS Demo のログイン・利用制限・再起動検証、規模別ベンチマークも通過しました。テスト件数は[自動生成レポート](reports/portfolio-sharing/ci-final/tests.md)、[PostgreSQL の実行一覧](reports/portfolio-sharing/ci-final/postgres-tests.json)、[フロントエンドレポート](reports/portfolio-sharing/ci-final/frontend-tests.json)を参照してください。HTTPS 検証は CI 内部 CA とローカル検索を使用しており、一般公開や実 API による品質評価の再実施を意味するものではありません。
 
-[全ソースファイル](SOURCE_INDEX.md) · [検索・権限に関する 12 項目の改善](docs/retrieval-optimization-report.md) · [前段階の 17 項目の改善](docs/optimization-report.md) · [初回変更記録](docs/change-report.md) · [アーキテクチャと設計判断](docs/architecture.md)。リンク先の詳細資料には中国語・英語のものがあります。
+[全ソースファイル](SOURCE_INDEX.md) · [検索・権限に関する 12 項目の改善](docs/retrieval-optimization-report.md) · [前段階の 17 項目の改善](docs/optimization-report.md) · [初回変更記録](docs/change-report.md) · [アーキテクチャと設計判断](docs/architecture.md)。詳細評価、変更報告、共有・デプロイ手順は日本語で閲覧できます。評価の原文、モデル出力、JSON の識別子は元言語を保持します。[日本語化の範囲と原本](docs/localization-ja.md)を参照してください。
 
 業務 Agent は、タスク計画、権限内のナレッジ検索、日付・計算ツール、複数ターンの追加確認、厳密な根拠検証に対応しています。チャット画面で「ナレッジ Q&A / 業務 Agent」を切り替えられます。日本語の失敗事例の回帰テスト、24 シナリオの実 API 評価、処理段階別の時間計測、制度に関する主張（Policy Claim）の決定的な制約、単一プロセスの状態管理検証を追加しました。詳細は [Modification Report](docs/agent-hardening-report.md) を参照してください。営業日カレンダーは明示的に Mock と表示されます。過去の失敗、[第 3 段階のブラウザー結合検証](docs/agent-stage3.md)、[第 2 段階のツール検証](docs/agent-stage2.md)、[第 1 段階の処理フロー](docs/agent-stage1.md)も保存しています。
 

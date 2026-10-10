@@ -1,15 +1,15 @@
-# Verification mode comparison
+# 検証モードの比較
 
-Dataset: policy-challenge-v2.1; split: test; chunk size/overlap: 900/0; query workers: 2.
+データセット：policy-challenge-v2.1; 分割：test; Chunk size/overlap：900/0; query worker 数：2.
 
-Generator and verifier: gpt-5.6-luna / gpt-5.6-luna; independent Judge: gpt-4.1.
+Generator と Verifier：gpt-5.6-luna / gpt-5.6-luna; 独立 Judge：gpt-4.1.
 
-| Mode | Correctness | Citation groundedness | Refusal accuracy | Quote mismatch | Unsupported | False refusal | Query p50 ms | Query p95 ms | Mean query USD |
+| モード | 正確性 | 引用の根拠支持 | 拒否の正確性 | 引用不一致 | 根拠不足 | 誤拒否率 | 質問 p50 ms | 質問 p95 ms | 平均質問 USD |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | off | 0.97619048 | 1.00000000 | 0.98148148 | 0.00000000 | 0.00000000 | 0.02380952 | 3527.50535001 | 6822.62708500 | 0.00057060 |
 | fast | 0.92857143 | 1.00000000 | 0.98148148 | 0.00000000 | 0.00000000 | 0.02380952 | 3389.12990000 | 6984.66103500 | 0.00056931 |
 | strict | 0.83333333 | 1.00000000 | 0.85185185 | 0.00000000 | 0.05555556 | 0.16666667 | 5426.14704999 | 9751.65452000 | 0.00081014 |
 
-Citation groundedness is an independent evaluation of delivered answers; it is not the runtime verifier pass rate. Off/fast remain semantically unverified in the application. Correctness uses answerable questions; refusal accuracy uses all questions. See each mode JSON for denominators and rejected-candidate diagnostics.
+Citation groundedness は回答済み出力の独立評価で、実行時 Verifier の通過率ではありません。off/fast はアプリ内で意味検証しません。Correctness は回答可能な問題、refusal accuracy は全問題が分母です。分母と遮断候補の診断は各 JSON を参照してください。
 
-Query latency/cost excludes the extra evaluation Judge and indexing. One generation per question/mode; generation randomness remains a confounder, so this is a pipeline comparison, not a paired replay of identical candidate answers. Test scores are reported without tuning prompts on test failures.
+query の時間・費用は追加 Judge と索引を除きます。問題・モードごとに別生成するため確率的変動が残り、同一候補のペア比較ではなく処理全体の比較です。test 失敗に合わせたプロンプト調整はしていません。

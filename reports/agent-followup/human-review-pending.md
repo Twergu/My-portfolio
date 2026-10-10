@@ -1,5 +1,5 @@
-# Human review status
+# 人手レビューの状態
 
-Status: **pending_human_review**. Human-reviewed: 0/8.
+状態：**pending_human_review**. 人手レビュー済み：0/8.
 
-Pending or unapproved references never produce an accuracy claim. See the JSON for the frozen dataset hash and annotations.
+確認待ち・未承認の参照回答から正確性を主張しません。凍結データのハッシュとアノテーションは JSON を参照してください。

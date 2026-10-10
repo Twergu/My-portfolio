@@ -1,39 +1,39 @@
-# Agent Evaluation 协议
+# Agent 評価プロトコル
 
-`evals/agent_dataset.json` 是冻结的 24 个虚构企业任务（中、日、英），通过 `python -m evals.make_agent` 重建。包含制度问答、缺少个人条件的多轮澄清、多制度计算/日期、缺少写工具、无政策、缺少实际日历等情况。八份虚构制度编成一个多页 PDF；多制度场景跨物理页检索，不宣称本轮评估覆盖多 PDF。数据和参考答案由 AI 编写，**尚未人工审核**，不代表生产准确率。
+`evals/agent_dataset.json` は中国語・日本語・英語の架空企業タスク 24 件を凍結したもので、`python -m evals.make_agent` で再構築できます。制度 Q&A、個人条件不足による複数ターンの確認、複数制度の計算・日付、書き込みツールの不在、制度なし、実カレンダーの不在を含みます。架空制度 8 件を単一の複数ページ PDF にまとめています。複数制度の質問では物理ページをまたいで検索しますが、この評価で複数 PDF を網羅したとは主張しません。データと参照回答は AI 作成で、**人手レビュー未実施**です。本番の正確性を示しません。
 
-运行前在 `.env` 配置现有 API 及独立 `RAG_EVAL_JUDGE_MODEL`。执行：
+実行前に `.env` へ既存 API 設定と独立した `RAG_EVAL_JUDGE_MODEL` を設定します。
 
 ```powershell
 python -m scripts.agent_evaluate --live --label baseline --output reports/agent-hardening/evaluation-baseline-live.json
 ```
 
-选择一个新的报告文件名；程序拒绝覆盖旧实验。运行使用隔离临时库，经真实 PDF 解析、真实 Embedding、SQLite Hybrid Retrieval、真实 Planner/Generator/Strict Verifier；Calculator 为确定性十进制计算，Calendar 明确是 Mock 工作周。权限在搜索之前应用，模型无法扩大范围。不存在发邮件、提交申请等写操作。生产 PostgreSQL/pgvector 行为由独立 CI 验收，不把本脚本的 SQLite 运行称为 PostgreSQL 性能测试。
+新しい出力名を指定してください。既存実験への上書きは拒否します。隔離した一時 DB で、実 PDF 解析、実 Embedding、SQLite Hybrid Retrieval、実 Planner/Generator/Strict Verifier を使います。Calculator は決定的な十進計算、Calendar は明示的な Mock 営業週です。権限は検索前に適用し、モデルは範囲を拡大できません。メール送信や申請提出などの書き込みはありません。本番 PostgreSQL/pgvector は別 CI で検収し、この SQLite 実行を PostgreSQL 性能テストとは呼びません。
 
-每个场景有独立任务状态，可最多补充一次预先写好的用户答复，避免评估器临时替模型补全条件。24 个结果均保留；错误、被拦截、继续追问未完成，全部计入失败。每题后保存 JSON 和 Markdown；中断报告注明 completed/expected，不能当作完整结果。原日文失败仍在 `agent-ja-regression.json` 和早期诊断中保留，本集合也包含该多轮问题。
+各シナリオは独立した状態を持ち、事前に書いた利用者の返信を最大 1 回だけ追加します。評価器がその場で不足条件を補うことはしません。24 件すべてを残し、エラー、遮断、追加質問の継続による未完了も失敗に含めます。各問題後に JSON/Markdown を保存し、中断時は completed/expected を明記します。中断結果は全件結果ではありません。元の日本語失敗は `agent-ja-regression.json` と初期診断に保存し、このセットにも同じ複数ターン問題を含めます。
 
-## 指标
+## 指標
 
-- **Tool Selection Accuracy**：实际尝试的工具集合包含 required 且不超 allowed，且不存在工具错误。重复/非法调用不能当作正确选择。
-- **Clarification Accuracy**：实际是否追问，与标注的必须追问一致。参考答复只在实际追问时给出。
-- **Planning Success**：工具与澄清均正确，且可回答题实际到达 ready；无答案题到达允许的 unavailable/insufficient_evidence。该分数不依赖最终 Generator 是否成功。
-- **Task Success**：Planning Success，加正确终态；可回答题还要求独立 Judge Correctness、每条引用 Groundedness 和运行时 Strict 全部通过。
-- **Answer Correctness / Grounded Answer Rate**：分母为全部可回答任务，含误拒答和异常。另报 grounded_rate_among_delivered，明确仅对已交付答案计算，不能代替整体成功率。
-- **Tool Calls / Planner Calls**：最终累计 trace 计数，澄清前后不重复相加。
-- **Latency**：将每次 API 输入的应用耗时相加，排除用户思考、索引和离线 Judge；同时保留单阶段 Planner、Knowledge Search、Calendar、Calculator、Generator、Verifier 耗时。搜索含 Embedding，阶段与 HTTP 耗时不能重复相加。
-- **Cost**：按响应 token usage 和配置单价估算应用每任务成本；索引、Judge 单列。无法确定的成本保持 null，不能算成零。
+- **Tool Selection Accuracy**：試みたツール集合が required を含み、allowed を超えず、ツールエラーがないこと。重複・不正呼び出しを正解と扱いません。
+- **Clarification Accuracy**：追加質問の有無が「必須」のラベルと一致する割合。参照返信は実際に質問された場合のみ与えます。
+- **Planning Success**：ツールと追加確認が正しく、回答可能な問題は ready、回答なしは許可された unavailable/insufficient_evidence に到達したこと。最終 Generator の成否には依存しません。
+- **Task Success**：Planning Success と正しい終状態。回答可能な問題は独立 Judge の Correctness、各引用の Groundedness、実行時 Strict のすべてが通過する必要があります。
+- **Answer Correctness / Grounded Answer Rate**：分母は誤拒否・例外を含む回答可能な全タスク。grounded_rate_among_delivered は回答済みのみの補助指標で、全体の成功率を代替しません。
+- **Tool Calls / Planner Calls**：最終的な累積 trace から数え、追加確認前後を重複加算しません。
+- **Latency**：各 API 入力に対するアプリ処理時間を合計し、利用者の思考、索引、オフライン Judge を除外します。Planner、Knowledge Search、Calendar、Calculator、Generator、Verifier の各時間も保持。検索は Embedding を含み、段階時間と HTTP 時間の重複加算はできません。
+- **Cost**：応答 token usage と設定単価からタスクあたりのアプリ費用を推定。索引と Judge は別集計。不明費用は null とし、ゼロにはしません。
 
-独立 Judge 两次调用分别评估正确性和引用：正确性可见参考答案/必要文档；引用 Judge 只能见候选及其实际引用，不能从 gold 借用缺失证据。两者均看不到运行时 Verifier verdict。自动 Judge 仍可能误判，失败需结合原文审查。
+独立 Judge は正確性と引用を別々の 2 呼び出しで評価します。正確性には参照回答と必要文書を渡し、引用 Judge には候補と実引用のみを渡します。欠けた根拠を gold から補うことはできません。どちらも実行時 Verifier verdict は見ません。自動 Judge も誤るため、失敗は原文と照合する必要があります。
 
-离线脚本记录 Generator Output、Evidence、Verifier Verdict 和所有模型请求文本，只用于虚构数据诊断；不要用该明文诊断脚本处理私有生产数据。测试中的受控返回只验证评分及工程合同，不冒充真实 API 结果。
+オフラインスクリプトは Generator Output、Evidence、Verifier Verdict、全モデルリクエスト本文を保存します。架空データの診断専用であり、非公開の本番データをこの平文診断に使わないでください。テストの制御済み応答は採点と実装契約を検証するもので、実 API の結果とは区別します。
 
-## 本轮计算与人工校准
+## 計算と人手による校正
 
-`--case` 可重复指定冻结场景，例如 `--case commuter-clarify-ja --case training-clarify-ja`；报告记录选择的 ID 和完整数据集摘要。子集结果不替代全量结果，也不删除未完成、拒答或错误案例。旧的“必须追问”标签继续保留，因此直接给出正确条件说明仍可能被旧任务合同计为失败。
+`--case` は複数指定でき、例は `--case commuter-clarify-ja --case training-clarify-ja` です。選択 ID と全データセットのハッシュを記録します。部分集合は全件結果を代替せず、未完了・拒否・エラーも削除しません。旧「追加質問が必須」ラベルを維持するため、正しい条件付き説明を直接返しても旧契約上は失敗になる場合があります。
 
-人工集 [agent-human-review-v1](agent-human-review-v1.md) 是另一份八例候选校准集，含故意构造的错误以及原始失败。用户已逐题审核，具体文字保存在 annotations；它不代表上面 24 个端到端任务已获人工审核。创建时的数据集状态保留为 `awaiting_human_review` 以冻结内容摘要，当前状态由签署的 annotations 和审核报告确定。
+[agent-human-review-v1](agent-human-review-v1.md) は独立した 8 候補の校正セットで、意図的な誤りと元の失敗を含みます。依頼者が各問をレビュー済みで、発言は annotations に保存しました。上の 24 タスクすべての人手レビューを意味しません。作成時の `awaiting_human_review` は内容ハッシュを維持するため変更せず、現在の状態は記名 annotations とレビュー報告で確定します。
 
-以下命令均需使用新的输出文件名；带 `--live` 的命令会实际调用 API：
+次のコマンドには新しい出力名が必要です。`--live` は実 API を呼び出します。
 
 ```powershell
 python -m scripts.human_review_report --annotations evals/agent-human-review-v1.annotations.json --output reports/review-new.json
@@ -41,4 +41,4 @@ python -m scripts.agent_human_calibration --live --output reports/verifier-calib
 python -m scripts.agent_calculation_replay --live --output reports/calculation-replay-new.json
 ```
 
-第二条衡量 Verifier 与八例人工标签的一致性，数据参与了提示开发，不能当作未见测试集。第三条仅回放保留的计算误拒答案及另设的制度推论反例，没有重新调用 Planner/Generator，不能当作新的端到端成功率。两类结果均保存模型原文和用量；具体版本、失败、性能和限制见[本轮修改报告](agent-followup-report.md)。
+2 番目は人手ラベル 8 件と Verifier の一致を測ります。プロンプト開発に使用したため未見テストではありません。3 番目は保存した計算の誤拒否候補と別途用意した制度推論の反例のみを再検証します。Planner/Generator は再実行せず、新しい E2E 成功率とは扱いません。両方でモデル原文・使用量を保存します。版、失敗、性能、制約は[変更報告](agent-followup-report.md)を参照してください。

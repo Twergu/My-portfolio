@@ -1,10 +1,10 @@
-# Chunk experiment (api)
+# Chunk 分割実験 (api)
 
-Max dev Answer Correctness when judged, then Recall@k, nDCG@k, then fewest chunks; never test metrics.
+Judge がある場合は dev Answer Correctness、次に Recall@k、nDCG@k、Chunk 数の少なさの順で選び、test 指標は使いません。
 
-Unicode characters, adjusted toward sentence boundaries; physical pages never merged.
+単位は Unicode 文字数で、文の境界へ調整します。物理ページは結合しません。
 
-| Size | Overlap | Chunks | Recall@k | Precision@k | MRR@k | nDCG@k | Correctness | Recall@1 | Recall@3 | False refusal | Index ms | Query p50 ms | Query p95 ms | USD |
+| サイズ | 重複幅 | Chunk 数 | Recall@k | Precision@k | MRR@k | nDCG@k | 正確性 | Recall@1 | Recall@3 | 誤拒否率 | 索引 ms | 質問 p50 ms | 質問 p95 ms | USD |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 450 | 0 | 100 | 0.9048 | 0.2524 | 0.8373 | 0.8177 | 0.7857 | 0.5992 | 0.8056 | 0.2143 | 19682.6875 | 6866.2266 | 11097.6768 | 0.2031 |
 | 450 | 60 | 100 | 0.9048 | 0.2524 | 0.8254 | 0.8123 | 0.7619 | 0.5873 | 0.8056 | 0.2381 | 16635.5666 | 5991.3406 | 10409.0792 | 0.1879 |
@@ -13,18 +13,18 @@ Unicode characters, adjusted toward sentence boundaries; physical pages never me
 | 1200 | 120 | 96 | 0.8810 | 0.2476 | 0.8234 | 0.8074 | 0.7619 | 0.5873 | 0.8135 | 0.1905 | 18023.4252 | 5839.2333 | 11028.4860 | 0.1890 |
 | 1200 | 180 | 96 | 0.8810 | 0.2476 | 0.8353 | 0.8109 | 0.7857 | 0.5992 | 0.8135 | 0.2143 | 20143.2760 | 5737.8147 | 12018.5834 | 0.1958 |
 
-Selected on dev: size **900**, overlap **0**.
-Frozen test Recall@k: 0.8810; test nDCG@k: 0.8055.
+dev による選択：size **900**, overlap **0**.
+凍結 test Recall@k：0.8810; test nDCG@k: 0.8055.
 
-The test split did not participate in parameter selection. Existing production defaults were not changed.
+test はパラメーター選択に使っていません。既存の本番既定値も変更していません。
 
-## Limits
+## 制約
 
-- Templated multilingual cases are correlated, not independent statistical samples.
-- Dev/test use different organizations and numbers but share rule templates.
-- Reference evidence is page-level; retrieval recall does not establish fact coverage.
-- Human review on representative private documents remains necessary.
-- Page text starts after PDF parsing; end-to-end PDF coverage is tested by live_smoke.
-- One pass on a tiny corpus; p95 is descriptive, not a statistically stable production estimate.
-- Local hashed retrieval is a baseline, not a multilingual embedding model.
-- Changing production defaults is a separate decision; this script only reports results.
+- テンプレートを共有する多言語ケースには関連性があり、統計的に独立した標本ではありません。
+- dev/test は組織名と数値を分けていますが、ルールのテンプレートは共有します。
+- 参照根拠はページ単位で、検索の再現率は全事実の網羅性を保証しません。
+- 代表的な実文書による人手レビューが引き続き必要です。
+- ページテキストは PDF 解析後から扱います。PDF の一連の処理は live_smoke で検証します。
+- 小規模データで 1 回の測定です。p95 は記述値で、統計的に安定した本番推定ではありません。
+- ローカルハッシュ検索は比較基準で、多言語 Embedding モデルではありません。
+- 本番既定値は別途判断し、このスクリプトは結果のみを報告します。

@@ -1,12 +1,12 @@
-# Agent Evaluation: guarded-handoff
+# Agent 評価：guarded-handoff
 
-Real Embedding + Planner + Generator + Strict Verifier + independent Judge API; isolated real SQLite search, deterministic Calculator, explicitly mock workweek Calendar; fictional AI-authored policies, NOT human-reviewed. No external writes.
+Embedding、Planner、Generator、Strict Verifier、独立 Judge は実 API。隔離した実 SQLite 検索、決定的な Calculator、明示的な Mock 営業日カレンダーを使用します。制度は AI 作成の架空データで、人手レビュー未実施。外部への書き込みはありません。
 
-Dataset: `7e2f341eac8a60c72d1a200d5c623662713a1546d5e320022e8cb88f05700d20`. Completed 24/24.
+データセット：`7e2f341eac8a60c72d1a200d5c623662713a1546d5e320022e8cb88f05700d20`. 完了：24/24.
 
-Planning is scored from actual trace and tool contracts. Task success additionally requires expected final status, correctness and independent groundedness. Answer quality denominators include **all answerable tasks**, including refusals/errors. Judge failures are not successes. No human-review claim.
+計画は実 trace とツール契約から採点します。Task Success には期待する終状態、正確性、独立した根拠支持も必要です。回答品質の分母は拒否・エラーを含む**回答可能な全タスク**。Judge 失敗は成功扱いせず、人手レビュー済みとは主張しません。
 
-| Metric | Value |
+| 指標 | 値 |
 | --- | --- |
 | task_success | 0.7083333333333334 |
 | planning_success | 0.875 |
@@ -19,9 +19,9 @@ Planning is scored from actual trace and tool contracts. Task success additional
 | planner_calls_per_task | 2.2916666666666665 |
 | cost_per_task_usd | 0.00214715 |
 
-Task latency ms: `{'count': 24, 'mean': 9994.561541666666, 'p50': 10682.009, 'p95': 19904.046050000008}`. Indexing and Judge usage are separate; user thinking time excluded. Prices are configured estimates, not billing reconciliation.
+タスク時間 ms：`{'count': 24, 'mean': 9994.561541666666, 'p50': 10682.009, 'p95': 19904.046050000008}`。索引作成と Judge 使用量は別集計で、ユーザーの思考時間は除きます。費用は設定単価による推定で、請求額との照合ではありません。
 
-| Phase | P50 ms | P95 ms |
+| 処理段階 | P50 ms | P95 ms |
 | --- | --- | --- |
 | agent_planning | 3153.196 | 6336.08445 |
 | agent_tool_knowledge_search | 155.949 | 280.5840000000002 |
@@ -30,9 +30,9 @@ Task latency ms: `{'count': 24, 'mean': 9994.561541666666, 'p50': 10682.009, 'p9
 | generation | 3962.9855000000002 | 7870.6196 |
 | verification | 2796.3244999999997 | 6379.817550000002 |
 
-Phase timings are inclusive; HTTP/embedding overlap parent stages and must not be added to them. Absent stages contribute zero per task.
+段階時間は内部処理を含み、HTTP/Embedding は親段階と重なるため加算できません。未実行の段階は、そのタスクではゼロとして集計します。
 
-| Scenario | Status | Planning | Task success | Calls | ms | USD |
+| シナリオ | 状態 | 計画 | タスク成功 | 呼び出し数 | ms | USD |
 | --- | --- | --- | --- | --- | --- | --- |
 | purchase-limit-zh | unsupported_answer | True | False | 1 | 12629 | 0.00250116 |
 | commuter-contractor-ja | unsupported_answer | True | False | 1 | 11188 | 0.00211956 |

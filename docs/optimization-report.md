@@ -1,43 +1,43 @@
-# 第二轮优化：逐项修改方向与验收
+# 第 2 回改善：項目別の変更方針と検収
 
-> 本文件是上一轮的历史记录；新增 ACL、Hybrid 和 Reranker 的当前状态见 [本轮 12 项修改](retrieval-optimization-report.md)。
+> 過去の作業記録です。ACL、Hybrid、Reranker を追加した段階の状態は[次の 12 項目](retrieval-optimization-report.md)を参照してください。
 
-本轮使用 `policy-challenge-v2.1`。用户于 2026-09-15 补充额度后恢复真实 API 验证；模型答案、验证和成本均从实际调用记录中计算。代码发布到独立 `codex/rag-quality-v2` 分支；真实 CI 状态与版本以 [Actions](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2) 和 [README 实验汇总](../README.md) 为准，未完成的实验不计为通过。
+`policy-challenge-v2.1` を使用。2026-09-15 に依頼者が利用枠を追加した後、実 API 検証を再開し、回答、検証、費用を実呼び出し記録から計算しました。`codex/rag-quality-v2` ブランチに公開し、実 CI とバージョンは [Actions](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml?query=branch%3Acodex%2Frag-quality-v2) と [README 実験概要](../README.md)を基準とします。未完了実験を通過とは扱いません。
 
-| # | 要求 / 修改方向 | 实现与效果 | 验收范围 |
+| # | 要求 / 方針 | 実装と効果 | 検収範囲 |
 |---|---|---|---|
-| 1 | 真实 Embedding + LLM | 两页 PDF 的真实端到端 smoke；识别余额不足且不再盲目重试 | 补充额度后已实际通过解析、Embedding、结构化生成、quote/claim 校验和第 2 页引用，见[报告](../reports/live-api-smoke.md) |
-| 2 | 困难 Evaluation Dataset | 新增 48 文档、96 页、108 题；中日英、旧/新/草案、相似制度、数字陷阱、否定、例外、跨文档和无答案 | 结构与页级证据校验通过；同语言所有竞争版本在检索范围内；模板仍相关，尚非人工独立评测集 |
-| 3 | 真实 RAG 质量评估 | Recall@1/3/5、MRR、nDCG；隔离输入的两个独立 Judge 请求评分 Correctness / Citation Groundedness；Refusal Accuracy | 正式真实模型结果见[冻结 test 报告](../reports/chunks-api/chunk-api-selected-test.md)，不以本地原文检索替代生成指标 |
-| 4 | Chunk 参数由实验决定 | 六组真实 API 配置全部完成；只用 dev 选出 900/0 并冻结后运行 test | [API 对照](../reports/chunks-api/chunk-experiment-api.md)；900/1200 四组产生同样边界，不能归因参数改善。本机示例使用 900/0，通用默认值保持，待长页验证 |
-| 5 | 校验器误拒答分析 | 分别记录 quote_mismatch、unsupported_answer、invalid_model_response、false_refusal；被拦截候选由独立 Judge 复核 | 真实候选记录见各评估 JSON；引用 Judge 看不到 gold evidence，防止借用未引用证据高估支持度；公开 HTTP 不返回被拦截候选 |
-| 6 | Generator / Verifier 分离 | `chat_model`、`verifier_model` 独立；真实对比 Luna 与 gpt-4.1-mini Verifier，各跑完整 dev | [模型试验](../reports/api-results.md)：Mini 只多答对一题且答案独立生成，不足以证明改善，保留经济基线；修改不影响 Embedding profile |
-| 7 | Verification 模式 | off：schema/来源编号；fast：再校验原文 quote；strict：再调用模型逐断言验证 | [三模式真实测试](../reports/verification/comparison.md)全部完成；strict 有误拦截且延迟/成本更高，off/fast 不宣称运行时语义验证通过 |
-| 8 | PostgreSQL 验收 | GitHub Linux runner 使用真实 pgvector 服务；CI 必须有测试 URL，任何 skipped 都算失败 | 实际数据库结果从 Actions 下载保存，见 README；本机没有安装 PostgreSQL |
-| 9 | 1k/10k/100k Exact vs HNSW | 同 seed、384 维、20 查询、3 次重复；独立 float64 NumPy 真值；预热排除；报告构建时间、大小、计划和召回 | 通过真实 GitHub PostgreSQL 运行；只有完成记录才计为 measured，不预设 ANN 一定更好 |
-| 10 | HNSW 生命周期 | 创建移到写入事务和维护路径；重建/删除清理废弃 profile 索引；查询不做 DDL | 真实 PG 测试覆盖旧索引清理、缺索引明确报错、入库前准备和删除清理 |
-| 11 | Docker 完整启动 | 首次启动自动生成数据库随机密码、持久 secret 卷；无需 `.env` 即可 `docker compose up` | CI 构建与健康检查、PDF 入库、真实 HTTP 引用和重启持久性；结果见运行报告 |
-| 12 | GitHub Actions 全绿 | 独立分支触发真实工作流；普通/PG 测试、双库/规模基准、Docker | 以当前分支实际工作流结论为准，未完成不宣称绿色 |
-| 13 | Latency / Cost | 请求角色、各模型单价、tokens、平均 cost/query、P50/P95；Judge 开销与应用 query 分离 | 数据库、本地与 API 数据由实际请求计时/usage 生成；缺用量保留未知，见 README 和各实验 JSON |
-| 14 | README 首页成果 | 动态 CI badge、困难集/Chunk/Vector 表格与可点报告；脚本从 JSON 更新 | 不手写测试通过数量；带运行范围和缺失值 |
-| 15 | 后续 ACL | 下一阶段设计 User / Role / Document Permission，在检索前产生服务器端可访问文档集合，并覆盖 PDF、片段和列表接口 | 按用户“后续再加入”的顺序保留下一阶段；本轮未实现，当前仍为单用户 |
-| 16 | 再后续 Audit Log | 下一阶段记录已认证用户、查询、候选/实际引用文档、拒绝访问、时间与请求 ID；绑定 ACL | 尚未实现；现有性能日志不能称为用户访问审计 |
-| 17 | Agent 最后 | 等真实 RAG 评估、pgvector、Docker/CI 与访问边界稳定，再引入工作流和工具 | 本轮未引入 LangGraph 或 Agent，保留可靠 RAG 基础 |
+| 1 | 実 Embedding + LLM | 2 ページ PDF の実 E2E smoke。残高不足を識別し、無条件の再試行を停止 | 枠追加後に解析、Embedding、構造化生成、quote/claim 検証、2 ページ目の引用を通過。[結果](../reports/live-api-smoke.md) |
+| 2 | 高難度 Evaluation Dataset | 48 文書、96 ページ、108 問。中国語・日本語・英語、旧・新・草案、類似制度、数値、否定、例外、複数文書、回答なし | 構造・ページ根拠を検証。同言語の競合版を検索範囲に保持。テンプレートに関連性があり、人手の独立評価ではない |
+| 3 | 実 RAG 品質評価 | Recall@1/3/5、MRR、nDCG。入力を分離した 2 Judge 呼び出しで Correctness / Citation Groundedness、Refusal Accuracy | [凍結 test](../reports/chunks-api/chunk-api-selected-test.md)に実モデル結果。原文検索を生成品質の代用にしない |
+| 4 | 実験による Chunk 選択 | 6 API 設定を完了。dev のみで 900/0 を選び、凍結後に test | [API 比較](../reports/chunks-api/chunk-experiment-api.md)。900/1200 の 4 設定は同じ境界で、差をパラメーター効果と断定しない。ローカル例は 900/0、汎用既定値は維持し長いページでの検証待ち |
+| 5 | Verifier 誤拒否分析 | quote_mismatch、unsupported_answer、invalid_model_response、false_refusal を分離し、遮断候補を独立 Judge で再評価 | 各 JSON に実候補。引用 Judge へ gold evidence を渡さず、未引用根拠で支持を過大評価しない。公開 HTTP は遮断候補を返さない |
+| 6 | Generator / Verifier 分離 | chat_model、verifier_model を独立化。Luna と gpt-4.1-mini Verifier で各 dev 全件を実測 | [モデル実験](../reports/api-results.md)。Mini は正答が 1 問多いだけで回答も別生成のため、改善の証明には不足。低費用の基準を維持。Embedding profile には影響しない |
+| 7 | Verification モード | off：schema/出典番号、fast：原文 quote も確認、strict：モデルで主張も検証 | [3 モード実測](../reports/verification/comparison.md)完了。strict は誤遮断と追加時間・費用があり、off/fast を実行時の意味検証済みと扱わない |
+| 8 | PostgreSQL 検収 | GitHub Linux runner の実 pgvector。CI にテスト URL を必須化し、skip は失敗扱い | Actions から実 DB 結果を取得して保存。README 参照。ローカルには PostgreSQL 未導入 |
+| 9 | 1k/10k/100k Exact vs HNSW | 同 seed、384 次元、20 クエリ、3 回。独立 float64 NumPy 正解、事前実行を除外。構築時間、サイズ、計画、再現率 | GitHub の実 PostgreSQL で実行。完了のみ measured とし、ANN の優位性を前提にしない |
+| 10 | HNSW ライフサイクル | 作成を書き込みトランザクション・保守へ移動。再構築・削除で不要 profile 索引を整理。検索時は DDL なし | 実 PG で旧索引整理、索引欠落エラー、格納前準備、削除後の整理を検証 |
+| 11 | Docker 全起動 | 初回に DB のランダムパスワードを作り専用永続ボリュームへ保存。.env なしで docker compose up | CI でビルド、ヘルスチェック、PDF 格納、実 HTTP 引用、再起動時の保持を検証 |
+| 12 | GitHub Actions 全通過 | 独立ブランチで通常/PG テスト、両 DB・規模比較、Docker を実行 | 実ワークフローの結論に従い、未完了を成功としない |
+| 13 | Latency / Cost | 役割、モデル単価、tokens、平均 cost/query、P50/P95。Judge とアプリ query を分離 | 実時間・usage から DB/local/API データを生成。不明使用量は不明のまま。README と実験 JSON 参照 |
+| 14 | README で成果を表示 | 動的 CI badge、高難度・Chunk・Vector 表、リンク付きレポートを JSON から更新 | テスト通過数を手入力せず、範囲と欠測を表示 |
+| 15 | 後続 ACL | 次段階で User / Role / Document Permission を設計し、検索前にサーバー側の許可文書集合を解決。PDF、抜粋、一覧も対象 | 依頼の順序に従い次段階へ。この時点では未実装で単一ユーザー |
+| 16 | さらに後続の Audit Log | 認証ユーザー、質問、候補・実引用文書、拒否、時刻、リクエスト ID を ACL と連携して記録 | 未実装。性能ログをユーザー監査ログとは呼ばない |
+| 17 | 最後に Agent | 実 RAG 評価、pgvector、Docker/CI、アクセス境界が安定してからワークフローとツールを導入 | この段階では LangGraph / Agent を追加せず、RAG の基礎を整備 |
 
-## 指标的解释
+## 指標の解釈
 
-Recall 截取实际 Top-K Chunk 后按物理页去重；重复片段不能从预算之外补出新的相关页。困难集不标注词项别名覆盖，避免把命中一个数字称为正确答案。Answer Correctness 使用参考答案、问题范围和 gold evidence，由单独配置的 Judge 判断完整性与错误；Citation Groundedness 单独依据实际引用片段判断。两者是自动评估，仍需人工抽样。
+Recall は実 Top-K Chunk を切り出してから物理ページを重複除去します。重複の代わりに上限外の関連ページを補いません。高難度セットでは語彙別名の一致を正解とせず、数値一致を意味的正確性と扱いません。Answer Correctness は参照回答、質問範囲、gold evidence に基づき独立 Judge が完全性と誤りを判定します。Citation Groundedness は実引用のみで判定します。いずれも自動評価で、人手の標本確認が必要です。
 
-`false_refusal` 表示有答案题未交付答案，包含生成拒答及校验拦截，不表示这些拦截都不合理。`grounding_rejected_correct_and_grounded` 才统计被拦截候选经独立 Judge 判断既正确又有依据的情况。未配置 Judge 或发生 Judge 错误时不得输出完整质量验收。
+`false_refusal` は回答可能な問題に回答を返さなかった割合で、生成時の拒否と検証遮断を含みます。全遮断が不適切という意味ではありません。`grounding_rejected_correct_and_grounded` が、遮断候補のうち独立 Judge が正確かつ根拠ありとした割合です。Judge 未設定やエラー時に完全な品質検収とは報告できません。
 
-独立 Judge 的判断也不是金标准。[三例分歧复核](../reports/grounding-case-review.md)发现一个“不含税”附加断言未获原文支持，但 Judge 仍判正确；运行时拦截在该例是合理的。原测量不改动，明确区分自动分数、事后 Codex 分析和将来独立人工验收。
+独立 Judge も正解の保証ではありません。[3 件の不一致の再確認](../reports/grounding-case-review.md)では、「税抜き」という追加主張に原文の根拠がないのに Judge が正しいとしました。この例で実行時の遮断は妥当です。元の測定を維持し、自動スコア、事後の Codex 分析、将来の独立した人手検収を区別します。
 
-本地 Chunk 对比有部分配置产生相同边界，因为页长短于参数值。这是观测结果；扩大真实长页资料后仍需重做实验。不跨物理页的设计继续由 [ADR 0001](adr/0001-physical-page-chunks.md) 约束。
+ローカル Chunk 比較ではページが設定値より短く、一部設定の境界が一致しました。長い実資料で再実験が必要です。物理ページ境界は [ADR 0001](adr/0001-physical-page-chunks.md) に従います。
 
-本轮真实 API 的完整汇总、相同分块边界组、Verifier 试验和避免重复计费的账本见 [实验报告](../reports/api-results.md)。测试集 strict 正确性、引用支持度、拒答准确率和逐题失败原因均公开；不能以已交付答案的引用高分掩盖未交付答案。独立 Judge 遇到一次格式错误，已只补评原答案，原始失败及费用保留；现在格式错误最多重试一次，未恢复时仍让实验失败。
+実 API の全概要、同じ境界の設定群、Verifier 実験、重複計上を避けた費用台帳は[実験報告](../reports/api-results.md)を参照してください。test の strict 正確性、引用支持、拒否精度、各失敗を公開し、回答済みの引用高得点で未回答を隠しません。Judge の形式エラー 1 件は元の回答だけ再評価し、失敗と費用を保存しました。形式再試行は最大 1 回で、回復しなければ実験は失敗です。
 
-日文浏览器验收还修复了异步保存提示、重建提示、动态导航标题和引用面板按钮的漏译，PDF 原文及文件名继续保留原语言。真实模型日语生成和中文 PDF 引用单独记录为浏览器 smoke，不混入冻结测试集。
+日本語ブラウザー検収では非同期保存・再構築の通知、動的ナビゲーション見出し、引用パネルの未翻訳ボタンも修正しました。PDF 原文とファイル名は元言語を維持。実モデルの日本語回答と中国語 PDF 引用は独立ブラウザー smoke として記録し、凍結 test に混ぜません。
 
-## 测试和凭据隔离
+## テストと認証情報の分離
 
-pytest 在导入应用前清空真实 API key，并禁止真正的 HTTPTransport 联网；PostgreSQL 驱动仍可连接显式测试数据库。真实 API smoke 是单独的显式脚本。`.env`、用户数据、缓存、测试临时文件均不进入源码包或 Git 分支。发布同步还检查本地密钥未进入待发布文件。
+pytest はアプリ import 前に実 API key を除去し、実 HTTPTransport の通信を禁止します。PostgreSQL ドライバーは明示したテスト DB に接続できます。実 API smoke は別の明示的スクリプトです。.env、ユーザーデータ、キャッシュ、テスト一時ファイルは ZIP と Git に含めず、公開同期時もローカルキーの混入を検査します。

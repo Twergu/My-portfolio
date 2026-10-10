@@ -1,0 +1,426 @@
+{
+  "at": "2026-10-10T04:24:40.557198+00:00",
+  "status": "passed",
+  "scope": "Japanese documentation translation only; no model calls, rerun, prompt changes or rescore",
+  "original_documentation_commit": "aac72b18a278f6207ad897eacea8122df3cfa382",
+  "markdown_files": 100,
+  "existing_markdown_translated_or_updated": 99,
+  "new_documentation_files": [
+    "docs/localization-ja.md"
+  ],
+  "relative_links_checked": 625,
+  "table_rows_compared": 3271,
+  "executable_fenced_blocks_unchanged": true,
+  "protected_non_markdown_unchanged": 247,
+  "frozen_raw_json": "reports/agent-freeze-20261005/evaluation-live.json",
+  "frozen_raw_sha256": "d38530172cacabd3cdbd4041853824c7e27a3cc355a607db1c22b4be3442cf9c",
+  "failures": [],
+  "limitations": [
+    "Original quotations, machine identifiers, JSON, recorded screenshots and text remain in their original languages.",
+    "Markdown hashes in historical freeze/CI manifests refer to original captured bytes, available in original_documentation_commit.",
+    "Existing generator scripts retain their original output language; these Japanese reports are translated snapshots.",
+    "No new runtime/CI or paid API quality claim is made for this documentation-only change."
+  ],
+  "documentation_hashes": {
+    "README.md": {
+      "original_sha256": "c0aee404b80cc7456e7d07cabcda89dbd013f05d26ef3bbdf4f02152fdde278c",
+      "japanese_sha256": "37586574223d9dfb9e08dcf1917f29645949a56f870b91b29fb259b4cdf5a2fe"
+    },
+    "SOURCE_INDEX.md": {
+      "original_sha256": "27c88508bf556a6f26cf35ce20a15284c299d945df4dff73ce9f50f4128daf66",
+      "japanese_sha256": "2c232450e864598ecbf03d00a43e6cbf505cfa214a4a3871afd7b9ff291426d3"
+    },
+    "SECURITY.md": {
+      "original_sha256": "f314130e94ef0203573795c3917bae266ae1b3a88fe74e01f86f252235172186",
+      "japanese_sha256": "97a804e45200b56f5918c10a70c1eea50dcef2379227e9e6696fa8233b5b6096"
+    },
+    "evals/README.md": {
+      "original_sha256": "70dc8afc994da6d6e41bb9a62117fc08cd741fe91f5773cf651b7cb1993ae20c",
+      "japanese_sha256": "0a565a616f0fc329869642597e740487cb20d46ac01169700ced253791ece01b"
+    },
+    "docs/access-control.md": {
+      "original_sha256": "18beae3de6cb952e21cb4a5be50c94665e9411b3e9c1e659efd6563482f2dc5e",
+      "japanese_sha256": "c43d6e10abacc031d60eff5a2d15b77ba68eb138e2167b45a15ac3bdbe5d8970"
+    },
+    "docs/agent-evaluation.md": {
+      "original_sha256": "d2c639693429ace5db54bc9e039eec8a4ffd14a63e1a5acad5ddedd75827d993",
+      "japanese_sha256": "459cd34e4b862bc2e2dd36ea45812ac4dfae04df0bcaf00fe9ec0c72b9d151e4"
+    },
+    "docs/agent-followup-report.md": {
+      "original_sha256": "28c82be1ead1c66cc80682f238d78cac93454ef424b078844f07ac42dec5349b",
+      "japanese_sha256": "4e0e235cc3672418e4d5667fe2d3db934677f05536b3a2f7d0d9161300dcb133"
+    },
+    "docs/agent-hardening-report.md": {
+      "original_sha256": "896f2600f12bd384108f22e1c3408e416daa3ac9004aaf9637dff65bbc4330d6",
+      "japanese_sha256": "12d50a230457cd574c395fe195736b9a22bfd56fdc2d263934ce6938e00d117b"
+    },
+    "docs/agent-human-review-v1.md": {
+      "original_sha256": "0c0082568ba47872eaa84e910cb8cacc3c54c532fad2149207ea5b88ed79d414",
+      "japanese_sha256": "c0a485c9d66dc53b0fbb8ab86baac051bb78f2e7885827e85312ac417b8e78cc"
+    },
+    "docs/agent-runtime.md": {
+      "original_sha256": "415aef0435629482e653fc5cc87805090c419a0a608719ff2e411faa243e7c40",
+      "japanese_sha256": "6355a63ce2f27f626a81032940ba6762a68a2a627f84091a0deba3bb684e81fa"
+    },
+    "docs/agent-stage1.md": {
+      "original_sha256": "b66275c41e65df4c3f84e3a3558cc68707bfc613afdd9c3749afa171b428ccfb",
+      "japanese_sha256": "c199cf2cffe9d8e1931bfe9e3486e28998763f7454c0cd1234cef813164b8586"
+    },
+    "docs/agent-stage2.md": {
+      "original_sha256": "4c9d6507f3a740efe4a35057f9e101a1879117e4b9f1cc64a531875e13b468af",
+      "japanese_sha256": "4c259b4b9196a02c33978145c0f8f61d17fc62c756a1ac93a9c65a8ad1ef337c"
+    },
+    "docs/agent-stage3.md": {
+      "original_sha256": "c9f4fa59d183127c685679d4fc9659739ecee2b9d83e8e1fe9946393549faa68",
+      "japanese_sha256": "0dc113270ae3adb41b121b59245eaa2f6d74bf6b968cb4e552213201d36fcd3b"
+    },
+    "docs/architecture.md": {
+      "original_sha256": "2fed5dca6c9eb1d054c27a99437bd3c876b9b246417ee6cf6326667e5d809e81",
+      "japanese_sha256": "b5ed957ceecbda5254b7c106f15c048b4f516ad3626d7cf59705c209102c52fc"
+    },
+    "docs/change-report.md": {
+      "original_sha256": "b6e8b8a6282f47d42e1ce97cb6f22ae526d8c111c52ec886f0c046d5855402ab",
+      "japanese_sha256": "476eeff8889fb23442300ff6b2049ff1b145b330d4c699219e3254dafcc55ec8"
+    },
+    "docs/demo-walkthrough.md": {
+      "original_sha256": "739b0d8a774685cef12a98b6e9c4bb810f4bc909dbf6cf2be54d404312fdcc1f",
+      "japanese_sha256": "ef1f05e5db6be55e4b0524b3af01e11582a5a87e1e8ecb71a24f1f95a8ce4b9d"
+    },
+    "docs/localization-ja.md": {
+      "original_sha256": null,
+      "japanese_sha256": "20958546e9b3b5567a76612caa2d652f2d8d58a482afe18d8187cd31b53c7768"
+    },
+    "docs/optimization-report.md": {
+      "original_sha256": "d752ccc354bca427d748fa54dd8eb08219cacdcfdc081eb2271f0c33f15fad09",
+      "japanese_sha256": "ec82c1d0e58661af5bb44de1702fbbe9b6d5d8b954c2108ec2920b22a32b2dad"
+    },
+    "docs/portfolio-sharing-report.md": {
+      "original_sha256": "52873e0330d5f3add23c6c5b6ac4a9c301c1f65853faaefc0895c7b1b80edb78",
+      "japanese_sha256": "1f8f8871635f49e1bf5153a3f5e5affcd0ec1147a4b5b046485fdcfc2632dc61"
+    },
+    "docs/portfolio-sharing.md": {
+      "original_sha256": "ac0930a49fe8ce9fda06eb82b68d7055eb373925e422d370e82b616f964512ae",
+      "japanese_sha256": "8310582518d0bc8b32496c6fb36f679592913880bc3baa2900e598bb3ab0d6bb"
+    },
+    "docs/retrieval-optimization-report.md": {
+      "original_sha256": "c6daf6ce969a86e4236e792cc1f12b5c78b54912ada0e5913ff73fa964bda2c1",
+      "japanese_sha256": "ee2dde3c7f34023c798fb0ccb24f8f9bf64acb6b9dbe4ec49fecb0d993e3bc8a"
+    },
+    "docs/adr/0001-physical-page-chunks.md": {
+      "original_sha256": "6ca7cd4dec68eb127f6acbbbf65cca38a43df0d3ad167fbb9cad29c550ce590e",
+      "japanese_sha256": "4850bd7ae54101131358ea8cb9bf8ede22a352e9717e09760a27aad68b0bbb25"
+    },
+    "docs/adr/0002-hybrid-and-verification.md": {
+      "original_sha256": "5ddc45e25089b2dc48449cb0bd8adf234a50f252357a7d509bcd23bbcdb0dd2b",
+      "japanese_sha256": "62dbf5fdc63798241f0eb6c793da977057812fbdf65a250de06cec38fd78947b"
+    },
+    "docs/adr/0003-agent-gates.md": {
+      "original_sha256": "283e0305b4be03b0f49901007840ac4ff404b17927359a9747105a5f1539f8cd",
+      "japanese_sha256": "c5bcf8097f6a511d769093c730d22be93a3eb64e8203812f742ef1148f837822"
+    },
+    "reports/api-results.md": {
+      "original_sha256": "e467debee5fae907400341f32c4dd06f3de7df23df960e0aaf49b85b7313cd35",
+      "japanese_sha256": "ceb3965ff684631f4737b478ac9671d932ee22c3c415c0c041d4bb2bec6d193b"
+    },
+    "reports/grounding-case-review.md": {
+      "original_sha256": "6770dd28b40a15667031ad7a76486ae6a8701cd042091006a164fc60e54e2700",
+      "japanese_sha256": "fb68bc739d8a7fa606cb1f7ca74dff5b74fa005ec57cfe49d79af0217a050b09"
+    },
+    "reports/live-api-smoke.md": {
+      "original_sha256": "0058262f1bcc21981b6c9715551f41808d40ef229673ac4a327aa2e91ff40d3e",
+      "japanese_sha256": "176384534be6ae889526565f3a43dc87defb549da20c35798bdb453633b8df96"
+    },
+    "reports/live-ui-smoke.md": {
+      "original_sha256": "f3f23369c1987793103201ff485f18a3c4813173ad3d77d5bc91250d488d388c",
+      "japanese_sha256": "ad621b7e368cec0656ad7e6105d7ba8db1f5cd47242c9fcc3472b60e458775c5"
+    },
+    "reports/store-benchmark.md": {
+      "original_sha256": "f5fd1148a37b6fc94c5cd008a89dd7d8102109ae76bff6a03c90830ad658292a",
+      "japanese_sha256": "6693528c913c5e62747c1747d3a181d23a2aef90466471971d4c4f18906e0d8e"
+    },
+    "reports/tests.md": {
+      "original_sha256": "f120fcbc650595a7e0e716af883bfc666f1dddeec65b3d4540c959d371a8cd42",
+      "japanese_sha256": "727f1f0816475b015c910728c8deb170f98a9353b2367510a2f63f7f6cb9b747"
+    },
+    "reports/ui-smoke.md": {
+      "original_sha256": "d9e98351bdf0d60cb8b22ae2365d56271585760d84b1680291fae76579de485c",
+      "japanese_sha256": "f11b6502f43ff7b9affe8651c7949d31b2d67d06a850cd314dab4ae6f6ff109a"
+    },
+    "reports/vector-scale.md": {
+      "original_sha256": "6eb3469e5013fd6e422544f40891e8ed4374f8e10823bd59bc4ad9c3e8e59b82",
+      "japanese_sha256": "bb74213f0c754c88f0ebd4f7bcc5287e4b548fb022006866c9abff8b52add914"
+    },
+    "reports/agent-followup/five-cases-final-live.md": {
+      "original_sha256": "5539d612155ab964659e717c8a166e5bb70d87e26ba88cf0f4c5330b03dbd3fa",
+      "japanese_sha256": "8385c0966eb16bbc9f333a7312586d1dfda887177915256eadc0a78217888162"
+    },
+    "reports/agent-followup/five-cases-live.md": {
+      "original_sha256": "2cc3a20471bdb8ac25cbee17e8712503ea733468f615dcdb7e5df49d60f57feb",
+      "japanese_sha256": "e724c0f78a2da48183916f3d69866377582b92a5603d0eda0eaf361b6f71dda8"
+    },
+    "reports/agent-followup/full-comparison.md": {
+      "original_sha256": "2fa35528b0284bb53d570421281237f71ad199d1c06d7cba296a62281ea5974d",
+      "japanese_sha256": "662646de3772bb8dc825b1c300a1cfe66915854041b64eaac57ea845e5ce6d64"
+    },
+    "reports/agent-followup/full-live.md": {
+      "original_sha256": "ec9d9fdc15b63ff512db6704ac201a54e121610e2f2422473cebc17bde2d95fa",
+      "japanese_sha256": "46ddc2c82fb05649de239edfd0addffd4390c8c8528f17f93b4b4da3b9a25ebb"
+    },
+    "reports/agent-followup/human-review-completed.md": {
+      "original_sha256": "4aba3f0468ee88d894019ee33fbe9ccedf4093a5df1168bd5be87caae1dbcbf7",
+      "japanese_sha256": "f8f2196d5b73fac063c44a8765ad0b5914ccdc86d959423323e94c6a81595c8a"
+    },
+    "reports/agent-followup/human-review-pending.md": {
+      "original_sha256": "da2aa1bee1ecb2af50a23b4c3166b85cc8970389fd553f482cb1309956c3d2f0",
+      "japanese_sha256": "ac69c43c475963bf8e12d56864f4445996e3eaa8b5aa38e0698219bb7dedf427"
+    },
+    "reports/agent-followup/human-verifier-live.md": {
+      "original_sha256": "44139387dcbda0689d66442788f3908b97a78218397a7c2ee2458ac2f31dc5cb",
+      "japanese_sha256": "4196974b9dab6abb33dc70e3c841720dfe10a5cbe8e3b48f45effed6072d9108"
+    },
+    "reports/agent-freeze-20261005/acceptance.md": {
+      "original_sha256": "bb72906927052e139f30e3e9666dbb612faca6953b7ae982e08654a675417fe6",
+      "japanese_sha256": "40e076f7c10bb03b2c40ed46be042304eb4b5ded8545062e0ab0f5297679ac83"
+    },
+    "reports/agent-freeze-20261005/comparison.md": {
+      "original_sha256": "38414f748b497fd701f8249764afc46f7a173a98249c5f1dbef9eead940811af",
+      "japanese_sha256": "1d89a23dc195c555b7255984478b38a86d502ccec458b1ec3feb9a414615ae6c"
+    },
+    "reports/agent-freeze-20261005/evaluation-live.md": {
+      "original_sha256": "ad16c1bd04e7c5eafeab5908abfc1034a2940f98434b843c7f1b20204ffdb648",
+      "japanese_sha256": "7de8fe69e9c40ae24835fd08c97c2671bcb99f5d29e5afb2567b01b59aaeae83"
+    },
+    "reports/agent-hardening/evaluation-baseline-live.md": {
+      "original_sha256": "109345feeef32c438b8e041dae43577d262631b076a4ad671a26e459d6acf9ac",
+      "japanese_sha256": "65eb6eaee9d1ee20d4e2d6aa9b9435746fbd237350e41c662ec1639d358613a3"
+    },
+    "reports/agent-hardening/evaluation-baseline.md": {
+      "original_sha256": "1b72a4e0a63f75473c1ca146b0430c881a8ed09a180fd749790bbaffc00c4011",
+      "japanese_sha256": "83d75a8eb274fb6eba68e0676bee513ae4d34f7f91fefadbee89004b18fd09a2"
+    },
+    "reports/agent-hardening/evaluation-final-complete-live.md": {
+      "original_sha256": "9ceeb7fef2482530c75235e67c16b35afde68102d05356c4be4df5cf17092d22",
+      "japanese_sha256": "68738c9903d8d8abca26d55fc24c49e8119cf9eaadffeaaeb7d08f2048939ccd"
+    },
+    "reports/agent-hardening/evaluation-final-live.md": {
+      "original_sha256": "fd18f3bf93191410146588aa1565da2d79a443a0554a2557a1728e3d9ec54a55",
+      "japanese_sha256": "cf9903ca3a8056ff7cf24ae41f958a11e26e6e5c980258f4f990eddc55f6df7c"
+    },
+    "reports/agent-hardening/evaluation-final-quoted-live.md": {
+      "original_sha256": "cba5a2bf11d1fe96aeb9bb983cafc21381a77653f192679c83b27a079ec1306b",
+      "japanese_sha256": "0e39865c2a6deaefcfaf5c1e07aab383edb6b099122de9fe94df908e64bb0962"
+    },
+    "reports/agent-hardening/evaluation-guarded-handoff-live.md": {
+      "original_sha256": "8d671b2d7e05b2e6a1f713de32a198e7042dabeb447c1fb3d139ce1e5322ecc1",
+      "japanese_sha256": "cd30e04add5dadda42ca5d8b6d8b20805a76a51e1c6c7b2211e3abb0714914f4"
+    },
+    "reports/agent-hardening/evaluation-handoff-live.md": {
+      "original_sha256": "1aa3a9192341368a5657548b24a3553326ada4c6c4d1317f941daa9cd3786c8f",
+      "japanese_sha256": "01ee34c3fc3f867fe48250d32b43026e3a6fe5227e8b397b0bd98b2435a37d59"
+    },
+    "reports/agent-hardening/latency-comparison.md": {
+      "original_sha256": "35dc75cfbdd405fd9ed6187077ca58d391a23f2a583974cf332b9cb53a6b3a5b",
+      "japanese_sha256": "02891acb959c68e4959d553b5bed4387f89e7500c77772de757d3ba17c2b173d"
+    },
+    "reports/agent-hardening/latency-final-comparison.md": {
+      "original_sha256": "025a13a20a2c0fb20daa9d6fd710e7a1a4e00ded15803a4928a54fd8bb8f6749",
+      "japanese_sha256": "6118a4bdb077903cecad06c141d158d7833745c357e7cb35ca3318eaae9b58e9"
+    },
+    "reports/agent-hardening/latency-first-attempt.md": {
+      "original_sha256": "1df12f4e598020f7a4801b78e17cf34b0d975ab4411bb4d031333f1573458415",
+      "japanese_sha256": "0623c5e1aa426eaef6979198b7393c92cf297e2df365634a648af4c276361e0e"
+    },
+    "reports/api-baseline-v1/chunk-api-900-120-dev.md": {
+      "original_sha256": "f7df10fb91cce7558e7e3603561f2ab2fcf616526508fc7ea21dffeb2c02a666",
+      "japanese_sha256": "716fadba7feb88ced50fa63203c6a5c73f51871a721f46eac3cd0184213da00f"
+    },
+    "reports/api-baseline-v1/README.md": {
+      "original_sha256": "d5e7af1b4b6417d540572ec9c6baa241104873309b74b8627320c1a067ce15ef",
+      "japanese_sha256": "ad672b83538b4b2cebf1afeb95832f13a063b64f20c56ac0c86f687952a34c1f"
+    },
+    "reports/chunks/chunk-experiment-local.md": {
+      "original_sha256": "e5cd062c86883c66ae59c089e423df02e37f4e0daee2658cbf8096e7b8581b69",
+      "japanese_sha256": "e1ab947d750a862afd78cdea1280c338fe1bebfd57b763443b8183a9ec7a1664"
+    },
+    "reports/chunks/chunk-local-1200-120-dev.md": {
+      "original_sha256": "1e8f2bd879e35863662e28453d793c04af1de336b8aceb54118669c759fd1a06",
+      "japanese_sha256": "91a787f91455dae0b911d65b7eac6907fd1a6c0a247a4d8d2d342c2f104253b4"
+    },
+    "reports/chunks/chunk-local-1200-180-dev.md": {
+      "original_sha256": "a59ed6ad34eded72b5868fe817356d6c833c25e29e1bc84de4c648d76f39938d",
+      "japanese_sha256": "e5bd7c90a81148a683baa18a6e6a2b43ee0a49f229880fe46f401b8364805b13"
+    },
+    "reports/chunks/chunk-local-450-0-dev.md": {
+      "original_sha256": "b8319d9285af40544f50426cbef6fe632cee98bbe2bcb646e89988e6f896d4be",
+      "japanese_sha256": "5f54324314ccff48b8045a8d831ffbaaec9bfa5729faa2d1aa0612450521b934"
+    },
+    "reports/chunks/chunk-local-450-60-dev.md": {
+      "original_sha256": "368765e3b6dc943607af8dea0f8645aad5bae55e35cf096061e47dab4eca8d97",
+      "japanese_sha256": "15c6f7e10a7f91b1f7625ae167fc685ea08f39bf02eac585da9ade3432bd9337"
+    },
+    "reports/chunks/chunk-local-900-0-dev.md": {
+      "original_sha256": "dae46d606c4e9f956af3fc564682b6b0a44c921c5d66eaa6e932804fa9b675d2",
+      "japanese_sha256": "48d30dc28915dc87abc0859b19e4601246f8f2965ed889d295bf8dad4c4773ad"
+    },
+    "reports/chunks/chunk-local-900-120-dev.md": {
+      "original_sha256": "7676638cbeb038092d25c77733f2bcd2cdb82a866c24cfab02d8fa11565d2f8d",
+      "japanese_sha256": "397ac11e65422fe03a405a3eaba5f5f5decc472f1cfbb39d94dfcc38e840a813"
+    },
+    "reports/chunks/chunk-local-selected-test.md": {
+      "original_sha256": "6c869c7e8bd5a3c4b2480f3106027ef20f6192dc64f25d66c5e4ffe6c856682f",
+      "japanese_sha256": "8996a5d1df7b8019a2a37b16c120fa519c6b429fa13dc0d9a7d684e7e6809622"
+    },
+    "reports/chunks-api/chunk-api-1200-120-dev.md": {
+      "original_sha256": "f8e6c0d81c5d08c737dd457c7815a79638c642bada64fe417220cdb919ccd9f6",
+      "japanese_sha256": "00cc9a01e9850ced626115ce5feee9026ce5feb15bc18d506835a0e4950206d4"
+    },
+    "reports/chunks-api/chunk-api-1200-180-dev.md": {
+      "original_sha256": "0fe9de973d83febc13b0112415cb6ae9038bae199050bd65450aaa3f3079088d",
+      "japanese_sha256": "ed236abef16385c8e6f5c23c40779979a7ce2967352d4d7dd0cf2fbeb3b9ed12"
+    },
+    "reports/chunks-api/chunk-api-450-0-dev.md": {
+      "original_sha256": "56a67c060ac32c19d0f987a36f08dd2ceed3df6eafd3e1e48957364f627dd478",
+      "japanese_sha256": "c8eb96cd0d0ef9eb976836d32897faafedef7ec4f2daa87e0742ef7d3e28493a"
+    },
+    "reports/chunks-api/chunk-api-450-60-dev.md": {
+      "original_sha256": "e374976bd912402879b906b1a8fb10063cd8dad6c9f488f7c10efa1464a4929c",
+      "japanese_sha256": "dfb824461e26890f9fe737831c5adbd5db960f916c7566d834e6cd588bcff313"
+    },
+    "reports/chunks-api/chunk-api-900-0-dev.md": {
+      "original_sha256": "0a956436c6b23ae4896e319b4cc92798c35da031334987b3f04012eade307125",
+      "japanese_sha256": "bb813e3f01214fd076f993edd3a4d85c041a9daec13c9951b073e5efca4f63e7"
+    },
+    "reports/chunks-api/chunk-api-900-120-dev.md": {
+      "original_sha256": "56a907808b25b78d79e0b5bae584babc533eb3fd834404e55cf6b67e23800016",
+      "japanese_sha256": "9372ff5a01af51519919a931447e5845226ca4398dbc215ad7d0f16acf0975fc"
+    },
+    "reports/chunks-api/chunk-api-selected-test.md": {
+      "original_sha256": "c15e28f617051cce14d555ce46be5cdfea3b53c7cf394742d39a5f391622e0f2",
+      "japanese_sha256": "b90a14ac972fe2870c455df1988efb4ea2462b4e7c5a435aa5ff7cc594595bd2"
+    },
+    "reports/chunks-api/chunk-experiment-api.md": {
+      "original_sha256": "915dc7f8c84404b473e284e6edc92e0d473e3ecbec83e100ad5249c00716ce18",
+      "japanese_sha256": "776f8e59de44924240fb956dbca35e4e9011bbaab58e85aaa9dd587290e08982"
+    },
+    "reports/chunks-v2/chunk-experiment-local.md": {
+      "original_sha256": "5a06a76e74e42684779b5b830432e2fd768681a52b722f3806b9f0c56b42ff01",
+      "japanese_sha256": "3a08d9995e418ad76a1948d5ab0b33094732dac0b24ac2d7a4549f4ea31452b0"
+    },
+    "reports/chunks-v2/chunk-local-1200-120-dev.md": {
+      "original_sha256": "47e7bb2ee40e26fdd9196b3a9a24247f9a3f0ba3dc93111e0c09da8142203912",
+      "japanese_sha256": "f8d25f8fd0bd438d6ba1e2d3c6578bba851bb16370729f96e8ad807b6e4f3104"
+    },
+    "reports/chunks-v2/chunk-local-1200-180-dev.md": {
+      "original_sha256": "d15867365b4adcccb89707e99ddb44c7e9b286e52cfc5ac984037d6b4043b728",
+      "japanese_sha256": "f03272d3bdd400de729a7648d5dd695c5f3a814262bfc7b4cabe16ced6411449"
+    },
+    "reports/chunks-v2/chunk-local-450-0-dev.md": {
+      "original_sha256": "19d6f132273788cc0995dd5aaff32ef9caa92f1dd366a66608f1c86a6c05394d",
+      "japanese_sha256": "6361fd9a1006239afebc969c3ecb601ade3b1ca5d43b6f01a4f8bd158124566e"
+    },
+    "reports/chunks-v2/chunk-local-450-60-dev.md": {
+      "original_sha256": "d60d6f314f0b982df03064ce9944ceab0c865886fc2b3cf1753017eebefa0d94",
+      "japanese_sha256": "41e33ae77ff676c4cce4c6c728509d2b04cec647962dbe8e37e1bdbd65722de6"
+    },
+    "reports/chunks-v2/chunk-local-900-0-dev.md": {
+      "original_sha256": "17c465d27890b268d13e9662581a3344602a9365af5967eeaa8fcf857c223a37",
+      "japanese_sha256": "f4b886236a33556aead8b351eeed58d196e616db13c63a1334e398d49e64d0be"
+    },
+    "reports/chunks-v2/chunk-local-900-120-dev.md": {
+      "original_sha256": "c67543db92f1a8c671e324fb261dc7f547baabbd1f0866a7b1a3a817f514535e",
+      "japanese_sha256": "63e964981de7cccd2992c1662e1bac8aa4fd98d14b6999aa20e758078f02ccba"
+    },
+    "reports/chunks-v2/chunk-local-selected-test.md": {
+      "original_sha256": "da82df5c2387716ac5010e16cf631a4e4d176e2c8abd8efc970793249b584a81",
+      "japanese_sha256": "9ab834556582bf16c6501581a5a5fabf717bd4d30a074d2cd4b8f18e8a6d6a45"
+    },
+    "reports/ci/tests.md": {
+      "original_sha256": "8c05fbe9d061395332e37a5b9973cc8bbdcc07a286ccf0f0c12ccd66437833ae",
+      "japanese_sha256": "417dd123971e62407417900a6364861356c5c8a3518503a5016a10110dbef18e"
+    },
+    "reports/v3/grounding-diagnostics.md": {
+      "original_sha256": "44b8fba8482219f181cdd3e2cd96c3d51762475c1233dfe4a06bfc8e211e9825",
+      "japanese_sha256": "adaa1f3bc845a970038cede8f6b4254085ee3930628729ae22da1073d150646f"
+    },
+    "reports/v3/quality-fast-test.md": {
+      "original_sha256": "a9245e4487e86ebfeb11bab132fb6b881d799240cd967988905b8b4fc8fc3348",
+      "japanese_sha256": "70a80bfb5f46e02dbefb3e22b61a388f3a1330417dbaa258f4b36c36adb4d088"
+    },
+    "reports/v3/quality-strict-test.md": {
+      "original_sha256": "a39c758b42ec5ed33569e0f4aad1f199efdff28c106fe463a2cf0e6d6d8dd1f5",
+      "japanese_sha256": "ff3bf5db42f5df7c9d3ce1fe6b3f065128e63f75c159006e241f1addedd81ff7"
+    },
+    "reports/v3/summary.md": {
+      "original_sha256": "141d87a5efe88762c8e5cb9d19a152a08dbec0c0ec9195ed8529e9675feea842",
+      "japanese_sha256": "ed6d0542d1a17910c1f084600f63d89bb1080cd39705d3ce48250ee54644b76f"
+    },
+    "reports/verification/comparison.md": {
+      "original_sha256": "29c8ae570ac14db7a5381963eea0da1c359a8cd60d8ee1942a8612f8819e10bf",
+      "japanese_sha256": "d9c8a3b81929ab0068d783ad1433478466e511a9232b69432523b2fa9b0e39d3"
+    },
+    "reports/verification/fast.md": {
+      "original_sha256": "342809a602f11db324d828ffa375d3fd1d05f215806db7569e56e3887412a666",
+      "japanese_sha256": "a62fcc7253660e57faeafb3350e580e0d5e2e9845b85883d32c2389c6b697869"
+    },
+    "reports/verification/off.md": {
+      "original_sha256": "19e0281ac1580c2cdef5602bfa0192923105090828ca3bec48557f0b20ad1799",
+      "japanese_sha256": "1662661940157ea5cd46b8dae26439fb97a962599a92250dddb44318d6bcb572"
+    },
+    "reports/verification/strict.md": {
+      "original_sha256": "c15e28f617051cce14d555ce46be5cdfea3b53c7cf394742d39a5f391622e0f2",
+      "japanese_sha256": "b90a14ac972fe2870c455df1988efb4ea2462b4e7c5a435aa5ff7cc594595bd2"
+    },
+    "reports/verifier-models/mini-450-0-dev.md": {
+      "original_sha256": "e24ec98280e5713bf67a0fe8ed4818d6ba8ea52ad0396ff80ec05e64b747630a",
+      "japanese_sha256": "b05f3355743e75196456cd596b27ed1cf88d586e6bb6adb7232e4d464bb0ed43"
+    },
+    "reports/agent-followup/ci-final/store-benchmark.md": {
+      "original_sha256": "5fb4e54d60d2acebf97c29b568fef11246d41f29f2004b0355da549340c33e50",
+      "japanese_sha256": "64899a2f388c9f5d0c2e058d54675468109910069ad801f0784bb6606418e494"
+    },
+    "reports/agent-followup/ci-final/tests.md": {
+      "original_sha256": "9eca98974dfcc433ea458a481cd3e2a16a47e2ab9573f2295aadd7d33b95f1e5",
+      "japanese_sha256": "b6f2e6b8c95c21df85977656acc02761ff676adbebb05aa058a39b24c161c463"
+    },
+    "reports/agent-followup/ci-final/vector-scale.md": {
+      "original_sha256": "470a9441f7e2d97073eb025224c0f95380d9ac3b4afb1df1860f7e1a7857f6e4",
+      "japanese_sha256": "5369f61dd21aef9e0c322f64095d2e7f11a9a100ecf6044643db514ce50839dc"
+    },
+    "reports/agent-hardening/ci-final/store-benchmark.md": {
+      "original_sha256": "8f082cc348b47535e73768dbe3bcc8688b011b2d7a2044d6f5b3ef435af89273",
+      "japanese_sha256": "92fc81b1f16d6d885a7dd8a4b8a629250f58510506fa3f96980e8628e7b765fa"
+    },
+    "reports/agent-hardening/ci-final/tests.md": {
+      "original_sha256": "e7d7dc763d298bbe2e1db219835c5fe423fadc0400eb9bcaef51530f47f7bf39",
+      "japanese_sha256": "1608ab8399f00adeb7f450aaea014cc9e8ea9deca0b85dfbd0f2345413a06adb"
+    },
+    "reports/agent-hardening/ci-final/vector-scale.md": {
+      "original_sha256": "8cd92c04f582cba3aa8b6aa8ff4253889f29832f6e96421b886c210d8aee6d68",
+      "japanese_sha256": "3ec8fb306128532f2e508ffafe208987d7c244b394c0a0158ea79b80f924ed69"
+    },
+    "reports/agent-hardening/ci-p0/tests.md": {
+      "original_sha256": "b1aa82c3b39ef44faeaa5f0e1a342f6711b72e6b340225ca5c6bf9968760fd81",
+      "japanese_sha256": "2b7a40d7f536dc4dd9574ac38fb1c6202dd91f7cadae49e5165fa499edd79093"
+    },
+    "reports/agent-hardening/ci-p1/tests.md": {
+      "original_sha256": "0bc63b58838c9f77f34d3598b71327bfe7d8b5b46d12a9d181f94c7df303deae",
+      "japanese_sha256": "e176996d39cbb54291369b82aab72fc10a3f4699d42a4c573167e53213a9f34c"
+    },
+    "reports/portfolio-sharing/ci-final/tests.md": {
+      "original_sha256": "face5366e563b4a9affd7906df12c360decef3e7ae342439edec63bccc248751",
+      "japanese_sha256": "749001d6684d1d62e85f18038468b9d669fa2649fa6016033dede22d7d48d6ab"
+    },
+    "reports/portfolio-sharing/ci-final/vector-scale.md": {
+      "original_sha256": "1df9045fff1dd0b0e62ece836673125a39c0d0941a9061c32af52321ef5d9d70",
+      "japanese_sha256": "4bfeafc0f2fb8ab54fc583ea3272f4a322c3f1c4a21a474b8659e66d077e39b0"
+    },
+    "reports/v3/ci-first/README.md": {
+      "original_sha256": "00dd81b8f4ff37107a3af02e760cd2bdc48a98daa034d3abf321a9507b3cfdf1",
+      "japanese_sha256": "53a5435fd51dba0dbe2aeddf04933c33489f7c4ce5749019152d5f653001dc0f"
+    },
+    "reports/v3/ci-first/vector-scale.md": {
+      "original_sha256": "5d4161042dce81b14dcd2317e435034db2a10be82c951df1c51ba4815cf78131",
+      "japanese_sha256": "2efce2100b1ffdc2d4d52cc089e1f7364d6904196d7dd5994e02c5c52ab82d5a"
+    }
+  }
+}

@@ -1,27 +1,27 @@
-# Agent 第二阶段：实际工具与有依据的结果
+# Agent 第 2 段階：実ツールと根拠付き回答
 
-历史阶段状态：后端工具、Agent API、多轮任务与结果验证已接通；四个真实模型流程检查通过。本阶段交付时暂停，随后获用户继续授权；当前已完成[第三阶段页面接入](agent-stage3.md)。以下保留第二阶段当时的验证范围与结果。
+当時はバックエンドツール、Agent API、複数ターン、結果検証を接続し、実モデルの 4 フローを通過して停止しました。その後の続行指示で[第 3 段階の画面](agent-stage3.md)も完了しています。以下は当時の範囲と結果です。
 
-## 修改与效果
+## 変更と効果
 
-| 修改 | 现在的行为 |
+| 変更 | 動作 |
 | --- | --- |
-| Knowledge Search | 调用现有 Dense/Hybrid/Reranker 检索配置，返回真实片段、物理页码、PDF 链接和政策元数据。只允许模型提供查询词；文档范围、ACL 和版本过滤由服务器确定。 |
-| Calendar | 支持日期偏移、指定周的星期、包含首尾的日期区间。默认工作日配置明确标为模拟的周一至周五日历，未配置法定/公司节假日；不能查询余额、空闲时间或批准申请。 |
-| Calculator | 用 Decimal 执行加、减、乘、除、百分比，禁止执行表达式或代码。最多保留六位小数，明确记录舍入；数值和单位是否适用于业务仍需核对用户/文档依据。 |
-| 证据来源 | 区分 `document`、`tool`、`user`。PDF 保留页码链接；工具和用户信息不伪装成 PDF 引用，分别携带计算来源、模拟标记或自述标记。 |
-| 回答生成 | 将已检索证据交给共享 `answer_from_sources`，不再次 Embedding/检索。结合政策、计算和用户条件输出结论、材料、步骤。 |
-| 严格验证 | Agent 强制 `strict + all`，检查引用编号、原文摘录与全部断言依据；原有 RAG 的 off/fast/strict 设置不变。任何断言不支持则隐藏候选回答。 |
-| 双重追问机会 | Planner 可以追问；即便它提前交接，回答阶段发现缺少必要个人条件也可返回 `needs_input`。补充信息后继续原任务，缺政策证据则仍明确拒答。 |
-| 多轮与权限 | 状态只存在服务器内存，任务 ID 随机生成并绑定用户。每次模型操作前重新认证和核对范围，回复时重新核对权限、文档、配置及旧证据。范围变化时要求重开任务。 |
-| 生命周期 | 最多 100 个活跃任务、每用户 4 个；任务创建后 15 分钟过期，同一任务不能并发回复。只保留等待补充的任务；完成/失败即释放，可显式取消等待中的任务。 |
-| 可观测性 | 记录 Planner、Embedding、Generator、Verifier、工具耗时及 token/cost。每次输入单独计时，不把用户思考时间算成模型响应延迟。 |
+| Knowledge Search | 既存 Dense/Hybrid/Reranker で実 Chunk、物理ページ、PDF リンク、制度 metadata を取得。モデルは検索語のみ指定し、範囲・ACL・版はサーバーが決定 |
+| Calendar | 日付加減算、指定週の曜日、両端を含む区間。既定は明示的な Mock 月～金で、法定・会社休日は未設定。残高、空き時間、承認は確認できない |
+| Calculator | Decimal で加減乗除・百分率。式やコードは実行しない。小数は最大 6 桁で丸めを明記。値・単位の業務適用性は文書・ユーザー根拠で別確認 |
+| 根拠の出所 | document/tool/user を区別。PDF はページリンクを保持し、ツール・自己申告は PDF を装わず、計算・Mock・自己申告の表示を付ける |
+| 回答生成 | 取得済み根拠を共有 answer_from_sources に渡し、Embedding/検索を繰り返さない。制度・計算・本人条件から結論、書類、手順を生成 |
+| 厳密検証 | Agent は strict + all を強制し、出典番号、原文抜粋、全主張を検証。通常 RAG の設定は維持。1 主張でも根拠不足なら候補を隠す |
+| 2 段階の質問機会 | Planner が質問でき、早期引き継ぎ後でも生成側が必要条件不足なら needs_input を返す。追加後は同タスクを継続し、制度根拠不足は拒否 |
+| 複数ターンと権限 | サーバーメモリのみ。ランダム task ID をユーザーに紐付け、各モデル操作前に再認証・範囲確認。返信時は権限、文書、設定、旧根拠を再確認し、変化なら新規タスク |
+| ライフサイクル | 全体 100、ユーザー別 4 タスク。作成から 15 分、同一タスクの並行返信禁止。追加情報待ちのみ保持、完了・失敗は解放し、待機は明示取消可能 |
+| 可観測性 | Planner、Embedding、Generator、Verifier、ツールの時間と token/cost。入力ごとに計測し、利用者の思考時間を含めない |
 
-代码：[实际工具](../backend/agent_tools.py)、[任务与 HTTP 接口](../backend/agent_service.py)、[共享回答链](../backend/rag.py)、[依据验证规则](../backend/verification.py)、[集成测试](../tests/test_agent_integration.py)。
+[実ツール](../backend/agent_tools.py)、[タスク・HTTP](../backend/agent_service.py)、[共有回答処理](../backend/rag.py)、[検証規則](../backend/verification.py)、[結合テスト](../tests/test_agent_integration.py)。
 
-## 接口
+## API
 
-通过原有登录 Cookie 或 Bearer Token 认证；local 模式仍是已有的单用户开发模式。
+既存ログイン Cookie または Bearer Token で認証。local は単一ユーザー開発モードです。以下のリクエスト例は元の中国語を保持しています。
 
 ```http
 POST /api/agent
@@ -35,45 +35,45 @@ Content-Type: application/json
 }
 ```
 
-返回 `needs_input` 时携带 `task_id` 与 `questions`。继续任务使用 `POST /api/agent/{task_id}/reply`，正文仅为 `{"question":"用户补充的信息"}`；不能在回复中上传状态、修改文档范围或伪造工具结果。取消等待中的任务使用 `DELETE /api/agent/{task_id}`。
+needs_input は task_id と questions を返します。再開は `POST /api/agent/{task_id}/reply`、本文は `{"question":"ユーザーの追加情報"}` のみ。状態、範囲変更、偽ツール結果は送信できません。待機取消は `DELETE /api/agent/{task_id}`。
 
-`answered` 携带已验证的 `claims`、`sources`、`support`、`trace` 和 `metrics`。`evidence_notices` 指明模拟数据、自述信息及本系统未执行外部业务操作。其他状态包括 `needs_input`、`insufficient_evidence`、`unsupported_answer`、`unavailable`、`error` 和 `limit_reached`。
+answered は検証済み claims、sources、support、trace、metrics を含みます。evidence_notices に Mock、自己申告、外部業務操作未実行を明示。その他の状態は needs_input、insufficient_evidence、unsupported_answer、unavailable、error、limit_reached。
 
-当前时区为 Asia/Tokyo，参考日期由服务器在任务开始时确定并保持不变，响应会明确返回。无任何有权限且索引有效的文档时，先返回 `no_accessible_evidence`，不调用模型；当前 Agent 入口定位于企业知识任务，尚未开放空知识库下的独立计算模式。
+タイムゾーンは Asia/Tokyo、基準日は開始時にサーバーで固定し応答へ返します。権限があり有効に索引済みの文書がなければ、モデル前に no_accessible_evidence を返します。企業知識タスク向けで、空の知識庫で単独計算するモードは未公開です。
 
-## 真实 API 验证
+## 実 API 検証
 
-[完整 JSON 报告](../reports/agent-stage2/live-smoke.json) 记录实际请求、用量、响应、验证结果和费用。本次使用配置中的 gpt-5.6-luna 与 text-embedding-3-small，通过临时应用上传虚构 PDF 并真正完成索引；检索使用隔离的 SQLite + Hybrid，日期与计算工具实际执行。
+[全 JSON](../reports/agent-stage2/live-smoke.json)に要求、使用量、応答、検証、費用を記録。gpt-5.6-luna と text-embedding-3-small を使い、一時アプリへ架空 PDF をアップロードして実索引を作成。検索は隔離 SQLite + Hybrid、日付と計算も実処理です。
 
-| 场景 | 实际结果 |
+| シナリオ | 実結果 |
 | --- | --- |
-| 中文采购 | 知识检索 + Calculator：3 × 1200 = 3600 日元，列出采购材料并引用原文。 |
-| 日文培训申请 | 知识检索 + Calendar：2026-10-12 开始、提前三个自然日，得到 2026-10-09，并列出规定要求的材料。 |
-| 英文通勤补助 | 先追问雇佣类型和每周现场办公天数。补充后给出基于用户自述的条件性判断，明确仍需雇主确认。 |
-| 模拟工作日 | 2026-10-02 至 10-06 含首尾，在模拟周一至周五日历下为三个工作日；明确这未确认公司节假日。 |
+| 中国語の購入 | 検索 + Calculator：3 × 1200 = 3600 円。必要書類と原文引用 |
+| 日本語の研修申請 | 検索 + Calendar：開始 2026-10-12 の 3 暦日前は 2026-10-09。必要書類を列挙 |
+| 英語の通勤補助 | 雇用区分と週の出社日数を質問。返信後は自己申告による条件付き判断と、雇用主確認の必要性を明示 |
+| Mock 営業日 | 2026-10-02～10-06 の両端を含め、Mock 月～金では 3 営業日。会社休日は未確認と明示 |
 
-最终四个流程均通过状态、预期工具和严格依据验证断言；它们是功能 smoke，不是大规模质量评估，也没有独立 Judge 或人工审核。源政策与问题见 [虚构测试集](../evals/agent-workflows.json)。
+4 フローで状態、期待ツール、厳密検証を通過しました。機能 smoke であって大規模品質評価ではなく、独立 Judge・人手レビューもありません。元制度と質問は[架空テストセット](../evals/agent-workflows.json)。
 
-最终成功运行 24 个模型/Embedding 请求，报告 token 总量 32,927，包含索引与追问的估算费用 USD **0.01040254**。最终回答轮耗时约 7.94–16.82 秒，通勤场景另有前一轮追问耗时；这不是稳定的 P50/P95 benchmark。费用基于配置单价，不等于服务商账单。
+成功実行はモデル/Embedding 24 要求、報告 token 合計 32,927、索引・追加確認を含む推定 **USD 0.01040254**。最終回答ターンは約 7.94–16.82 秒で、通勤には前段の確認時間もあります。安定した P50/P95 benchmark ではなく、費用も請求額ではありません。
 
-首次真实运行暴露了“规划器过早交接，回答阶段因缺用户条件拒答”的问题，详见 [修复前结果](../reports/agent-stage2/live-smoke-before-clarification.json)。没有删除失败记录；增加回答阶段的结构化追问后重跑成功。两次有用量记录的运行费用合计 USD **0.01908548**。另外保留 [最初的临时目录权限失败](../reports/agent-stage2/live-smoke-first.json)，该次未记录任何 API 操作。
+初回は「Planner が早すぎる引き継ぎを行い、生成側が条件不足で拒否」を確認。[修正前](../reports/agent-stage2/live-smoke-before-clarification.json)を削除せず、生成段階の構造化質問を追加して再実行しました。使用量のある 2 実行の合計は **USD 0.01908548**。[最初の一時ディレクトリ権限エラー](../reports/agent-stage2/live-smoke-first.json)も保存し、その実行に API 操作の記録はありません。
 
-## 自动测试与限制
+## 自動テストと当時の制約
 
-- 全项目测试数量与覆盖率见 [动态测试报告](../reports/tests.md)，Ruff lint/format 均通过。新测试覆盖权限撤销、跨用户任务、元数据/模型/索引变化、上下文伪造、过期/并发/容量限制、计算与日期边界，以及生成阶段追问恢复。
-- 当前本机 PostgreSQL 测试仍因未配置测试数据库跳过，包括新增的 Agent SQLite/pgvector 共用检索权限合同中的 pgvector 分支；不把跳过算通过。既有远程 CI/Docker 记录属于旧版本，本阶段尚未重新运行远程验收。
-- 多轮状态存于单进程内存，应用重启会失效；未提供跨进程/多副本状态共享。同步请求只有 Provider 超时和次数限制，取消接口不能中断在途 HTTP 调用。
-- 真实业务日历、HR 余额、审批状态、申请提交尚未接入。Mock 标记和用户自述限定不能替代真实系统验证；模型依据校验也不是形式化正确性证明。
-- 未添加页面按钮或修改聊天界面，未安装 LangGraph、增加外部写入工具或人工审批流程。
+- 件数・カバレッジは[動的テスト結果](../reports/tests.md)。Ruff lint/format 通過。権限取消、別ユーザー、metadata/モデル/索引変更、文脈偽造、期限・並行・容量、計算・日付境界、生成側質問からの再開を検証。
+- ローカル PostgreSQL は未設定で skip。新 Agent の両 DB 共通検索権限契約も PG 側は skip で、成功としません。旧遠隔 CI/Docker は旧版で、この段階では未再実行。
+- 状態は単一プロセスのメモリで再起動時に消失。複数プロセス・レプリカ共有なし。同期要求は Provider timeout・回数制限のみで、取消 API は送信中 HTTP を中断できません。
+- 実業務日暦、HR 残高、承認状態、申請提出は未接続。Mock/自己申告の限定は実システム検証の代わりでなく、モデル検証も形式的証明ではありません。
+- この時点では画面、LangGraph、外部書き込み、人手承認を追加していません。
 
-复现：
+再現：
 
 ```powershell
 .\.venv\Scripts\python.exe -m scripts.check
 .\.venv\Scripts\python.exe -m ruff check .
 .\.venv\Scripts\python.exe -m ruff format --check .
-# 显式允许付费调用，仅使用虚构 PDF 与问题
+# 有料呼び出しを明示的に許可。架空 PDF と質問のみ使用
 .\.venv\Scripts\python.exe -m scripts.agent_live_smoke --live
 ```
 
-第三阶段接入页面：Agent 模式、多轮补充、分类来源卡片、工具执行记录与实际场景演示。当前阶段完成后等待用户确认。
+次の第 3 段階は Agent モード、追加確認、分類出典カード、実ツール記録、実シナリオの画面接続です。当時はこの段階完了後に依頼者の確認を待ちました。

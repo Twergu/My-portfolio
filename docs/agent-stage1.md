@@ -1,68 +1,68 @@
-# Agent 第一阶段：通用任务编排
+# Agent 第 1 段階：汎用タスクの実行制御
 
-历史阶段状态：后端编排核心完成后暂停并获用户继续授权。现已完成[第二阶段](agent-stage2.md)的实际知识库、日期/计算工具、答案依据验证和 API，以及[第三阶段页面接入](agent-stage3.md)；本页保留第一阶段当时的范围与验证记录。
+過去の段階記録です。バックエンド中核完成後に停止し、依頼者の続行指示を受けました。現在は[第 2 段階](agent-stage2.md)の実検索・日付/計算・回答検証・API と[第 3 段階の画面](agent-stage3.md)を完了しています。本書は第 1 段階当時の範囲と結果を維持します。
 
-## 已实现的能力
+## 実装した機能
 
-| 能力 | 实现与效果 |
+| 機能 | 実装と効果 |
 | --- | --- |
-| 通用任务理解 | 模型区分 `knowledge_question` 与 `business_task`，输出简短目标；没有请假、报销或采购专用分支。 |
-| 缺失信息追问 | `clarify` 返回最多三个问题，暂停执行。服务器通过 `resume` 传入用户回复后继续，保留问题与回复的对应关系。 |
-| 动态工具选择 | `call_tool` 每轮选择一个已注册工具；服务器严格校验名称和参数，再调用 Python handler。工具结果作为数据返回给下一轮模型。 |
-| 结果交接 | `prepare_answer` 只能引用本任务成功的 observation；返回 `ready`。它表示可以进入下一阶段，不表示答案已生成、经过验证或业务已获批准。 |
-| 明确无法完成 | 缺少工具、缺少证据或任务超出范围，返回 `unavailable` 和结构化原因。模型/API 出错则返回 `error`。 |
-| 执行上限 | 默认整个任务最多 8 次规划、6 次工具调度、4 次用户输入；追问后继续不会重置计数。另有上下文和工具输出大小限制。 |
-| 去重与错误处理 | 对校验后的工具名/参数计算摘要，阻止重复执行。失败结果不能当作成功证据；异常保留服务端 traceback，模型只接收安全错误码。 |
-| 任务隔离 | 无全局对话历史。继续任务时要求服务器身份及权限范围版本一致，否则在调用模型前拒绝。 |
-| Provider 与指标 | 复用现有 HTTP Client 和 Generator 配置，新增 `planner` 调用角色；记录规划/工具耗时、token 和按配置单价估算的费用。 |
-| 语言与日期基准 | 接收 zh/ja/en、明确的参考日期和时区；相对日期在任务内采用同一参考日期。 |
+| 汎用的な意図理解 | knowledge_question / business_task を区別して短い目的を出力。休暇・精算・購入の専用分岐なし |
+| 不足情報の質問 | clarify が最大 3 問を返して停止。resume で返信を渡し、質問との対応を保持して続行 |
+| 動的ツール選択 | call_tool が毎回 1 登録ツールを選択。サーバーが名前・引数を厳格検証し Python handler を実行。結果をデータとして次のモデルへ |
+| 結果の引き継ぎ | prepare_answer は同じタスクの成功 observation のみを参照し ready を返す。次段階へ進める意味で、回答生成・検証・業務承認済みではない |
+| 実行不能の明示 | ツール・根拠不足や範囲外は unavailable と構造化理由、モデル/API 異常は error |
+| 実行上限 | タスク全体で計画 8 回、ツール 6 回、ユーザー入力 4 回。再開でリセットせず、文脈とツール出力も制限 |
+| 重複・エラー | 検証済み名前・引数のハッシュで重複実行を防止。失敗を成功根拠にせず、サーバーに traceback、モデルには安全なエラーコードのみ |
+| タスク分離 | グローバル会話履歴なし。再開時にサーバー ID と権限範囲の版が一致しなければ、モデル呼び出し前に拒否 |
+| Provider と計測 | 既存 HTTP Client と Generator 設定を再利用し planner 役割を追加。計画・ツール時間、token、設定単価の費用を記録 |
+| 言語と日付 | zh/ja/en、明示的基準日・タイムゾーンを受け取り、相対日付は同一タスク内で同じ基準日を使用 |
 
-核心文件：[编排与工具接口](../backend/agent.py)、[Provider](../backend/providers.py)、[自动化测试](../tests/test_agent.py)。本阶段未增加依赖或安装 LangGraph。
+[実行制御・ツールインターフェース](../backend/agent.py)、[Provider](../backend/providers.py)、[テスト](../tests/test_agent.py)。この段階では依存追加や LangGraph 導入はありません。
 
-## 执行状态
+## 実行状態
 
 ```mermaid
 flowchart TD
-    Task[用户任务] --> Plan[模型返回结构化动作]
+    Task[ユーザーのタスク] --> Plan[構造化アクション]
     Plan --> Ask[clarify / needs_input]
-    Ask --> Resume[用户补充信息与身份范围复核]
+    Ask --> Resume[追加情報と本人・権限範囲の再確認]
     Resume --> Plan
-    Plan --> Tool[call_tool / 名称与参数校验]
-    Tool --> Observation[成功或错误 observation]
+    Plan --> Tool[call_tool / 名前と引数の検証]
+    Tool --> Observation[成功またはエラー observation]
     Observation --> Plan
     Plan --> Ready[prepare_answer / ready]
     Plan --> Stop[unavailable / error / limit_reached]
-    Ready --> Later[后续阶段：生成与依据验证]
+    Ready --> Later[後続段階：生成と根拠検証]
 ```
 
-规划器通过现有兼容 API 的 JSON object 模式工作，并由 Pydantic 再检查严格 schema；不会把 JSON 可解析等同于字段正确，也不会自动执行模型输出的任意函数。协议依据见 [OpenAI Structured Outputs / JSON mode](https://developers.openai.com/api/docs/guides/structured-outputs)。
+互換 API の JSON object モードを使い、Pydantic で厳密 schema を再検証します。JSON が解析可能なだけで正しいフィールドとは扱わず、任意のモデル出力関数も実行しません。参考：[OpenAI Structured Outputs / JSON mode](https://developers.openai.com/api/docs/guides/structured-outputs)。
 
-## 验证证据
+## 検証の証跡
 
-- [动态本地回归报告](../reports/tests.md)：数量由 JUnit 自动生成；跳过的 PostgreSQL 用例不计为通过。本阶段没有声称重新完成 Docker/远程 CI 验收。
-- [真实 Planner 检查](../reports/agent-stage1/planner-smoke-live.json)：采购（中）、差旅（日）、入职（英）进入 `ready`；通勤补助（中）进入 `needs_input`，追问雇佣类型和现场办公天数。
-- 上述检查调用真实配置模型，工具返回显式 `mock` 的虚构规定。它只验证规划、工具调度和追问，**没有运行 Embedding、真实知识检索、最终回答或 Claim Grounding**，不能当作完整 Agent 的准确率评估。
-- [检查数据](../evals/agent-planning-smoke.json) 为 AI 编写、未经人工审核的小规模 fixtures；通过状态断言不代表覆盖了模型的所有决策错误。原始输出和费用见 JSON。
-- 首次受限网络运行的 [连接失败记录](../reports/agent-stage1/planner-smoke-sandbox-failed.json) 保留，未知费用未按零计算。取得联网权限后完成真实模型检查。
+- [動的ローカル回帰結果](../reports/tests.md)：JUnit から生成し、PostgreSQL skip は成功としません。この段階で Docker/遠隔 CI を再検収したとは主張しません。
+- [実 Planner 確認](../reports/agent-stage1/planner-smoke-live.json)：購入（中国語）、出張（日本語）、入社（英語）は ready、通勤補助（中国語）は needs_input となり、雇用形態と出社日数を質問。
+- 設定した実モデルを使用しますが、ツールは明示的 mock の架空制度を返します。計画・選択・質問のみを検証し、**Embedding、実検索、最終回答、Claim Grounding は未実行**。Agent 全体の精度評価ではありません。
+- [確認データ](../evals/agent-planning-smoke.json)は AI 作成の未レビュー少数 fixture。状態の通過は全判断誤りの網羅を保証しません。元出力・費用は JSON。
+- 初回の制限ネットワークによる[接続失敗](../reports/agent-stage1/planner-smoke-sandbox-failed.json)も保持。不明費用をゼロ扱いせず、接続許可取得後に実モデルを確認しました。
 
-可复现命令：
+再現：
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q tests/test_agent.py tests/test_providers.py
 .\.venv\Scripts\python.exe -m ruff check .
 .\.venv\Scripts\python.exe -m ruff format --check .
 .\.venv\Scripts\python.exe -m scripts.check
-# 显式 opt-in：会消耗 API 额度，只发送虚构 fixtures
+# 明示的 opt-in：API 利用枠を消費し、架空 fixture のみ送信
 .\.venv\Scripts\python.exe -m scripts.agent_planner_smoke --live --output reports/agent-stage1/planner-smoke-live.json
 ```
 
-## 后续接入约束
+## 後続の接続条件
 
-1. `AgentState` 仅供服务器内部使用，不能从浏览器上传的 JSON 重建可信状态。HTTP 会话存储、过期和并发控制尚未接入；同一 state 的操作必须串行执行。
-2. `AgentContext.principal_id` 和 `scope_revision` 必须由服务器计算。当前的版本比较是接入点，不是新的 ACL resolver；第二阶段必须复用现有权限/版本过滤，在 Planner/检索前确定范围，继续任务时重新检查权限及索引/配置变化。
-3. `ReadOnlyTool` 是开发者注册的可信 Python handler 接口，不是代码沙箱。服务器必须只注册审核过的只读实现；模型不能注册工具或构造 handler。不得把数据库权限或鉴权参数交由模型填写。
-4. 工具结果标记 `retrieved/calculated/live/mock`。最终答案需要分别关联政策原文、工具结果和用户自述，再进行依据验证；本阶段只交接证据，没有把任何未经验证的业务判断展示给用户。
-5. 调用次数、字符数量有限制；字符不是 token，不能当作精确费用上限。Provider 保留现有重试与 HTTP 超时；本阶段尚无能够中断在途同步请求的任务总时限。
-6. 工具输出中的指令作为不可信数据处理，但提示词不是完整的注入防护保证。当前测试确认未注册工具无法执行；真实工具的最小权限和检索隔离还需要第二阶段集成测试。
+1. `AgentState` はサーバー内部専用で、ブラウザーの JSON から信頼状態を再構築できません。当時は HTTP 状態保存・期限・並行制御は未接続で、同一 state の操作は直列にします。
+2. `AgentContext.principal_id` と `scope_revision` はサーバーが計算します。版比較は接続口で、新 ACL resolver ではありません。第 2 段階で既存権限・版フィルターを再利用し、Planner/検索前に範囲を確定、再開時に権限・索引・設定を再確認します。
+3. `ReadOnlyTool` は開発者登録の信頼済み Python handler インターフェースで、コード sandbox ではありません。確認済み読み取り実装のみ登録し、モデルに登録・handler 構築・DB 権限・認証引数を委ねません。
+4. ツールを retrieved/calculated/live/mock と分類。最終回答は制度、ツール、自己申告を別々に関連付け検証します。当時は根拠の引き継ぎのみで、未検証業務判断を表示しません。
+5. 回数・文字数を制限しますが、文字数は token ではなく厳密な費用上限ではありません。Provider の再試行・HTTP timeout は維持し、送信中同期要求を中断するタスク総 timeout は未実装でした。
+6. ツール内の指示は非信頼データとして扱いますが、プロンプトだけで注入対策は完結しません。未登録ツールの実行不可は確認済み。実ツールの最小権限と検索分離は第 2 段階で結合検証します。
 
-下一阶段：接入现有 RAG Knowledge Search、日期和计算工具，并完成基于工具/文档证据的结果生成。页面与完整多场景演示放在第三阶段。
+次は RAG Knowledge Search、日付・計算、根拠付き生成を接続し、画面と複数シナリオのデモは第 3 段階で扱います。

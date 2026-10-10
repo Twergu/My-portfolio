@@ -1,11 +1,11 @@
-# Security and sharing boundaries
+# セキュリティと共有の境界
 
-Public portfolio deployment uses `compose.demo.yaml`, required authentication, read-only HTTP APIs, pre-retrieval ACL, Strict/all evidence verification, trusted-host/HTTPS checks, request quotas and persistent estimated API spend reservations. See [deployment guide](docs/portfolio-sharing.md) for defaults and exact limits.
+公開ポートフォリオ向け設定は `compose.demo.yaml` を使い、必須認証、読み取り専用 HTTP、検索前 ACL、Strict/all 根拠検証、許可ホスト・HTTPS 確認、リクエスト配額、永続的な推定 API 費用予約を提供します。既定値・上限は[デプロイ手順](docs/portfolio-sharing.md)を参照してください。
 
-The ordinary `compose.yaml` is a localhost development configuration with an explicit single-user bypass. Do not expose that listener to the internet. Demo mode is single-process, not a distributed rate limiter. Estimated token budgets do not guarantee a provider billing hard cap. Tokens have no automatic expiry; revoke each reviewer when access is no longer needed.
+通常の `compose.yaml` は localhost の単一ユーザー開発で認証を明示的に省略します。インターネットへ公開しないでください。Demo は単一プロセスで分散レート制限ではなく、推定 token 予算はサービス側の請求上限を保証しません。トークンは自動失効しないため、閲覧が不要になったら無効化します。
 
-Do not upload private documents, access tokens, `.env*` secrets, database volumes or logs to Issues, PRs or releases. Use only fictional material for public demonstrations. If a credential has been exposed, revoke/rotate it at its issuer before considering history cleanup. Removing it from the current file is insufficient.
+非公開文書、トークン、`.env*` の秘密情報、DB ボリューム、ログを Issue、PR、Release へ載せないでください。公開デモは架空資料のみを使います。認証情報を漏らした場合は履歴整理より先に発行元で無効化・更新します。現在のファイルから消すだけでは不十分です。
 
-Report a suspected vulnerability through GitHub's private vulnerability reporting if the repository enables it; otherwise request a private contact channel without posting credentials or exploit-sensitive data publicly. This project has no external security audit or availability SLA.
+脆弱性の疑いは、リポジトリで有効なら GitHub の非公開報告機能を使ってください。無効なら秘密情報や悪用可能な詳細を公開せず、非公開の連絡方法を確認します。外部セキュリティ監査や可用性 SLA はありません。
 
-`python -m scripts.release_check --git .` checks the generated ZIP and reachable Git blobs for private paths, known local credential values and common secret patterns. It is not comprehensive secret detection or a security certification. GitHub secret scanning/push protection, where enabled, provide a separate layer; their settings are not automatically changed by this project.
+`python -m scripts.release_check --git .` は生成 ZIP と到達可能な Git blob を、非公開パス、既知のローカル認証情報、一般的な秘密情報形式について検査します。網羅的な漏えい検出や認証ではありません。GitHub secret scanning / push protection が有効なら別の保護層になりますが、このプロジェクトはその設定を自動変更しません。

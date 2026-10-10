@@ -1,7 +1,7 @@
-# Diagnostic baseline — superseded evaluation protocol
+# 診断用ベースライン：置き換え済みの評価方式
 
-This first real 54-question development run used a single Judge prompt containing both gold evidence and actual citations. Inspection found explanations that borrowed uncited gold evidence when assessing citation support. Its citation-groundedness and false-rejection estimates must not be treated as the final quality results.
+最初の実 dev 54 問では、gold evidence と実引用を同じ Judge プロンプトへ渡しました。確認の結果、引用支持を採点する際に未引用の gold を借用する説明が見つかりました。この citation-groundedness と誤遮断の推定を最終品質結果として扱ってはいけません。
 
-The original report is retained unchanged for traceability and incurred cost accounting. No test questions were used to revise the evaluator. The replacement protocol is `isolated-correctness-and-citations-v2`: correctness sees the reference, while a separate citation judge sees only the question and the candidate's actual cited sources. Generator instructions also explicitly require contiguous quotes and all premises for cross-document claims.
+元の測定を追跡性と発生費用の記録のために保持します。評価器修正に test 問題は使っていません。新方式 `isolated-correctness-and-citations-v2` では正確性 Judge は参照を見ますが、別の引用 Judge は質問と候補の実引用だけを見ます。Generator にも連続した抜粋と、複数文書の主張に必要な全前提を要求します。
 
-Final results belong in `reports/chunks-api/` and `reports/verification/`. The baseline is not reused for parameter selection under the new protocol.
+正式結果は `reports/chunks-api/` と `reports/verification/`。この基準は新方式の設定選択には再利用しません。日本語版は説明文の翻訳であり、元 JSON と過去の原文は維持しています。

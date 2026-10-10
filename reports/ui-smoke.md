@@ -1,14 +1,14 @@
-# Local browser smoke
+# ローカルブラウザーのスモークテスト
 
-Date: 2026-09-14. Source revision: `14e38dc` (local source matches application code in that revision).
+日付：2026-09-14。ソース版 `14e38dc`（ローカルのアプリコードは同コミットと一致）。
 
-| Check | Observed result |
+| 確認 | 実際の観測 |
 |---|---|
-| Server restart | Latest application running at `http://127.0.0.1:8000/` |
-| Japanese settings | Generator `gpt-5.6-luna`, Verifier `gpt-5.6-luna`, Embedding `text-embedding-3-small`; off/fast/strict selector and Japanese descriptions visible |
-| Mode | Local passage retrieval remained selected; connection-test button was not used |
-| Existing fictional PDF | Query `员工年假如何申请？` returned the leave-policy passage with Japanese interface text |
-| Citation | Citation 1 opened the source panel for physical PDF page 2, with the source excerpt and PDF link |
-| API usage | The observed query used local retrieval and displayed USD 0.000000; no model request was made |
+| サーバー再起動 | 最新アプリが `http://127.0.0.1:8000/` で稼働 |
+| 日本語設定 | Generator `gpt-5.6-luna`、Verifier `gpt-5.6-luna`、Embedding `text-embedding-3-small`。off/fast/strict 選択と日本語説明を表示 |
+| モード | ローカル原文検索の選択を維持。接続テストボタンは未使用 |
+| 既存の架空 PDF | 元の質問 `员工年假如何申请？` で休暇規則を検索し、日本語 UI で表示 |
+| 引用 | 引用 1 で PDF 物理ページ 2 の出典パネル、抜粋、PDF リンクを表示 |
+| API 使用 | ローカル検索で USD 0.000000 を表示。モデル要求はなし |
 
-This is manual browser smoke, not a complete visual/accessibility or Japanese-generation evaluation. The sample PDF itself is Chinese; the application retains the original source text.
+手動ブラウザー smoke であり、全面的な視覚・アクセシビリティ・日本語生成評価ではありません。サンプル PDF は中国語で、アプリは原文を保持します。

@@ -1,12 +1,12 @@
-# RAG evaluation — policy-challenge-v2.1
+# RAG 評価：policy-challenge-v2.1
 
-Mode: **api**; split: **test**; queries: 54.
+モード：**api**; 分割：**test**; クエリ数：54.
 
-Run status: completed; requested questions: 54; indexing error: none.
+実行状態：completed; 要求問題数：54; 索引エラー：none.
 
-Synthetic seed only. Test results are not evidence of production accuracy.
+合成した種データのみを使用します。この結果は本番の正確性を保証しません。
 
-| Retrieval metric (macro, answerable only) | Mean | n |
+| 検索指標（回答可能な問題のマクロ平均） | 平均 | n |
 |---|---:|---:|
 | recall_at_1 | 0.7619 | 42 |
 | recall_at_3 | 1.0000 | 42 |
@@ -15,9 +15,9 @@ Synthetic seed only. Test results are not evidence of production accuracy.
 | ndcg_at_k | 0.9805 | 42 |
 | precision_at_k | 0.2857 | 42 |
 
-Page ranks are de-duplicated from the returned chunk budget; precision divides by k, including unfilled slots.
+返された Chunk の上限内でページの重複を除去します。precision の分母は未充足枠も含む k です。
 
-| Answer metric | Mean | n |
+| 回答指標 | 平均 | n |
 |---|---:|---:|
 | all_claims_grounded | N/A | 0 |
 | answer_correctness | 0.9286 | 42 |
@@ -35,9 +35,9 @@ Page ranks are de-duplicated from the returned chunk budget; precision divides b
 | refusal_accuracy | 0.9630 | 54 |
 | unsupported_answer | 0.0000 | 54 |
 
-Local mode has no generated answer: answer-quality metrics are N/A. Lexical coverage / token F1 do not establish semantic correctness. Runtime claim_groundedness is a verifier diagnostic; answer_correctness and citation_groundedness come from the separately configured evaluation Judge, not human labels.
+local は回答を生成しないため回答品質は N/A。語彙カバレッジ / token F1 は意味的正確性を証明しません。実行時 claim_groundedness は Verifier 診断値、answer_correctness と citation_groundedness は別設定の評価 Judge の自動判定で、人手ラベルではありません。
 
-| Latency (ms) | p50 | p95 | n |
+| 所要時間 (ms) | p50 | p95 | n |
 |---|---:|---:|---:|
 | generation | 3784.6145 | 7452.1552 | 54 |
 | provider_http | 10470.6820 | 15261.4588 | 54 |
@@ -46,16 +46,16 @@ Local mode has no generated answer: answer-quality metrics are N/A. Lexical cove
 | retrieval | 15.1610 | 23.1396 | 54 |
 | question_total | 10497.5124 | 15314.5513 | 54 |
 
-Indexing: 96 chunks, 23241.44 ms.
-Total run API cost (USD): 0.2510. Unknown usage or missing configured prices stay null/N/A.
+索引作成：96 chunks, 23241.44 ms.
+実行全体の API 費用 (USD)：0.2510。使用量不明や単価未設定は null/N/A を保持します。
 
-Application mean USD/query: 0.0017; reported tokens: {'embedding_tokens': 1600, 'input_tokens': 174332, 'output_tokens': 47126, 'total_tokens': 223058, 'complete': True}.
-Independent evaluation: {'judge_model': 'gpt-4.1', 'independent_model': True, 'status': 'completed', 'judge_cost_usd': 0.159398, 'judge_errors': 0}. Judge latency and cost are excluded from application query metrics.
-One pass with 2 query worker(s); no warmup. Application latency excludes evaluator/queue time; Judge cost is separate.
+アプリ平均 USD/query：0.0017; 報告された tokens：{'embedding_tokens': 1600, 'input_tokens': 174332, 'output_tokens': 47126, 'total_tokens': 223058, 'complete': True}.
+独立評価：{'judge_model': 'gpt-4.1', 'independent_model': True, 'status': 'completed', 'judge_cost_usd': 0.159398, 'judge_errors': 0}。Judge の時間・費用はアプリ query の指標から除外します。
+query worker 2 個で 1 回実行し、事前実行はありません。アプリ時間は評価処理と待ち行列を除き、Judge 費用は別集計です。
 
-## Per question
+## 問題ごとの結果
 
-| ID | Type | Status | Recall@k | Lexical fact coverage | Total ms |
+| ID | 分類 | 状態 | Recall@k | 参照事実の語彙カバレッジ | 合計 ms |
 |---|---|---|---:|---:|---:|
 | boreal-en-01 | current_version | answered | 1.0000 | N/A | 8632.73 |
 | boreal-en-02 | old_version | answered | 1.0000 | N/A | 10239.25 |
@@ -112,10 +112,10 @@ One pass with 2 query worker(s); no warmup. Application latency excludes evaluat
 | boreal-ja-17 | negation | answered | 1.0000 | N/A | 9106.82 |
 | boreal-ja-18 | cross_document | answered | 1.0000 | N/A | 11670.40 |
 
-## Limits
+## 制約
 
-- Templated multilingual cases are correlated, not independent statistical samples.
-- Dev/test use different organizations and numbers but share rule templates.
-- Reference evidence is page-level; retrieval recall does not establish fact coverage.
-- Human review on representative private documents remains necessary.
-- Page text starts after PDF parsing; end-to-end PDF coverage is tested by live_smoke.
+- テンプレートを共有する多言語ケースには関連性があり、統計的に独立した標本ではありません。
+- dev/test は組織名と数値を分けていますが、ルールのテンプレートは共有します。
+- 参照根拠はページ単位で、検索の再現率は全事実の網羅性を保証しません。
+- 代表的な実文書による人手レビューが引き続き必要です。
+- ページテキストは PDF 解析後から扱います。PDF の一連の処理は live_smoke で検証します。

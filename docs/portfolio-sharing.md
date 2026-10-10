@@ -1,20 +1,20 @@
-# 求职作品的分享与部署
+# 求職用ポートフォリオの共有とデプロイ
 
-仓库展示、下载复现、受控在线 Demo 是三个独立入口。目前提供源码与可部署配置；尚未购买服务器或域名，没有公开在线地址。`127.0.0.1` 只能访问浏览器所在的机器。
+リポジトリの閲覧、ダウンロードによる再現、アクセスを制限したオンライン Demo は、それぞれ独立した利用方法です。現在はソースコードとデプロイ設定を提供しています。サーバーやドメインは未取得で、公開オンライン URL はありません。`127.0.0.1` はブラウザーを実行している端末自身を指します。
 
-## 给招聘方的入口
+## 採用担当者向けの入口
 
-分享包含最新材料的 [项目分支](https://github.com/Twergu/My-portfolio/tree/codex/rag-quality-v2)，可从 README 查看真实截图、架构和最终 24 题结果。默认分支若未合并，根仓库首页可能仍是旧版。
+最新資料を含む[プロジェクトブランチ](https://github.com/Twergu/My-portfolio/tree/codex/rag-quality-v2)を共有してください。README から実際の画面、構成、最終 24 問の結果を確認できます。デフォルトブランチに未マージの場合、リポジトリのトップには旧版が表示されることがあります。
 
-- **30 秒**：README 顶部能力、截图、18/24 冻结结果和六个失败。
-- **2 分钟**：[演示路线](demo-walkthrough.md)，看检索、物理页引用、工具证据与保守拒答。
-- **深入检查**：[完整源码目录](../SOURCE_INDEX.md)、[架构决定](architecture.md)、[冻结评估](../reports/agent-freeze-20261005/acceptance.md)、[CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml)。
+- **30 秒**：README 冒頭の機能、画面、18/24 の凍結結果と 6 件の失敗。
+- **2 分**：[デモ手順](demo-walkthrough.md)で検索、物理ページへの引用、ツールの根拠、保守的な回答拒否を確認。
+- **詳細確認**：[全ソース一覧](../SOURCE_INDEX.md)、[設計判断](architecture.md)、[凍結評価](../reports/agent-freeze-20261005/acceptance.md)、[CI](https://github.com/Twergu/My-portfolio/actions/workflows/ci.yml)。
 
-截图是已有真实界面的历史记录，带版本与限制说明；不把静态截图、Mock 日历或本地检索当成在线真实模型演示。不公开 API key、访客 token、私人文档或本机数据库。当前没有新增演示视频；可按演示路线录制。
+画像は過去の実画面の記録で、対象バージョンと制約を明記しています。静止画、Mock カレンダー、ローカル検索を、実モデルによるオンラインデモとして扱いません。API key、訪問者の token、非公開文書、ローカル DB は公開しません。新しいデモ動画は未収録です。デモ手順に沿って録画できます。
 
-## 无需额度的本地复现
+## API 利用料が不要なローカル再現
 
-安装 Git 与 Docker Compose，在空目录运行：
+Git と Docker Compose をインストールし、空のディレクトリで実行します。
 
 ```sh
 git clone --branch codex/rag-quality-v2 https://github.com/Twergu/My-portfolio.git
@@ -22,42 +22,42 @@ cd My-portfolio
 docker compose up --build -d --wait
 ```
 
-浏览器打开 `http://127.0.0.1:8000`，导入内置示例 PDF，体验原文检索和引用。默认是 local 开发模式，仅绑定回环地址；它不是公开 Demo。业务 Agent 需要配置真实模型 API，本地无额度模式不会伪造 Agent 输出。
+ブラウザーで `http://127.0.0.1:8000` を開き、内蔵サンプル PDF を取り込むと、原文検索と引用を試せます。既定は local 開発モードで、ループバックにのみバインドします。公開 Demo ではありません。業務 Agent には実モデル API の設定が必要で、API を使わないモードでは Agent 出力を捏造しません。
 
-## 有服务器后的部署流程
+## サーバー取得後のデプロイ手順
 
-此流程针对单台 Linux 主机、一个 Uvicorn worker。准备 Docker Engine + Compose v2，将域名 A/AAAA 指向服务器，只将 TCP 80/443 对外开放。SSH 仅按自己的运维方式开放；数据库无需发布端口。不要将应用的 8000/18001 端口改为公网监听。若开启云代理/CDN，须先重新检查可信代理和真实 IP 配置，本模板默认直连 Caddy。
+単一 Linux ホスト、Uvicorn worker 1 個を想定します。Docker Engine + Compose v2 を用意し、ドメインの A/AAAA をサーバーへ向け、TCP 80/443 のみを一般公開します。SSH は自身の運用方針に従って開放します。DB のポート公開は不要です。アプリの 8000/18001 ポートをインターネット向けに変更しないでください。クラウドプロキシや CDN を使う場合、信頼するプロキシと実 IP 設定を再確認してください。本テンプレートは Caddy への直接接続を前提とします。
 
-1. 克隆上述分支，复制 `.env.demo.example` 为 `.env.demo`，限制该文件的读取权限。
+1. 上記ブランチをクローンし、`.env.demo.example` を `.env.demo` にコピーして読み取り権限を制限します。
 
    ```sh
    cp .env.demo.example .env.demo
    chmod 600 .env.demo
    ```
 
-2. 将 `RAG_DEMO_DOMAIN` 改为自己的域名，不含 `https://`、端口或路径。保留 `RAG_MODE=local` 可先验证部署；真实 Agent 设置 `RAG_MODE=api`，填入 API 地址、模型、服务器专用 API key，以及各模型的实际每百万 token 单价。推荐在供应商控制台另外设置额度/项目限额并核对其是否为硬限制。价格留空或为零时，本 Demo 拒绝收费调用。
+2. `RAG_DEMO_DOMAIN` を自身のドメインに変更します。`https://`、ポート、パスは付けません。`RAG_MODE=local` のまま先にデプロイを検証できます。実 Agent を使う場合は `RAG_MODE=api` とし、API URL、モデル、サーバー専用 API key、各モデルの実際の 100 万 token あたり単価を入力します。サービス側にも利用枠やプロジェクト上限を設定し、強制停止する上限か確認してください。価格が空欄またはゼロの場合、Demo は有料呼び出しを拒否します。
 
-3. 启动独立 Demo 项目；它有独立数据卷，不使用普通本地项目的数据。
+3. 独立した Demo プロジェクトを起動します。専用ボリュームを使い、通常のローカルプロジェクトのデータは使用しません。
 
    ```sh
    docker compose --env-file .env.demo -f compose.demo.yaml config --quiet
    docker compose --env-file .env.demo -f compose.demo.yaml up --build -d --wait
    ```
 
-   不要在分享屏幕时运行没有 `--quiet` 的 `config` 命令，它可能展开密钥。Caddy 会在 DNS、80/443 可用时申请证书。CI 使用 localhost 的内部 CA 验证 HTTPS 链路，不代表已申请公网证书。
+   画面共有中に `--quiet` なしの `config` を実行するとキーが展開される可能性があります。DNS と 80/443 が利用できれば Caddy が証明書を取得します。CI は localhost の内部 CA で HTTPS を検証しており、公開ドメイン証明書の取得を意味しません。
 
-4. 初始化仓库内八页**虚构**政策，不读取自己的文档目录。
+4. リポジトリ内の 8 ページの**架空**の制度文書を初期登録します。自身の文書ディレクトリは読み込みません。
 
    ```sh
-   # local 模式，无模型费用
+   # local モード：モデル利用料なし
    docker compose --env-file .env.demo -f compose.demo.yaml exec app python -m scripts.prepare_demo
-   # api 模式时改用下面这一条，Embedding 会计费并经过预算守卫
+   # api モードはこちらを使用。Embedding は課金対象で、予算ガードを通ります
    docker compose --env-file .env.demo -f compose.demo.yaml exec app python -m scripts.prepare_demo --live
    ```
 
-   重复执行不会新增重复文档；Embedding 配置变化会重新索引。不要用此初始化命令处理其他正在使用的知识库。先初始化再发访客账号，避免维护与用户请求同时进行。
+   再実行しても文書は重複しません。Embedding 設定が変わると再インデックスします。他の利用中のナレッジベースにこの初期化コマンドを使わないでください。保守と利用者のリクエストが重ならないよう、初期化後に訪問者アカウントを発行します。
 
-5. 为每位招聘方创建单独只读账号；令牌仅保存到私密文件，不打印到日志。
+5. 採用担当者ごとに読み取り専用アカウントを作成します。トークンは非公開ファイルにのみ保存し、ログには出力しません。
 
    ```sh
    docker compose --env-file .env.demo -f compose.demo.yaml exec app python -m scripts.manage_access create-user reviewer-01 --roles demo-reviewer --token-file /app/data/.secrets/reviewer-01.txt
@@ -67,42 +67,42 @@ docker compose up --build -d --wait
    chmod 600 .secrets/reviewer-01.txt
    ```
 
-   通过私人渠道把 `https://你的域名` 与该令牌发给收件人；不要放进 README、URL 查询参数、公共 Issue 或截图。登录后以 HttpOnly / Secure / SameSite=Strict cookie 使用。令牌本身没有自动到期机制；结束展示后由管理员撤销。
+   `https://自身のドメイン` とトークンは非公開の連絡手段で相手に送ります。README、URL クエリ、公開 Issue、画像に載せません。ログイン後は HttpOnly / Secure / SameSite=Strict cookie を使います。トークン自体に自動失効機能はなく、展示終了後に管理者が無効化します。
 
    ```sh
    docker compose --env-file .env.demo -f compose.demo.yaml exec app python -m scripts.manage_access list-users
    docker compose --env-file .env.demo -f compose.demo.yaml exec app python -m scripts.manage_access disable-user USER_ID
    ```
 
-6. 私下验证登录、引用 PDF、日文界面、Agent 和拒答提示。查看 `/api/health` 不需要令牌；其他数据依然经过 ACL。网页上传、重索引、配置修改、权限修改均关闭，即使使用管理员账号也一样。运维通过主机 CLI 完成。
+6. ログイン、引用 PDF、日本語 UI、Agent、回答拒否を非公開で検証します。`/api/health` はトークン不要ですが、他のデータには ACL を適用します。Web のアップロード、再インデックス、設定・権限変更は管理者でも無効です。運用はホストの CLI で行います。
 
-## 限额与运行边界
+## 利用上限と実行上の制約
 
-| 项目 | 默认值 / 行为 |
+| 項目 | 既定値 / 動作 |
 |---|---|
-| 单用户每日请求 | 20；新问题和每次澄清回复分别计数，失败请求也计数 |
-| 全站每日请求 | 100；UTC 日期切换后恢复 |
-| IP 请求 | 每分钟 10 次推理；登录另有每 IP 10 次 / 全站 60 次每分钟限制 |
-| 同时推理 | 全站 2 个、每用户 1 个；繁忙时返回 429，不排长队 |
-| 输入/输出 | HTTP 请求 64 KiB；模型请求序列化 UTF-8 最多 60,000 bytes；输出最多 4,096 tokens |
-| 每日模型预算 | 默认 USD 1 的配置估算预算；每次 API 前预留，成功且用量可信才退回差额 |
-| 失败/缺失用量 | 保留整笔预留；没有隐式 HTTP 重试；实际回报超出预留会阻断后续收费请求 |
-| 重启 | 配额和预算保留在 app_data；Agent 的内存澄清会话丢失，需重新开始 |
-| 规模 | 单进程；并发槽位不跨进程共享；不支持多副本或多 worker 部署 |
+| ユーザー別の日次リクエスト | 20。新規質問と追加確認への各返信を個別に数え、失敗も含めます |
+| サイト全体の日次リクエスト | 100。UTC の日付変更で回復 |
+| IP 別リクエスト | 推論は毎分 10 回。ログインは別枠で IP ごとに毎分 10 回、全体で毎分 60 回 |
+| 同時推論 | 全体で 2 件、ユーザーごとに 1 件。混雑時は 429 を返し、長い待ち行列は作りません |
+| 入力 / 出力 | HTTP リクエスト 64 KiB。モデルへのシリアライズ済み UTF-8 入力は最大 60,000 bytes、出力は最大 4,096 tokens |
+| 日次モデル予算 | 既定は設定単価による推定 USD 1。各 API 前に予約し、成功かつ信頼できる使用量を取得した場合のみ差額を戻します |
+| 失敗 / 使用量不明 | 予約額全体を維持。暗黙の HTTP 再試行なし。報告された実使用量が予約を超えると、以降の有料リクエストを遮断 |
+| 再起動 | 配額と予算は app_data に保持。メモリ上の Agent 追加確認セッションは失われ、やり直しが必要 |
+| 規模 | 単一プロセス。同時実行枠はプロセス間で共有せず、複数レプリカ・worker は非対応 |
 
-费用限制使用所配置单价、UTF-8 字节及协议余量估算输入上界，不是供应商账单级硬上限。输入 tokenizer、服务附加费用、错误价格、费用回报错误仍有风险；第一次异常超额响应只能事后熔断。供应商的独立额度限制仍应保留。预算守卫也会覆盖 Planner、Embedding、Generator、Verifier，不跳过 Strict 校验来省钱。
+費用制限は、設定単価、UTF-8 バイト数、プロトコルの余裕分から入力上限を推定します。サービスの請求額を厳密に制限するものではありません。tokenizer、追加料金、誤った単価・使用量報告のリスクが残り、最初の異常超過は応答後にしか検出できません。サービス側の独立した上限も維持してください。予算ガードは Planner、Embedding、Generator、Verifier を対象とし、節約のために Strict を省略しません。
 
-Demo 仍保留读取获授权文档/下载 PDF 的能力，所以只装载可公开的虚构资料。问题会发给配置的模型服务；不要输入真实公司或个人信息。运营日志与 Agent 输出可能含用户输入，保留在服务器，不能混进公开发布包。删除数据卷会清空配额、账号和预算，不应作为绕过限额的方法。
+Demo でも権限のある文書の閲覧・PDF ダウンロードは可能なため、公開可能な架空資料だけを登録します。質問は設定したモデルサービスへ送信されます。実在企業の機密情報や個人情報は入力しないでください。運用ログと Agent 出力には利用者の入力が含まれる可能性があり、サーバー上で管理し、公開パッケージに含めません。ボリューム削除は配額、アカウント、予算を消去するため、上限回避には使わないでください。
 
-TLS 配置依据 [Caddy 自动 HTTPS](https://caddyserver.com/docs/automatic-https)；转发身份依据 [reverse_proxy 文档](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)。应用只信任固定代理 IP，Caddy 覆盖客户端伪造的 X-Forwarded-For；网段冲突时同步修改 `RAG_PROXY_SUBNET`、`RAG_PROXY_IP` 和 `RAG_APP_IP`，为两个容器分配不同的同网段地址。Compose 服务继承遵循 [Docker extends](https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/)。
+TLS は [Caddy 自動 HTTPS](https://caddyserver.com/docs/automatic-https)、転送元の識別は [reverse_proxy 文書](https://caddyserver.com/docs/caddyfile/directives/reverse_proxy)に基づきます。アプリは固定プロキシ IP のみを信頼し、Caddy が偽造 X-Forwarded-For を上書きします。ネットワーク競合時は `RAG_PROXY_SUBNET`、`RAG_PROXY_IP`、`RAG_APP_IP` を合わせて変更し、両コンテナーに同一サブネット内の異なる IP を割り当てます。継承は [Docker extends](https://docs.docker.com/compose/how-tos/multiple-compose-files/extends/)に従います。
 
-## 打包与复核
+## パッケージ作成と確認
 
 ```sh
 python -m scripts.source_index --archive
 python -m scripts.release_check --git .
 ```
 
-得到 `exports/knowbase-source-latest.zip` 与独立的 `exports/knowbase-release-check.json`；后者记录 ZIP SHA-256、文件数量、扫描范围及发现。扫描清单覆盖源码包、已知本地密钥值、常见密钥格式与所有可达 Git 历史对象，但不是渗透测试，也不保证识别未知格式或不可达历史。必须在最终文件确定后重新打包并扫描，校验报告不放入 ZIP 以避免自引用哈希。
+`exports/knowbase-source-latest.zip` と独立した `exports/knowbase-release-check.json` を生成します。後者は ZIP の SHA-256、ファイル数、検査範囲、検出結果を記録します。対象はソースパッケージ、既知のローカル認証情報、一般的なキー形式、到達可能な全 Git 履歴オブジェクトです。侵入テストではなく、未知の形式や到達不能な履歴の検出は保証しません。最終ファイル確定後に再度パッケージ化・検査します。自己参照ハッシュを避けるため、検査結果は ZIP に含めません。
 
-仓库未指定通用开源许可证；公开供招聘方阅读不等于授予任意再分发许可。后续确定许可证时单独加入。GitHub Release 可在最终验收并决定版本号后发布 ZIP 与校验报告，目前不自动打 tag、合并 PR 或发布 Release。
+汎用のオープンソースライセンスは指定していません。採用担当者への公開は任意の再配布許可を意味しません。ライセンス決定時に別途追加します。GitHub Release は最終検収とバージョン決定後に ZIP と検査レポートを公開できます。現時点では tag、PR マージ、Release を自動作成しません。

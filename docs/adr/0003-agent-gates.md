@@ -1,11 +1,11 @@
-# ADR 0003: Defer consequential Agents and human review
+# ADR 0003：外部に作用する Agent と人手レビューの段階的導入
 
-Status update, 2026-10-04: the user authorized a staged, general-purpose read-only Agent, stopping for review after each stage. [Stage 1](../agent-stage1.md) adds the orchestration core; [stage 2](../agent-stage2.md) connects scoped retrieval, deterministic tools, authenticated task APIs and strict grounding; [stage 3](../agent-stage3.md) adds the bilingual chat interface, clarification lifecycle and typed evidence panels. Real API checks use fictional PDFs and an explicitly mock workweek calendar; the UI check retains one withheld Japanese continuation instead of claiming perfect quality. New remote CI/PostgreSQL acceptance remains pending. This supersedes the original blanket deferral of the Agent, but does not authorize consequential tools or human-review work.
+2026-10-04 時点の更新：依頼者は汎用の読み取り専用 Agent を段階ごとに確認して進めることを承認しました。[第 1 段階](../agent-stage1.md)は中核、[第 2 段階](../agent-stage2.md)は範囲内検索・決定的ツール・認証タスク API・Strict、[第 3 段階](../agent-stage3.md)は 2 言語 UI、追加確認、分類出典を導入。実 API は架空 PDF と明示的 Mock 営業週を使い、日本語再開で遮断された例も保持して完全な品質とは主張しません。この記録時点では新しい遠隔 CI/PostgreSQL 検収は待機中でした。当初の Agent 全面保留を置き換えますが、外部作用ツールや人手レビュー作業の許可ではありません。
 
-No email, ticket creation, external data mutation or autonomous action tool is installed or exposed. Human review of the proposed evaluation set remains deferred at the user's request; all current synthetic/calibration sets retain an explicit non-human-reviewed label.
+メール送信、Ticket 作成、外部データ変更、自律的実操作ツールは導入・公開しません。当時は依頼で評価セットの人手レビューを保留し、合成・校正セットに未レビューと明示しました。後続の実レビューや CI は各段階の報告を参照してください。
 
-Before adding Router, Knowledge Search Tool and Evidence Validator, require a completed real RAG regression report, verifier confusion matrix, zero-skip PostgreSQL/ACL tests, successful Docker/CI and a documented latency/cost preset. The ACL resolver must remain ahead of every retrieval tool; an Agent cannot widen its principal's scope.
+Router、Knowledge Search Tool、Evidence Validator の導入条件は、実 RAG 回帰結果、Verifier 混同行列、skip ゼロの PostgreSQL/ACL、Docker/CI 成功、時間・費用設定の記録です。ACL resolver を全検索ツールの前に置き、Agent は本人の範囲を拡大できません。
 
-Future consequential tools must first create a reviewable proposal containing action, target, arguments, evidence and a content digest. The server must require a fresh authorized human approval tied to that exact proposal, expire stale approvals, invalidate approval after argument changes, recheck permissions, and use an idempotency key at execution. Rejection/cancellation means no tool execution. No timeout or model statement counts as approval. Audit logging and integration tests are prerequisites for exposing these actions.
+将来の実操作ツールは先に、操作・対象・引数・根拠・内容ハッシュを含む確認可能な提案を作ります。サーバーは正確な提案に紐付く新しい有権限者の承認を要求し、古い承認を失効、引数変更時に承認を無効化、実行時に権限再確認と冪等キーを適用します。拒否・取消では実行しません。時間経過やモデルの発言を承認と扱いません。監査ログと結合テストは公開前の必須条件です。
 
-This document is a future acceptance contract, not a claim that Agent approval flows or an audit log are already implemented.
+将来の検収契約であり、Agent の承認フローや監査ログが実装済みという主張ではありません。

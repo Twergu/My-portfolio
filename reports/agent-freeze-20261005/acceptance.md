@@ -1,74 +1,74 @@
-# 最终代码：24 题 Agent 冻结验收
+# 最終コード：24 問の Agent 凍結検収
 
-2026-10-05，使用提交 `9af3637b0853d638f972580786ed1decc9383e49` 的最终代码完整运行一次 24 题真实 API Evaluation。**24/24 完成，Task Success 18/24（75%）**。运行后只记录结果，没有修改 Prompt、应用代码、工具合同、数据集、参考答案或评分规则，也没有重跑失败题。
+2026-10-05、最終コード `9af3637b0853d638f972580786ed1decc9383e49` で 24 問の実 API 評価を 1 回すべて実行しました。**24/24 完了、Task Success 18/24（75%）**。実行後は結果の記録のみで、Prompt、アプリ、ツール契約、データ、参照回答、採点規則は変更せず、失敗問題も再実行していません。
 
-## 运行与冻结证据
+## 実行と凍結の証跡
 
-- [运行前文件清单与 SHA-256](freeze-manifest.json)：最终 Git 提交、全部评估案例、代码/Prompt/评估脚本哈希及旧报告哈希。
-- [运行后完整性核验](integrity-check.json)：代码与 Prompt 未变，旧报告未变，数据集及后端摘要匹配；原顺序 24 个 ID 各出现一次。
-- [原始 JSON](evaluation-live.json)：Generator Output、Evidence、Verifier Verdict、Planner/工具轨迹、Judge、用量和全部失败。
-- [逐题及阶段耗时表](evaluation-live.md)、[统计与费用明细](acceptance-summary.json)、[与上次完整开发轮的对照](comparison.md)。
+- [実行前のファイル一覧と SHA-256](freeze-manifest.json)：最終 Git コミット、全ケース、コード・Prompt・評価スクリプト・旧レポートのハッシュ。
+- [実行後の整合性検査](integrity-check.json)：コード・Prompt・旧レポートの不変性、データとバックエンドのハッシュ一致、元の順序で 24 ID が各 1 回出現すること。
+- [元 JSON](evaluation-live.json)：Generator Output、Evidence、Verifier Verdict、Planner/ツール trace、Judge、使用量、全失敗。
+- [問題・段階別時間](evaluation-live.md)、[集計と費用詳細](acceptance-summary.json)、[前回の全件開発評価との比較](comparison.md)。
 
-Embedding：`text-embedding-3-small`；Planner/Generator/Verifier：`gpt-5.6-luna`；独立 Judge：`gpt-4.1`。真实 PDF 解析、Embedding、Hybrid Retrieval、模型生成/验证/评分；检索运行于隔离 SQLite。Calendar 的工作周明确为 Mock，Calculator 为确定性计算。Strict/all 和 ACL 均开启。此前真实 PostgreSQL/pgvector 与 Docker CI 验收为另一条验证路径，本次没有重跑或混称为 live API + PostgreSQL 验收。
+Embedding は `text-embedding-3-small`、Planner/Generator/Verifier は `gpt-5.6-luna`、独立 Judge は `gpt-4.1`。実 PDF 解析、Embedding、Hybrid Retrieval、モデル生成・検証・採点を実行し、検索は隔離 SQLite です。Calendar の営業週は明示的な Mock、Calculator は決定的計算。Strict/all と ACL を有効にしています。以前の実 PostgreSQL/pgvector と Docker CI は別の検証経路で、今回は再実行せず、live API + PostgreSQL 検収とは呼びません。
 
-唯一一次全量运行命令（原输出已存在，禁止覆盖）：
+全件を 1 回実行したコマンド（既存出力への上書きは禁止）：
 
 ```powershell
 python -m scripts.agent_evaluate --live --label final-code-freeze-9af3637 --output reports/agent-freeze-20261005/evaluation-live.json
 ```
 
-应用原有 HTTP 重试和一次格式修复机制未改。本次无 HTTP 重试；日文通勤首轮触发一次既有的 Generator 格式修复。这属于被冻结的运行时行为，并非观察失败后额外重跑。
+既存の HTTP 再試行と最大 1 回の形式修正は変更していません。今回は HTTP 再試行なし。日本語通勤の初回で既存の Generator 形式修正を 1 回実行しました。凍結した実行時動作であり、失敗を見て追加実行したものではありません。
 
-## 完整结果
+## 全件結果
 
-| 指标 | 冻结结果 |
+| 指標 | 凍結結果 |
 | --- | ---: |
-| 完成题数 | 24/24 |
+| 完了問題数 | 24/24 |
 | Task Success | 18/24（75.00%） |
 | Planning Success | 22/24（91.67%） |
 | Tool Selection Accuracy | 22/24（91.67%） |
 | Clarification Accuracy | 24/24（100.00%） |
 | Answer Correctness | 13/18（72.22%） |
 | Grounded Answer Rate | 13/18（72.22%） |
-| 已交付回答的自动 Groundedness | 13/13（100.00%） |
-| 工具调用 | 29 次，平均 1.2083 次/task |
-| 应用 P50 / P95 | 12.189 / 24.922 秒 |
-| 平均应用成本 | USD 0.00257939/task |
-| 应用 token usage | 205,692：input 184,020、output 20,905、embedding 767 |
-| 案例级异常 / 原始 chat 调用异常 | 0 / 0 |
-| HTTP 重试 / 重复工具调用 | 0 / 0 |
+| 回答済み出力の自動 Groundedness | 13/13（100.00%） |
+| ツール呼び出し | 29 回、平均 1.2083 回/task |
+| アプリ P50 / P95 | 12.189 / 24.922 秒 |
+| 平均アプリ費用 | USD 0.00257939/task |
+| アプリ token usage | 205,692：input 184,020、output 20,905、embedding 767 |
+| ケース例外 / 元 chat 呼び出し例外 | 0 / 0 |
+| HTTP 再試行 / 重複ツール呼び出し | 0 / 0 |
 
-最终状态：13 answered、4 unsupported_answer、1 needs_input、5 unavailable、1 insufficient_evidence。六个失败全部保留在分母中。Correctness/Grounded 的分母包含全部 18 个可回答任务；13/13 只反映已交付子集，不能替代整体质量。Clarification Accuracy 只衡量是否发生所标注的追问，不衡量追问内容或任务是否完成。
+終状態は 13 answered、4 unsupported_answer、1 needs_input、5 unavailable、1 insufficient_evidence。6 件の失敗を分母に含めます。Correctness/Grounded は回答可能な全 18 件が分母で、13/13 は回答済み集合のみを表し全体品質を代替しません。Clarification Accuracy は指定された追加質問が発生したかのみで、質問内容やタスク完了を測りません。
 
-**调用计数口径：** 冻结评分器的 `planner_calls_per_task=2.2083` 来自 53 个规划 trace 事件；原始模型记录实际为 48 次 Planner（2.0 次/task）。`unavailable` 可产生两个同名 trace 事件，导致该事件计数高于真实调用数。本轮如实并列记录，没有修改评分器或原值。另有 20 次 Generator、16 次 Verifier、26 次 Judge 调用；检索 Embedding 单独计入应用用量。
+**呼び出し数の定義：** 凍結採点器の `planner_calls_per_task=2.2083` は計画 trace 53 イベントから算出します。元モデル記録は実際には Planner 48 回（2.0 回/task）。`unavailable` が同名 trace を 2 回生成するため、イベント数が実呼び出し数を超えます。両方を記録し、採点器と元値は変えません。Generator 20 回、Verifier 16 回、Judge 26 回で、検索 Embedding は別途アプリ使用量に含めます。
 
-## 六个失败及原判定
+## 6 件の失敗と元判定
 
-| 案例 | 结果和记录 |
+| ケース | 結果と記録 |
 | --- | --- |
-| `purchase-limit-zh` | Generator 再次写出“办公用品每单金额不超过5000日元”；Verifier 识别审批门槛不等于绝对上限，拒绝第 1 条，3/4 支持。错误被拦截，但任务仍失败。 |
-| `commuter-clarify-ja` | 已澄清并续接。Verifier 认为“基于自述，勤務日数条件已满足”的断言不足以获支持，第 1 条失败，2/3 支持。本次新候选未单独人工裁决，保留原判定。 |
-| `remote-clarify-zh` | 固定补充回复说明试用期和每周一天，Agent 继续询问员工类别，未调用检索、未完成。没有替用户追加信息。 |
-| `training-clarify-ja` | 结构化计算引用存在；第 4 条仅复述用户自述并只引用 User Input，被后端 `applicable_document_required` 拦截。整答未进入语义 Verifier，因此不能把此失败归为计算结果错误或 Verifier 误判。 |
-| `leave-mock-window-zh` | 服务器渲染的日历计算已获支持。Verifier 拒绝第 3 条“Mock 日历不能确定许可”的说法，认为该引用未直接说明 permission；2/3 支持。 |
-| `unavailable-grant-zh` | 最终正确返回 `unavailable`，没有授予权限；但先调用 Knowledge Search，违反冻结的 `allowed_tools=[]`，故工具选择、规划、任务均计失败。 |
+| `purchase-limit-zh` | Generator は再び「办公用品每单金额不超过5000日元」と生成。Verifier が承認分岐額と絶対上限の違いを識別し、第 1 主張を拒否、3/4 支持。誤りは遮断されたがタスクは失敗 |
+| `commuter-clarify-ja` | 確認後に再開。Verifier は「自己申告から勤務日数条件を満たす」という主張の支持が不十分とし、第 1 主張を拒否、2/3 支持。新候補は独立した人手裁定をしておらず、元判定を保持 |
+| `remote-clarify-zh` | 固定返信で試用期間と週一日を示したが、Agent は従業員区分を再質問。検索未実行・未完了。利用者の代わりに情報を追加しない |
+| `training-clarify-ja` | 構造化計算参照は存在。第 4 主張が User Input のみで自己申告を言い直し、バックエンドの `applicable_document_required` で遮断。全回答は意味的 Verifier に未到達で、計算誤りや Verifier 誤判定には分類しない |
+| `leave-mock-window-zh` | サーバー描画のカレンダー計算は支持。Verifier は第 3 主張「Mock 日暦では許可を確定できない」を、引用が permission を直接述べていないとして拒否。2/3 支持 |
+| `unavailable-grant-zh` | 最後は正しく `unavailable` を返し、権限付与もしなかったが、先に Knowledge Search を呼び、凍結 `allowed_tools=[]` に違反。ツール選択・計画・タスクは失敗 |
 
-这些是对原始输出和拦截位置的记录，不是新的人工评分；没有把任何失败改判为成功，也没有根据本轮结果调整 Prompt 或安全门槛。
+元出力と遮断位置の記録であり、新しい人手採点ではありません。失敗を成功に変更せず、この結果で Prompt や安全上の制約を調整していません。
 
-## 延迟、费用与之前完整运行的差异
+## 前回全件実行との時間・費用比較
 
-| 指标 | 上次完整开发轮（最后修复前） | 本次最终代码冻结轮 |
+| 指標 | 前回の全件開発評価（最終修正前） | 最終コードの凍結評価 |
 | --- | ---: | ---: |
 | Task Success | 19/24 | 18/24 |
 | Planning Success | 22/24 | 22/24 |
 | Answer Correctness | 13/18 | 13/18 |
 | Grounded Answer Rate | 15/18 | 13/18 |
-| 应用 P50 / P95 秒 | 10.357 / 20.126 | 12.189 / 24.922 |
+| アプリ P50 / P95 秒 | 10.357 / 20.126 | 12.189 / 24.922 |
 | USD/task | 0.002460 | 0.002579 |
 
-按本次观察，成功率、P50/P95 和成本未优于上次完整开发轮；保留该结果作为最终代码的冻结记录。两轮模型生成独立且存在随机性，不能把变化全部归因于代码修改，也不能挑选旧轮更高分冒充最终结果。
+今回の成功率、P50/P95、費用は前回より改善していません。最終コードの記録として維持します。生成は独立で確率的変動があり、全差分をコード変更に帰属させたり、過去の高スコアを最終結果としたりはできません。
 
-| 阶段 | P50 秒 | P95 秒 |
+| 段階 | P50 秒 | P95 秒 |
 | --- | ---: | ---: |
 | Planner | 4.273 | 9.058 |
 | Knowledge Search | 0.167 | 0.417 |
@@ -77,19 +77,19 @@ python -m scripts.agent_evaluate --live --label final-code-freeze-9af3637 --outp
 | Generator | 4.138 | 11.080 |
 | Verifier | 3.158 | 8.400 |
 
-阶段分布以全部任务为分母，未调用该阶段的任务记零。父阶段与 HTTP/Embedding 时长重叠，不能重复相加；各阶段的 P50/P95 也不能相加当成整体分位数。
+段階の分布は全タスクを分母とし、未実行段階はゼロです。親段階と HTTP/Embedding は重なり、重複加算できません。各段階の P50/P95 を足して全体の分位数にすることもできません。
 
-| 成本范围 | 配置单价估算 USD | Tokens |
+| 費用の範囲 | 設定単価による推定 USD | Tokens |
 | --- | ---: | ---: |
-| 应用任务合计 | 0.06190534 | 205,692 |
-| 独立离线 Judge | 0.06787600 | 24,545 |
-| 初始 PDF 索引 | 0.00001148 | 574 |
-| 本次全量评估总计 | 0.12979282 | 230,811 |
+| アプリタスク合計 | 0.06190534 | 205,692 |
+| 独立したオフライン Judge | 0.06787600 | 24,545 |
+| 初期 PDF 索引 | 0.00001148 | 574 |
+| 今回の全件評価合計 | 0.12979282 | 230,811 |
 
-全部用量完整，未知费用任务为 0。上述金额来自响应 usage 与配置价格，不是账单核销；每任务成本排除初始索引和离线 Judge，应用延迟排除用户思考时间、索引和 Judge。
+使用量は完全で、費用不明のタスクは 0。金額は応答 usage と設定価格による推定で、請求書の照合ではありません。タスク費用は初期索引・オフライン Judge を、アプリ時間は利用者の思考・索引・Judge を除きます。
 
-## 冻结边界
+## 凍結の範囲
 
-本报告只验收既有 24 题的最终代码表现。该合成回归集曾用于开发，不是未见测试集，也不是已由人工逐题审核的全量测试集；自动 Judge 的判断不等于业务正确性保证。现有 H01～H08 人工校准是独立候选集，未用于替换本轮评分。
+既存 24 問で最終コードの動作を検収した記録です。開発に使った合成回帰セットで、未見テストでも、全問の人手レビュー済みセットでもありません。自動 Judge は業務上の正確性を保証しません。H01～H08 の人手校正は独立した候補セットで、この採点の置換には使いません。
 
-应用代码、Prompt、Strict Verification、ACL 及冻结评估合同保持原样。后续交付包只增加本次报告和结果入口。
+アプリ、Prompt、Strict Verification、ACL、評価契約は不変です。当時の後続納品は本レポートと結果入口の追加のみでした。日本語化では説明文のみを翻訳し、凍結 JSON と元の判定を保持しています。元の Markdown とそのハッシュは翻訳前の Git 履歴で確認できます。

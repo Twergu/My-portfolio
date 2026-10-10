@@ -1,10 +1,10 @@
-# Chunk experiment (local)
+# Chunk 分割実験 (local)
 
-Max dev Recall@k, then dev nDCG@k, then fewest chunks; never test metrics.
+dev Recall@k、dev nDCG@k、Chunk 数の少なさの順で選び、test 指標は使いません。
 
-Unicode characters, adjusted toward sentence boundaries; physical pages never merged.
+単位は Unicode 文字数で、文の境界へ調整します。物理ページは結合しません。
 
-| Size | Overlap | Chunks | Recall@k | Precision@k | MRR@k | nDCG@k | Index ms | Query p50 ms | Query p95 ms | USD |
+| サイズ | 重複幅 | Chunk 数 | Recall@k | Precision@k | MRR@k | nDCG@k | 索引 ms | 質問 p50 ms | 質問 p95 ms | USD |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 450 | 0 | 29 | 1.0000 | 0.2000 | 1.0000 | 1.0000 | 70.9418 | 9.1470 | 9.6847 | 0.0000 |
 | 450 | 60 | 32 | 1.0000 | 0.2000 | 1.0000 | 1.0000 | 71.3438 | 9.5118 | 10.0998 | 0.0000 |
@@ -13,17 +13,17 @@ Unicode characters, adjusted toward sentence boundaries; physical pages never me
 | 1200 | 120 | 17 | 1.0000 | 0.2000 | 1.0000 | 1.0000 | 65.3001 | 9.6474 | 11.0968 | 0.0000 |
 | 1200 | 180 | 17 | 1.0000 | 0.2000 | 1.0000 | 1.0000 | 63.4022 | 8.9483 | 9.9018 | 0.0000 |
 
-Selected on dev: size **1200**, overlap **120**.
-Frozen test Recall@k: 1.0000; test nDCG@k: 0.8547.
+dev による選択：size **1200**, overlap **120**.
+凍結 test Recall@k：1.0000; test nDCG@k: 0.8547.
 
-The test split did not participate in parameter selection. Existing production defaults were not changed.
+test はパラメーター選択に使っていません。既存の本番既定値も変更していません。
 
-## Limits
+## 制約
 
-- Requires human review and expansion with representative held-out PDFs.
-- Page text is the parser output boundary; this corpus does not measure OCR/PDF extraction.
-- Test questions are held out from chunk selection but share policy topics with dev.
-- Translated topics are not statistically independent samples.
-- One pass on a tiny corpus; p95 is descriptive, not a statistically stable production estimate.
-- Local hashed retrieval is a baseline, not a multilingual embedding model.
-- Changing production defaults is a separate decision; this script only reports results.
+- 人手レビューと、代表的な未使用 PDF による拡充が必要です。
+- パーサー出力を入口とし、OCR/PDF 抽出はこのデータで測定しません。
+- test は Chunk 選択に使いませんが、dev と制度の主題を共有します。
+- 翻訳した主題は統計的に独立した標本ではありません。
+- 小規模データで 1 回の測定です。p95 は記述値で、統計的に安定した本番推定ではありません。
+- ローカルハッシュ検索は比較基準で、多言語 Embedding モデルではありません。
+- 本番既定値は別途判断し、このスクリプトは結果のみを報告します。

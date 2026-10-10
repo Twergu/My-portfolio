@@ -1,12 +1,12 @@
-# Knowbase 源码目录
+# Knowbase ソースファイル一覧
 
-所有链接相对于项目根目录，复制、克隆或解压到其他位置后仍可使用。
+リンクはプロジェクトルートからの相対パスで、コピー・クローン・展開後も利用できます。
 
-目录由 `python -m scripts.source_index` 从当前文件生成；`dist/` 就是可直接修改的 HTML、JavaScript、CSS 源文件，无需额外构建。
+一覧は `python -m scripts.source_index` で現在のファイルから生成します。`dist/` は直接編集可能な HTML、JavaScript、CSS のソースで、追加ビルドは不要です。
 
-需要完整压缩包时运行 `python -m scripts.source_index --archive`，输出 `exports/knowbase-source-latest.zip`。
+完全な ZIP は `python -m scripts.source_index --archive` で `exports/knowbase-source-latest.zip` に生成します。日本語版の表示範囲と再生成時の言語は [翻訳方針](docs/localization-ja.md) を参照してください。
 
-## 说明、配置与启动
+## 説明・設定・起動
 
 - [.dockerignore](.dockerignore)
 - [.env.demo.example](.env.demo.example)
@@ -27,7 +27,7 @@
 - [SOURCE_INDEX.md](SOURCE_INDEX.md)
 - [start.ps1](start.ps1)
 
-## 前端
+## フロントエンド
 
 - [dist/agent.js](dist/agent.js)
 - [dist/app.js](dist/app.js)
@@ -36,7 +36,7 @@
 - [dist/index.html](dist/index.html)
 - [dist/styles.css](dist/styles.css)
 
-## 后端
+## バックエンド
 
 - [backend/__init__.py](backend/__init__.py)
 - [backend/agent.py](backend/agent.py)
@@ -60,7 +60,7 @@
 - [backend/telemetry.py](backend/telemetry.py)
 - [backend/verification.py](backend/verification.py)
 
-## 测试
+## テスト
 
 - [tests/conftest.py](tests/conftest.py)
 - [tests/frontend/agent.test.cjs](tests/frontend/agent.test.cjs)
@@ -89,7 +89,7 @@
 - [tests/test_stores.py](tests/test_stores.py)
 - [tests/test_verifier_calibration.py](tests/test_verifier_calibration.py)
 
-## 评估数据与协议
+## 評価データと方式
 
 - [evals/__init__.py](evals/__init__.py)
 - [evals/agent-human-review-v1.annotations.json](evals/agent-human-review-v1.annotations.json)
@@ -109,7 +109,7 @@
 - [evals/metrics.py](evals/metrics.py)
 - [evals/README.md](evals/README.md)
 
-## 运行与实验脚本
+## 実行・実験スクリプト
 
 - [scripts/agent_calculation_replay.py](scripts/agent_calculation_replay.py)
 - [scripts/agent_compare.py](scripts/agent_compare.py)
@@ -146,7 +146,7 @@
 - [scripts/v3_results.py](scripts/v3_results.py)
 - [scripts/verification_experiment.py](scripts/verification_experiment.py)
 
-## 架构与修改说明
+## 構成と変更説明
 
 - [docs/access-control.md](docs/access-control.md)
 - [docs/adr/0001-physical-page-chunks.md](docs/adr/0001-physical-page-chunks.md)
@@ -163,26 +163,27 @@
 - [docs/architecture.md](docs/architecture.md)
 - [docs/change-report.md](docs/change-report.md)
 - [docs/demo-walkthrough.md](docs/demo-walkthrough.md)
+- [docs/localization-ja.md](docs/localization-ja.md)
 - [docs/optimization-report.md](docs/optimization-report.md)
 - [docs/portfolio-sharing-report.md](docs/portfolio-sharing-report.md)
 - [docs/portfolio-sharing.md](docs/portfolio-sharing.md)
 - [docs/retrieval-optimization-report.md](docs/retrieval-optimization-report.md)
 
-## 示例 PDF
+## サンプル PDF
 
 - [samples/employee-handbook.pdf](samples/employee-handbook.pdf)
 
-## 持续集成
+## 継続的インテグレーション
 
 - [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
-## 部署配置
+## デプロイ設定
 
 - [deploy/Caddyfile](deploy/Caddyfile)
 
-## 实际运行报告
+## 実際の実行レポート
 
-报告包含运行时间与验证范围，blocked/skipped 表示尚未实测或未执行。
+実行日時と検証範囲を記載します。blocked/skipped は未実測または未実行です。
 
 - [reports/agent-followup/calculation-diagnostics.json](reports/agent-followup/calculation-diagnostics.json)
 - [reports/agent-followup/calculation-verifier-replay.json](reports/agent-followup/calculation-verifier-replay.json)
@@ -350,6 +351,7 @@
 - [reports/live-api-smoke.md](reports/live-api-smoke.md)
 - [reports/live-ui-smoke.json](reports/live-ui-smoke.json)
 - [reports/live-ui-smoke.md](reports/live-ui-smoke.md)
+- [reports/localization-ja/validation.json](reports/localization-ja/validation.json)
 - [reports/portfolio-sharing/ci-final/container-persistence.json](reports/portfolio-sharing/ci-final/container-persistence.json)
 - [reports/portfolio-sharing/ci-final/container-smoke.json](reports/portfolio-sharing/ci-final/container-smoke.json)
 - [reports/portfolio-sharing/ci-final/coverage.json](reports/portfolio-sharing/ci-final/coverage.json)
@@ -402,6 +404,6 @@
 - [reports/verifier-models/mini-450-0-dev.json](reports/verifier-models/mini-450-0-dev.json)
 - [reports/verifier-models/mini-450-0-dev.md](reports/verifier-models/mini-450-0-dev.md)
 
-## 运行数据
+## 実行データ
 
-`data/`、`pgdata/`、`.venv/`、`.git/`、缓存、日志和测试临时目录不是源码；源码包不包含这些目录，也不包含 `.env` 密钥。
+`data/`、`pgdata/`、`.venv/`、`.git/`、キャッシュ、ログ、テスト一時領域はソースではなく、ZIP に含めません。`.env` の秘密情報も除外します。

@@ -1,79 +1,79 @@
-# 计算断言、澄清与人工审核修改报告
+# 計算の主張・追加確認・人手レビューの変更報告
 
-本轮对应三项优先级。上一轮 [Modification Report](agent-hardening-report.md)、24 题 JSON、三项计算误拒答和两项澄清失败均保留，不改标签或删样本。
+この作業は 3 つの優先事項に対応します。前回の[変更報告](agent-hardening-report.md)、24 問の JSON、計算の誤拒否 3 件、追加確認の失敗 2 件を維持し、ラベル変更や標本削除は行いません。
 
-**最终全量验收补记：** 按用户要求，最终代码 `9af3637` 已完整重跑一次 24 题，结果 **18/24 Task Success、13/18 Correctness、13/18 Grounded**，P50/P95 **12.189/24.922 秒**，估算 USD **0.002579/task**。六个失败及全部原始输出保留；运行前后哈希确认代码、Prompt、数据集和旧报告均未变，未再据此调参、重跑失败题或改分。见[冻结验收报告](../reports/agent-freeze-20261005/acceptance.md)和[原始 JSON](../reports/agent-freeze-20261005/evaluation-live.json)。下文记录之前的实施与各阶段结果，不替代这次最终全量成绩。
+**最終全件検収の追記：** 依頼に従い最終コード `9af3637` で 24 問を 1 回すべて再実行しました。**Task Success 18/24、Correctness 13/18、Grounded 13/18**、P50/P95 **12.189/24.922 秒**、推定 USD **0.002579/task**。6 件の失敗と全出力を保持し、実行前後のハッシュでコード、Prompt、データ、旧レポートが不変と確認しました。結果を見た調整、失敗の再実行、採点変更はしていません。[凍結検収](../reports/agent-freeze-20261005/acceptance.md)と[元 JSON](../reports/agent-freeze-20261005/evaluation-live.json)を参照してください。以下はそれ以前の実装・段階別結果であり、最終全件スコアを代替しません。
 
-## 1. 计算类 Claim 由服务器渲染
+## 1. 計算 Claim をサーバーが描画
 
-Generator 可在 `claims` 中返回 `{"calculation_source_id": 4}`。这只是对当前服务器工具来源的引用；不能附带 text、evidence、结果、单位覆盖或自报 Claim 类型。后端验证来源存在、属于 Calculator/Calendar、具有 observation_id 和结构化结果，再生成固定的中日英文本和引用。文档或用户来源编号不能冒充工具。
+Generator は `claims` に `{"calculation_source_id": 4}` を返せます。現在のサーバーツール出典への参照のみで、text、evidence、結果、単位の上書き、自己申告の Claim 種別を付加できません。バックエンドは存在、Calculator/Calendar 由来、observation_id、構造化結果を確認し、中国語・日本語・英語の固定文と引用を生成します。文書やユーザー出典 ID でツールを装えません。
 
-Calculator 保留原始十进制字符串、运算、结果、舍入信息和可选单位；显示前重新计算，使用同一个十进制实现。单位标签只接受枚举，必须能在当前授权文档或用户输入中找到带相应操作数的原文，后端固定引用该出处；未提供单位时保留为空，不猜测或自动换算。字面单位绑定不证明量纲和业务适用性，这些仍需 Strict 验证。
+Calculator は元の十進文字列、演算、結果、丸め、任意の単位を保持し、表示前に同じ十進実装で再計算します。単位は列挙値のみを認め、許可文書またはユーザー入力に該当する被演算数と単位の原文が必要で、サーバーが出典を固定引用します。単位未指定は空のままで、推測・自動換算しません。文字列としての単位の結び付けは次元や業務適用性の証明ではなく、引き続き Strict で検証します。
 
-Calendar 保留开始/结束日期、基准日期、时区、首尾包含规则、工作周/假日配置及 Mock/live 来源。API 的计算 Claim 另带 `rendering=server_calculation` 和 `calculation` 结构，保存工具、observation_id、来源编号、原始参数、结果和单位出处。自由文本中的业务许可/资格/审批结论仍须有适用 Document Evidence；所有计算和政策 Claim 均执行 Strict/all。没有放宽精确引语匹配，也不接受模型声明“非 Policy”绕过。
+Calendar は開始・終了日、基準日、タイムゾーン、端点を含む規則、営業週・休日、Mock/live の出所を保持します。API の計算 Claim に `rendering=server_calculation` と `calculation` を付け、ツール、observation_id、出典番号、元引数、結果、単位の出所を保存します。自由文による許可・資格・承認の結論には適用可能な Document Evidence が必要です。全計算・制度 Claim に Strict/all を実行します。引用の厳密一致は緩めず、モデルの「非 Policy」という自己申告も認めません。
 
-涉及 `backend/calculations.py`、`agent_tools.py`、`agent_grounding.py`、`agent_service.py`、`rag.py`、`verification.py`。`tests/test_agent_calculations.py` 覆盖三语言、两种工具、单位替换、伪造 ID/结果/类型、夹带审批、Verifier 否定时隐藏、以及三项原始失败的受控合同回归。只把原候选的计算项换成结构化引用，不改历史报告或其他断言。该受控测试不是新的真实 API 成绩。
+対象は `backend/calculations.py`、`agent_tools.py`、`agent_grounding.py`、`agent_service.py`、`rag.py`、`verification.py`。`tests/test_agent_calculations.py` は 3 言語、2 ツール、単位置換、ID/結果/種別偽造、承認の混入、Verifier 否定時の非表示、元の失敗 3 件の制御済み契約回帰を対象とします。元候補の計算部分だけ構造化参照へ置換し、歴史的レポートや他の主張は変えません。制御済みテストは新たな実 API スコアではありません。
 
-首项相关回归：98 passed、24 PostgreSQL skipped；数据库测试在真实 CI 单独验收，不能把本地跳过算作通过。
+関連回帰は 98 passed、24 PostgreSQL skipped。DB は実 CI で別途検収し、ローカル skip を成功扱いしません。
 
-后续真实运行又发现一项语义误拒答：服务器只写“2026-10-09 加七个日历日为 2026-10-16”，Verifier 却将它读成公司返还期限，要求提供制度条文。后端现在将经过结构化结果验证的 `rendering=server_calculation` 标记传给 Verifier；模型无法提交这个字段。Verifier 仍须验证运算、日期、单位及限制，但不能给纯计算凭空添加制度含义。自由文本制度推论仍需文档，标记不能覆盖矛盾内容，否定 verdict 仍使回答隐藏。新增伪造标记及正反例回归。
+後続の実行で意味的誤拒否が発生しました。サーバーは「2026-10-09 に 7 暦日を加えると 2026-10-16」とだけ述べたのに、Verifier が会社の返却期限と解釈して制度条文を要求しました。バックエンドは構造化結果の検証済み `rendering=server_calculation` を Verifier に渡すよう修正し、モデルからは指定できません。Verifier は演算、日付、単位、制約を検証しますが、純粋な計算に制度の意味を勝手に加えてはいけません。自由文の制度推論には文書が必要で、マーカーは矛盾を免除せず、否定 verdict では非表示にします。偽造マーカーと正負の回帰例を追加しました。
 
-## 2. Clarification 的完整性
+## 2. 追加確認の完全性
 
-`backend/clarification.py` 生成逐字问答上下文：原始目标、每轮自述及它对应的前序问题。Planner 与 Generator 使用同一份内容，不把最新回复当成新任务，也不因“回复过”就默认全部字段已解决。Generator 同时接收服务器确定的政策适用日期；文档生效日期不再被提示成额外个人条件。
+`backend/clarification.py` が元の目的、各ターンの自己申告、対応する先行質問を逐語的にまとめます。Planner と Generator は同じ内容を使い、最新返信を新規タスクとせず、返信済みだけで全項目が解決したとも扱いません。Generator にはサーバーが確定した制度の適用日も渡し、有効日を追加の個人条件として尋ねないようにしました。
 
-共享协议区分当前任务与后续办理：条件/材料说明不必先证明雇主已经确认；单课程估算无需总课程数；用户请求总额时缺少数量仍需追问。全职不等于非承包商，允许给出带明确排除条件的申请规则说明，不能伪称身份或批准已被确认。真实冲突或确实缺少的决定性条件仍可追问。
+共通ルールは現在の質問と将来の手続きを区別します。条件・書類の説明に、雇用主の確認完了を先に証明する必要はありません。単一講座の見積もりに全講座数は不要ですが、合計を求める際に数量がなければ質問します。フルタイムであることは非 contractor の証明ではありません。明示的な除外条件付きで申請規則を説明でき、本人属性や承認が確認済みとは述べません。矛盾や決定に不可欠な条件の不足には、引き続き質問できます。
 
-两个冻结日文案例的回归验证多轮原文与目标完整地进入 Planner/Generator；另覆盖总额仍需数量和冲突信息不能自动确认。语义上是否仍需追问取决于模型，以上是上下文与提示合同，不宣称确定性自然语言理解。
+凍結した日本語 2 ケースの回帰で、複数ターンの原文と目的が Planner/Generator に完全に入ることを確認しました。合計には数量が必要な例と、矛盾を自動解決しない例も含めます。質問の意味的な必要性はモデルに依存し、これは文脈とプロンプトの契約であって、決定的な自然言語理解の保証ではありません。
 
-相关回归：63 passed、3 PostgreSQL skipped。随后真实运行发现 Generator 同时返回 answered/claims 和 questions，违反原有互斥状态合同。新增一次有上限的模型格式修复；不静默删除问题/断言、不重试已经被 quote/provenance/Verifier 拒绝的答案。修复后仍执行全部 Strict 检查，重复无效输出继续隐藏。新增三个正反例验证次数上限及 Verifier 拒绝仍生效。
+関連回帰は 63 passed、3 PostgreSQL skipped。その後、Generator が answered/claims と questions を同時に返し、排他的な状態契約に違反しました。最大 1 回の形式修正を追加し、質問・主張を黙って消したり、quote/provenance/Verifier で拒否済みの回答を再試行したりはしません。修正後も全 Strict を実行し、再び不正なら非表示にします。回数上限と Verifier 拒否の維持を確認する 3 つの正負テストを追加しました。
 
-最终本地完整回归为 313 passed、37 PostgreSQL skipped；跳过不计通过。Ruff 检查及格式检查通过。真实 API 与 CI 最终结果见下方。
+最終ローカル回帰は 313 passed、37 PostgreSQL skipped。skip は成功に含めません。Ruff と format は通過。実 API と最終 CI は以下に記載します。
 
-## 3. 人工审核集
+## 3. 人手レビューセット
 
-准备 [8 例审核包](agent-human-review-v1.md)、`evals/agent-human-review-v1.json` 和空白 annotations。含真实“每笔最多 5000 日元”错误候选；5,001 与恰好 5,000 的边界；计算不等于许可；原文收据时点歧义；日文附条件解释和课程估算；Mock 日历不能证明审批。
+[8 件のレビュー資料](agent-human-review-v1.md)、`evals/agent-human-review-v1.json`、空の annotations を作成しました。実際の「1 件あたり最大 5000 円」という誤候補、5,001 とちょうど 5,000 の境界、計算と許可の区別、領収書時点の曖昧さ、日本語の条件付き説明と講座見積もり、Mock カレンダーで承認を証明できない例を含めます。
 
-每例提供问题、完整政策原文、候选、必要证据/允许解释范围和需要审核的参考答案。**已由本对话用户实际审核 8/8**；首次“是”的回复存在歧义，确认后用户逐题写明政策解释，原始文字、标签映射及时间存入[annotations](../evals/agent-human-review-v1.annotations.json)。H01/H03/H04/H08 的候选错误且无据，H02/H05/H06/H07 正确且有据；拟定参考答案获认可。[审核报告](../reports/agent-followup/human-review-completed.json)与此前待审核快照分别保存。审核人看到了参考答案，这是辅助审核，不是独立盲评。
+各例に質問、制度全文、候補、必要根拠・許容解釈、確認対象の参照回答を提示しました。**この対話の依頼者が 8/8 件を実際にレビュー済みです。** 最初の「はい」は曖昧だったため確認し、その後各問の制度解釈を明記してもらいました。元発言、ラベル対応、時刻を [annotations](../evals/agent-human-review-v1.annotations.json) に保存。H01/H03/H04/H08 は誤り・根拠なし、H02/H05/H06/H07 は正確・根拠ありで、参照回答案は承認されました。[レビュー結果](../reports/agent-followup/human-review-completed.json)と確認待ち時点のスナップショットは別保存です。参照回答を見た補助付きレビューであり、独立した盲検評価ではありません。
 
-`scripts.human_review_report` 校验冻结数据摘要、审核人声明、带时区时间、全部案例唯一且完整。未签署或缺项不给人工准确率；参考答案不被认可时保留“待裁决”，不将其算作已验收真值。实际审核后的 H01 标签可与旧 Verifier 的 supported=true 比较。脚本只能记录审核人声明，不能技术核实其身份。八例含故意错误的候选，其正确率是候选校准结果，不是一次新的 Agent 任务成功率。
+`scripts.human_review_report` は凍結データのハッシュ、担当者宣言、タイムゾーン付き時刻、ID の一意性・完全性を検証します。署名・項目が欠ければ人手の正確性を出さず、参照回答に不同意なら「裁定待ち」として、確定正解に数えません。レビュー後の H01 と旧 Verifier の supported=true を比較できます。担当者の宣言を記録するだけで、本人確認を技術的に保証しません。意図的な誤候補を含む 8 件の正確性は候補校正の結果で、新しい Agent タスク成功率ではありません。
 
-`tests/test_agent_human_review.py` 覆盖未审核/未签署、字符串布尔值、部分审核、摘要变更、重复 ID、时间格式、不同意参考答案和历史自动判定分歧。自动测试使用显式测试签署者；真实标注仅来源于用户本次逐题回复。
+`tests/test_agent_human_review.py` は未レビュー・未署名、文字列 boolean、部分レビュー、ハッシュ変更、重複 ID、時刻形式、参照回答への不同意、過去の自動判定との不一致を対象とします。自動テストは明示的なテスト署名者を使い、実ラベルは依頼者の今回の各問への返信だけに由来します。
 
-基于确认的语义，在 Generator/Verifier 提示中加入通用规则：如果更高数值存在另一条审批路径，不得把分界值表述为绝对上限；真实报销上限仍按原文保留。没有硬编码 5,000 的业务规则或放宽验证。`scripts.agent_human_calibration` 调用真实 Verifier 对八个人工样本逐条校准：[结果](../reports/agent-followup/human-verifier-live.json)为 **7/8 一致、Precision 1.00、Recall 0.75，0 API 错误**。H01 绝对上限误述现被拒绝，H05“收据时点有操作歧义”的说明仍被模型判无据而与人工不同。该样本已用于开发新提示，属于开发集校准，不能宣称是未见数据上的准确率。
+確定した意味に基づき、Generator/Verifier に「より高額な場合の別承認経路があるなら、分岐額を絶対上限と呼ばない」という汎用規則を追加しました。実際の精算上限は原文どおり維持し、5,000 という業務値はハードコードせず、検証も緩めません。`scripts.agent_human_calibration` による実 Verifier 校正は **7/8 一致、Precision 1.00、Recall 0.75、API エラー 0**。[結果](../reports/agent-followup/human-verifier-live.json)では H01 の絶対上限誤述を拒否しましたが、H05 の領収書時点の曖昧さの説明は根拠なしとされ、人手判定と異なります。プロンプト開発に使ったデータであり、未見データの正確性ではありません。
 
-## 实测与剩余限制
+## 実測と残る制約
 
-[第一轮五个旧失败场景](../reports/agent-followup/five-cases-live.md)实际调用 Embedding、Planner、Generator、Strict Verifier 和独立 Judge：3/5 成功。课程估算、Mock 日历、跨政策计算完成；采购中服务器计算 Claim 已通过，但另一个政策适用性推论被拒绝；通勤仍被追问政策日期/雇佣类别。保留全部失败并补充日期上下文及附条件适用性说明。
+[最初の旧失敗 5 シナリオ](../reports/agent-followup/five-cases-live.md)では実 Embedding、Planner、Generator、Strict Verifier、独立 Judge を呼び、3/5 成功。講座見積もり、Mock カレンダー、複数制度の計算を完了しました。購入では計算 Claim は通過したものの別の制度適用推論が拒否され、通勤では制度日付・雇用区分を追加質問しました。全失敗を維持し、日付文脈と条件付き適用説明を補いました。
 
-完整 [24 题实测](../reports/agent-followup/full-live.json)在最后的格式修复/审批门槛提示加入**之前**完成：自动 Task Success 19/24，Correctness 13/18，Grounded Answer Rate 15/18，交付 15 个回答，三个原计算失败场景均完成。P50/P95 为 10.357/20.126 秒，估算 USD 0.002460/task，排除索引与 Judge；[同集对照](../reports/agent-followup/full-comparison.md)保留全部失败。自动“正确”中采购题再次把分界写成上限，与用户确认的政策解释冲突，因此这些分数不是人工准确率；不改动原自动评分。这一轮另有输出状态混合、必要引用缺失、再次追问及 Judge 对完整性的争议。
+[24 問の全件実測](../reports/agent-followup/full-live.json)は、最後の形式修正・承認閾値のプロンプト追加**前**です。自動 Task Success 19/24、Correctness 13/18、Grounded Answer Rate 15/18、回答済み 15 件。元の計算失敗 3 件はすべて完了。P50/P95 10.357/20.126 秒、索引・Judge を除く推定 USD 0.002460/task。[同じセットの比較](../reports/agent-followup/full-comparison.md)に全失敗を保存しています。自動で「正解」とされた購入問題は再び分岐額を上限と述べ、人手解釈に反します。元の自動スコアは変更せず、人手の正確性とは呼びません。出力状態の混在、必要引用の欠落、再質問、完全性に関する Judge との不一致もありました。
 
-格式修复后[五题再次实测](../reports/agent-followup/five-cases-final-live.json)：交付 4/5，四个交付均通过独立正确性/依据检查，但冻结 Task Success 仍为 3/5。通勤题直接正确说明申请条件，没有多余追问，按旧“必须澄清”标签仍计失败，不调整旧标签；跨政策题的纯日期计算被 Verifier 误读成制度期限而拒绝。该计算文本明确限定为计算、不构成业务许可，因此这是 Verifier 误拒答；是否完整解释 RET-26 七日规则应另作回答完整性检查。原始判定继续保留。
+形式修正後の[5 問再実測](../reports/agent-followup/five-cases-final-live.json)では 4/5 が回答し、その 4 件は独立の正確性・根拠検証を通過しましたが、凍結 Task Success は 3/5 のままです。通勤は不要な質問をせず条件を正しく説明したものの、旧「追加確認必須」ラベルでは失敗となり、変更しません。複数制度の純粋な日付計算は Verifier に制度期限と誤解されて拒否されました。本文は計算であって業務許可ではないと限定しており、Verifier の誤拒否です。RET-26 の 7 日ルールを十分説明したかは別の回答完全性評価で扱います。元判定は保持します。
 
-最后的[真实 Verifier 回放](../reports/agent-followup/calculation-verifier-replay.json)保留该失败候选的全部原文和证据，仅为后端重新验证过的计算引用加入服务器标记：四条断言全部通过；另设的“计算即公司期限且用户已合规”反例仍被拒绝。`python -m scripts.agent_calculation_replay --live --output <new-path.json>` 可复现，保存原始输入、输出和用量。两个请求分别耗时 8.800 / 2.744 秒，配置单价估算共 USD 0.001640；这只是 Verifier 回放，不能作为整条 Agent 的延迟。此回放包含最终提示修复；24 题、五题和人工校准分别对应先前开发阶段，不能拼成最新版本的一轮全量成功结果。
+最後の[実 Verifier 再検証](../reports/agent-followup/calculation-verifier-replay.json)は候補全文と根拠を維持し、バックエンドで再検証した計算参照にのみサーバーマーカーを追加しました。4 主張はすべて通過し、別途作った「計算が会社の期限で、利用者は適合済み」という反例は拒否しました。`python -m scripts.agent_calculation_replay --live --output <new-path.json>` で再現でき、入力・出力・使用量を保存します。2 リクエストは 8.800 / 2.744 秒、推定合計 USD 0.001640。Verifier のみであり、Agent 全体の時間ではありません。これは最終プロンプト修正を含みますが、24 問・5 問・人手校正は別の開発段階で、最新版の 1 回の全件成功に合成できません。
 
-工作日日历仍为 Mock；ACL、Citation、Strict 均保留。语义推论、澄清必要性和单位/类别适用性仍依赖模型；缺失引用仍会拒答，人工集也只有八例且不是盲评。既有 24 题属于冻结合成回归集，对“解释条件是否必须追问”的标注边界应另行审核新版本，不能改写旧成绩。
+営業日カレンダーは Mock のままで、ACL、Citation、Strict を維持します。意味的推論、追加質問の必要性、単位・分類の適用性はモデル依存です。引用不足では拒否し、人手セットも 8 件の非盲検です。24 問は凍結合成回帰セットで、「条件説明に質問は必須か」の境界は新しい版で別途レビューし、旧スコアを書き換えません。
 
-## 最终工程验收
+## 最終エンジニアリング検収
 
-应用提交 `467d4471d9654c3398dfb408530401631e5d0ff5` 的 [GitHub Actions](https://github.com/Twergu/My-portfolio/actions/runs/37310074658) 全部成功，下载的 JUnit 与 JSON 已交叉核对：**350 passed、0 failed、0 errors、0 skipped**，其中 **37 项真实 PostgreSQL/pgvector 测试**；前端 15/15 通过，Ruff 与格式检查通过。见[完整测试报告](../reports/agent-followup/ci-final/tests.md)、[数据库逐项清单及 JUnit 摘要](../reports/agent-followup/ci-final/postgres-tests.json)、[运行版本与步骤](../reports/agent-followup/ci-final/provenance.json)。README 引用自动生成报告，不写死测试数量。
+アプリ `467d4471d9654c3398dfb408530401631e5d0ff5` の [GitHub Actions](https://github.com/Twergu/My-portfolio/actions/runs/37310074658) は全通過。JUnit と JSON を照合し、**350 passed、0 failed、0 errors、0 skipped**、うち**実 PostgreSQL/pgvector 37 件**。フロントエンド 15/15、Ruff、format も通過。[全テスト](../reports/agent-followup/ci-final/tests.md)、[DB 一覧と JUnit ハッシュ](../reports/agent-followup/ci-final/postgres-tests.json)、[版と実行手順](../reports/agent-followup/ci-final/provenance.json)を参照してください。README は生成結果を参照し、件数を固定しません。
 
-Docker Compose 实际完成 App + pgvector 启动、健康检查、PDF 索引/物理页引用和重启持久性，[验收结果](../reports/agent-followup/ci-final/container-persistence.json)已保存。Docker smoke 的 Agent 部分是 local mode API gate，完整 Agent 合同通过受控模型和真实 pgvector 测试；实际模型 API 的单独评估使用 SQLite，不将这些范围混称为一条 live API + PostgreSQL 测试。
+Docker Compose で App + pgvector 起動、ヘルスチェック、PDF 索引・物理ページ引用、再起動後の保持を[確認](../reports/agent-followup/ci-final/container-persistence.json)しました。Docker の Agent 部分は local mode の API gate で、全 Agent 契約は制御済みモデルと実 pgvector で検証。実モデル評価は別の SQLite 実行であり、live API + PostgreSQL の単一テストとは呼びません。
 
-CI 同时完成 [SQLite/pgvector 对照](../reports/agent-followup/ci-final/store-benchmark.md)及 [1k/10k/100k Exact/HNSW 基准](../reports/agent-followup/ci-final/vector-scale.md)。这些是合成向量的工程运行核验，本轮未改变索引策略，Exact 继续默认。后续归档提交仅更新说明与报告，不修改上述已测试应用代码。
+CI では [SQLite/pgvector 比較](../reports/agent-followup/ci-final/store-benchmark.md)と [1k/10k/100k Exact/HNSW](../reports/agent-followup/ci-final/vector-scale.md) も完了。合成ベクトルによる動作検証で、この作業では索引戦略を変えず Exact を既定にします。後続の保存コミットは文書・レポートのみで、検証済みアプリコードは変更しません。
 
-## 修改文件与复现入口
+## 変更ファイルと再現入口
 
-| 文件 | 修改内容 |
+| ファイル | 変更内容 |
 | --- | --- |
-| `backend/calculations.py`、`agent_tools.py` | 共用十进制运算；工具保留结构化数值、单位、日期和来源 |
-| `backend/agent_grounding.py`、`agent_service.py` | 单位字面出处绑定、固定展示文本/引用、服务器来源校验 |
-| `backend/rag.py`、`verification.py` | 计算引用合同、后端标记、Strict 规则、审批门槛语义、一次有上限的格式修复 |
-| `backend/clarification.py`、`agent.py` | 原始目标与逐轮问答共享、实际缺项和附条件说明规则 |
-| `tests/test_agent_calculations.py`、`test_agent_clarification.py`、`test_agent_human_review.py` | 原始失败回归、伪造输入/越权边界、部分回答、格式修复和人工标签验证 |
-| `scripts/agent_evaluate.py`、`agent_calculation_replay.py` | 可追溯子集选择、原始失败的真实 Verifier 回放 |
-| `scripts/prepare_agent_review.py`、`human_review_report.py`、`agent_human_calibration.py` | 冻结审核包、实际人工意见校验、真实 Verifier 对照 |
-| `evals/agent-human-review-v1*.json`、`docs/agent-human-review-v1.md` | 八例原文、候选、参考答案与实际逐题审核 |
-| `README.md`、`SOURCE_INDEX.md`、`docs/agent-evaluation.md`、`agent-runtime.md` | 实验范围、动态测试报告链接、相对源码路径、复现方法和限制 |
+| `backend/calculations.py`、`agent_tools.py` | 共通の十進演算と、構造化した数値・単位・日付・出所 |
+| `backend/agent_grounding.py`、`agent_service.py` | 単位の原文対応、固定表示・引用、サーバーによる出所確認 |
+| `backend/rag.py`、`verification.py` | 計算参照契約、サーバーマーカー、Strict、承認分岐の意味、最大 1 回の形式修正 |
+| `backend/clarification.py`、`agent.py` | 元目的と各ターンを共有し、実不足条件と条件付き説明を規定 |
+| `tests/test_agent_calculations.py`、`test_agent_clarification.py`、`test_agent_human_review.py` | 元失敗、偽造・越権、部分回答、形式修正、人手ラベルの回帰 |
+| `scripts/agent_evaluate.py`、`agent_calculation_replay.py` | 追跡可能な部分集合選択と、元失敗の実 Verifier 再検証 |
+| `scripts/prepare_agent_review.py`、`human_review_report.py`、`agent_human_calibration.py` | 凍結レビュー資料、人手発言の検証、実 Verifier 比較 |
+| `evals/agent-human-review-v1*.json`、`docs/agent-human-review-v1.md` | 8 件の原文、候補、参照回答、実レビュー |
+| `README.md`、`SOURCE_INDEX.md`、`docs/agent-evaluation.md`、`agent-runtime.md` | 実験範囲、動的テストリンク、相対ソース一覧、再現方法、制約 |
 
-完整原始数据位于 `reports/agent-followup/`；复现命令及 API/单元测试范围见 [Evaluation 协议](agent-evaluation.md)。旧 `reports/agent-hardening/` 和冻结的 24 题、日文回归数据保持不变。
+全データは `reports/agent-followup/`。コマンドと API/単体テストの範囲は[評価プロトコル](agent-evaluation.md)を参照してください。旧 `reports/agent-hardening/`、24 問、日本語回帰の元データは維持します。
